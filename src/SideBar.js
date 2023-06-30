@@ -37,8 +37,14 @@ export default class SideBar {
             parent.map(child => {
                 detail += `
                 <span class = "filePage__text--white-space">  </span>
-                <details style = "display:inline">
-                    <summary><span class = "filePage__text--page-summary" data-id=${child.id}>${child.title}</span></summary>
+                <details>
+                    <summary>
+                        <span class = "filePage__text--page-summary" data-id=${child.id}>${child.title}</span>
+                        <div class = "filePage__button">
+                            <button class = "filePage__button--delete">🗑️</button>
+                            <button class = "filePage__button--add">➕</button>
+                        </div>
+                    </summary>
                     
                 `
 

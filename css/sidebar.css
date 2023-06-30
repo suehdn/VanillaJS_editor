@@ -3,9 +3,15 @@
     width: 620px;
 } */
 
+details {
+    display: inline;
+    box-sizing: border-box;
+}
+
 details>summary {
-    padding: 2px 6px;
-    width: 15em;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-right: -10px;
     border: none;
     cursor: pointer;
     list-style: none;
@@ -25,6 +31,10 @@ details>span {
     margin: 0;
 }
 
+.filePage__text--page-summary {
+    display: inline;
+}
+
 .filePage__text--white-space {
     white-space: pre;
 }
@@ -33,6 +43,25 @@ details>span {
     color: grey;
     font-size: 15px;
 }
+
+.filePage__button {
+    display: inline;
+    float: right;
+    margin-bottom: -10px;
+}
+
+.filePage__button--delete {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.filePage__button--add {
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    cursor: pointer;
+}
+
 
 .sidebar__aside--flex {
     width: 20%;
