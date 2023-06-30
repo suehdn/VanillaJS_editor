@@ -1,3 +1,5 @@
+import { push } from './router.js';
+
 /**
  * SideBar를 만들어주는 컴포넌트
  */
@@ -19,7 +21,8 @@ export default class SideBar {
         $filePage.addEventListener('click', (e) => {
             const $summary = e.target.closest('.filePage__text--page-summary');
             if ($summary) {
-                console.log("clicked!!!");
+                const { id } = $summary.dataset;
+                push(`/posts/${id}`);
             }
         })
     }
@@ -35,7 +38,7 @@ export default class SideBar {
                 detail += `
                 <span class = "filePage__text--white-space">  </span>
                 <details style = "display:inline">
-                    <summary><span class = "filePage__text--page-summary">${child.title}</span></summary>
+                    <summary><span class = "filePage__text--page-summary" data-id=${child.id}>${child.title}</span></summary>
                     
                 `
 
