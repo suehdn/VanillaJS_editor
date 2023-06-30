@@ -1,0 +1,44 @@
+/* details {
+    font: 16px "Open Sans", Calibri, sans-serif;
+    width: 620px;
+} */
+
+details>summary {
+    padding: 2px 6px;
+    width: 15em;
+    border: none;
+    cursor: pointer;
+    list-style: none;
+}
+
+details>summary::marker {
+    content: '👉';
+    font-size: 12px;
+}
+
+details[open]>summary::marker {
+    content: '👇';
+    font-size: 12px;
+}
+
+details>span {
+    margin: 0;
+}
+
+.filePage__text--white-space {
+    white-space: pre;
+}
+
+.filePage__text--empty {
+    color: grey;
+    font-size: 15px;
+}
+
+.sidebar__aside--flex {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid blueviolet;
+    margin-left: auto;
+    margin-right: auto;
+}
