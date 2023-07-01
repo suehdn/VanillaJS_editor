@@ -8,11 +8,11 @@ export default class App {
         this.$target = $target;
         const data = new Data();
         data.getDocumentStructure().then(x => {
-            const sideBar = new SideBar({
+            this.sideBar = new SideBar({
                 $target: this.$target,
                 initialState: x
             })
-            const editor = new Editor({
+            this.editor = new Editor({
                 $target: this.$target,
                 initialState: x
             })
