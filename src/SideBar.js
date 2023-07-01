@@ -1,5 +1,7 @@
 //해야할 작업
 // 1. sidebar의 file name과 추가 삭제버튼 위치 css flex로 변경하기 
+// 2. 페이지 추가,삭제하면 열려있던 토글이 닫힌채로 전부 렌더링 되는 현상 발생.. -> 어떻게 해결?
+// 3. 페이지가 많아지면 스크롤도 넣어야할듯
 
 import { push } from './router.js';
 import Data from './data.js';
@@ -14,6 +16,7 @@ export default class SideBar {
         this.state = initialState;
         this.data = new Data();
         this.render();
+
     }
 
     setState = (nextState) => {
