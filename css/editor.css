@@ -1,6 +1,7 @@
 .editor__div--flex {
     width: 75%;
     display: flex;
+    order: 2;
     flex-direction: column;
     border: 1px solid blueviolet;
     margin-left: auto;

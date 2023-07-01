@@ -5,7 +5,8 @@
 
 details {
     display: inline;
-    box-sizing: border-box;
+    width: 95%;
+    margin-left: 5%;
 }
 
 details>summary {
@@ -33,6 +34,7 @@ details>span {
 
 .filePage__text--page-summary {
     display: inline;
+
 }
 
 .filePage__text--white-space {
@@ -62,12 +64,15 @@ details>span {
     cursor: pointer;
 }
 
+.filePage__root-add--add {
+    margin: auto;
+}
+
 
 .sidebar__aside--flex {
     width: 20%;
     display: flex;
+    order: 1;
     flex-direction: column;
     border: 1px solid blueviolet;
-    margin-left: auto;
-    margin-right: auto;
 }
