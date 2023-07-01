@@ -11,12 +11,17 @@ import Data from './data.js';
 export default class SideBar {
     constructor({ $target, initialState }) {
         this.$page = document.createElement('aside');
+        this.$namePage = document.createElement('section');
         this.$filePage = document.createElement('section');
         this.$target = $target;
         this.state = initialState;
         this.data = new Data();
-        this.render();
 
+        this.$namePage.className = 'sidebar__section--name';
+        this.$namePage.innerHTML = 'Hyesu님의 Notion🥳'
+        this.$page.appendChild(this.$namePage);
+        this.render();
+        this.eventAdd();
     }
 
     setState = (nextState) => {
@@ -36,32 +41,6 @@ export default class SideBar {
             </div>
             ${this.printFile(this.state)}
         `
-
-        this.$filePage.onclick = async (e) => {
-            const $summary = e.target.closest('.filePage__text--page-summary');
-            const $delete = e.target.closest('.filePage__button--delete');
-            const $add = e.target.closest('.filePage__button--add');
-            if ($summary) {
-                const { id } = $summary.dataset;
-                push(`/posts/${id}`);
-            } else {
-                if ($delete) {
-                    const { id } = $delete.dataset;
-                    await this.data.deleteDocumentStructure(id);
-                    this.data.getDocumentStructure().then(x => {
-                        this.setState(x);
-                    })
-                }
-                else if ($add) {
-                    const { id } = $add.dataset;
-                    await this.data.addDocumentStructure(id);
-                    this.data.getDocumentStructure().then(x => {
-                        this.setState(x);
-                    })
-                }
-
-            }
-        }
     }
 
     /**
@@ -90,5 +69,35 @@ export default class SideBar {
             detail += `<span class = "filePage__text--empty">  하위 항목 없음</span>`
         }
         return detail
+    }
+    /**
+     *  클릭했을때 동작을 add 해주는 함수
+     */
+    eventAdd() {
+        this.$filePage.onclick = async (e) => {
+            const $summary = e.target.closest('.filePage__text--page-summary');
+            const $delete = e.target.closest('.filePage__button--delete');
+            const $add = e.target.closest('.filePage__button--add');
+            if ($summary) {
+                const { id } = $summary.dataset;
+                push(`/posts/${id}`);
+            } else {
+                if ($delete) {
+                    const { id } = $delete.dataset;
+                    await this.data.deleteDocumentStructure(id);
+                    this.data.getDocumentStructure().then(x => {
+                        this.setState(x);
+                    })
+                }
+                else if ($add) {
+                    const { id } = $add.dataset;
+                    await this.data.addDocumentStructure(id);
+                    this.data.getDocumentStructure().then(x => {
+                        this.setState(x);
+                    })
+                }
+
+            }
+        }
     }
 }
