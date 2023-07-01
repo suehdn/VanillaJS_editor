@@ -3,9 +3,10 @@
     display: flex;
     order: 2;
     flex-direction: column;
-    border: 1px solid blueviolet;
+    /* border: 1px solid blueviolet; */
     margin-left: auto;
     margin-right: auto;
+    margin-top: 50px;
 }
 
 .editor__input {
