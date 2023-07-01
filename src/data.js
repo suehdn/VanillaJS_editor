@@ -15,4 +15,20 @@ export default class Data {
         })
         return getDocumentStructure;
     }
+
+    deleteDocumentStructure = async (id) => {
+        const deleteDocumentStructure = await request(`/${id}`, {
+            method: 'DELETE'
+        })
+    }
+
+    addDocumentStructure = async (id) => {
+        const addDocumentStructure = await request('', {
+            method: 'POST',
+            body: JSON.stringify({
+                title: "title",
+                parent: id
+            })
+        })
+    }
 } 
