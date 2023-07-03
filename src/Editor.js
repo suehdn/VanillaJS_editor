@@ -1,10 +1,11 @@
 export default class Editor {
-    constructor({ $target, initialstate = { title: '', content: '' } }) {
+    constructor({ $target, initialstate = { title: '', content: '' }, onEditing }) {
         this.$editor = document.createElement('div');
         this.$target = $target;
         this.state = initialstate;
         this.makeEditor();
         this.eventAdd();
+        this.onEditing = onEditing();
     }
 
     setState = (nextState) => {
@@ -51,5 +52,6 @@ export default class Editor {
             console.log(nextState);
             this.setState(nextState);
         })
+        this.onEditing(this.state);
     }
 }
