@@ -6,8 +6,8 @@
 import { push } from './router.js';
 import Data from './data.js';
 import Editor from './Editor.js';
-import { request } from './api.js';
-import { setItem, removeItem } from './storage.js';
+// import { request } from './api.js';
+// import { setItem, removeItem } from './storage.js';
 /**
  * SideBar를 만들어주는 컴포넌트
  */
@@ -17,29 +17,32 @@ export default class SideBar {
         this.$namePage = document.createElement('section');
         this.$filePage = document.createElement('section');
         this.$target = $target;
-        this.state = initialState;
+        this.state = {
+            ...initialState,
+            postId: initialState.list[0].id
+        }
         this.data = new Data();
-        this.postLocalSavekey = '';
-        this.timer = null;
+        // this.postLocalSavekey = '';
+        // this.timer = null;
         this.editor = new Editor({
             $target: this.$target,
             initialState: this.state.content,
-            onEditing: (post) => {
-                if (this.timer !== null) {
-                    clearTimeout(this.timer);
-                }
-                this.timer = setTimeout(async () => {
-                    setItem(postLocalSavekey, {
-                        ...post,
-                        tempSaveDate: new Date()
-                    })
-                    await request(`/posts/${this.state.content.id}`, {
-                        method: 'PUT',
-                        body: JSON.stringify(post)
-                    })
-                    removeItem(postLocalSavekey)
-                }, 2000)
-            }
+            // onEditing: (post) => {
+            //     if (this.timer !== null) {
+            //         clearTimeout(this.timer);
+            //     }
+            //     this.timer = setTimeout(async () => {
+            //         setItem(postLocalSavekey, {
+            //             ...post,
+            //             tempSaveDate: new Date()
+            //         })
+            //         await request(`/posts/${this.state.content.id}`, {
+            //             method: 'PUT',
+            //             body: JSON.stringify(post)
+            //         })
+            //         removeItem(postLocalSavekey)
+            //     }, 2000)
+            // }
         })
         this.$namePage.className = 'sidebar__section--name';
         this.$namePage.innerHTML = 'Hyesu님의 Notion🥳'
@@ -49,14 +52,17 @@ export default class SideBar {
     }
 
     setState = (nextState) => {
-        this.data.getDocumentContent(nextState.postId).then(x => {
-            console.log(x)
-            this.state = {
-                ...this.state,
-                ...{ content: x }
-            };
-            this.postLocalSavekey = `temp-post-${this.state.content.id}`;
-        })
+        if (nextState.postId) {
+            this.data.getDocumentContent(nextState.postId).then(x => {
+                this.state = {
+                    ...this.state,
+                    ...{ content: x }
+                };
+                this.postLocalSavekey = `temp-post-${this.state.content.id}`;
+            })
+        } else {
+            this.state = nextState;
+        }
         this.render();
     }
 
@@ -118,14 +124,14 @@ export default class SideBar {
                     const { id } = $delete.dataset;
                     await this.data.deleteDocumentStructure(id);
                     this.data.getDocumentStructure().then(x => {
-                        this.setState(x);
+                        this.setState({ list: x });
                     })
                 }
                 else if ($add) {
                     const { id } = $add.dataset;
                     await this.data.addDocumentStructure(id);
                     this.data.getDocumentStructure().then(x => {
-                        this.setState(x);
+                        this.setState({ list: x });
                     })
                 }
             }
