@@ -5,6 +5,7 @@
 
 import { push } from './router.js';
 import Data from './data.js';
+import Editor from './Editor.js';
 /**
  * SideBar를 만들어주는 컴포넌트
  */
@@ -16,7 +17,19 @@ export default class SideBar {
         this.$target = $target;
         this.state = initialState;
         this.data = new Data();
-
+        console.log(initialState)
+        this.editor = new Editor({
+            $target: this.$target,
+            initialState: this.state.content,
+            // onEditing: (post) => {
+            //     if (timer !== null) {
+            //         clearTimeout(timer);
+            //     }
+            //     timer = setTimeout(async () => {
+            //         setItem(postLocalSavekey)
+            //     })
+            // }
+        })
         this.$namePage.className = 'sidebar__section--name';
         this.$namePage.innerHTML = 'Hyesu님의 Notion🥳'
         this.$page.appendChild(this.$namePage);
@@ -25,7 +38,13 @@ export default class SideBar {
     }
 
     setState = (nextState) => {
-        this.state = nextState;
+        this.data.getDocumentContent(nextState.postId).then(x => {
+            console.log(x)
+            this.state = {
+                ...this.state,
+                ...{ content: x }
+            };
+        })
         this.render();
     }
 
@@ -39,7 +58,7 @@ export default class SideBar {
                 <span>새로운 루트 페이지 추가</span>
                 <button class = "filePage__button--add" data-id="null">➕</button>
             </div>
-            ${this.printFile(this.state)}
+            ${this.printFile(this.state.list)}
         `
     }
 
@@ -80,6 +99,7 @@ export default class SideBar {
             const $add = e.target.closest('.filePage__button--add');
             if ($summary) {
                 const { id } = $summary.dataset;
+                this.setState({ postId: id })
                 push(`/posts/${id}`);
             } else {
                 if ($delete) {

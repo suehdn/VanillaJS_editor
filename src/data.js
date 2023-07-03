@@ -16,6 +16,13 @@ export default class Data {
         return getDocumentStructure;
     }
 
+    getDocumentContent = async (id) => {
+        const getDocumentStructure = await request(`/${id}`, {
+            method: 'GET'
+        })
+        return getDocumentStructure;
+    }
+
     deleteDocumentStructure = async (id) => {
         const deleteDocumentStructure = await request(`/${id}`, {
             method: 'DELETE'

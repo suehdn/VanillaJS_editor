@@ -1,7 +1,8 @@
 import Data from './data.js';
 import SideBar from './SideBar.js';
-import Editor from './Editor.js';
+
 import { initRouter } from './router.js';
+import { setItem } from './storage.js';
 
 export default class App {
     constructor({ $target }) {
@@ -10,11 +11,7 @@ export default class App {
         data.getDocumentStructure().then(x => {
             this.sideBar = new SideBar({
                 $target: this.$target,
-                initialState: x
-            })
-            this.editor = new Editor({
-                $target: this.$target,
-                initialState: x
+                initialState: { list: x }
             })
         })
         this.route();
