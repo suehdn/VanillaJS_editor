@@ -3,4 +3,6 @@ main {
     flex-wrap: wrap;
     flex-direction: row;
     background-color: white;
+    height: 100%;
+    border: 1px solid antiquewhite;
 }
