@@ -21,9 +21,9 @@ export default class Editor {
     render() {
         console.log("render")
         this.makeEditor();
-        // console.log(this.$editor.querySelector('[name=title]').value, this.$editor.querySelector('[name=content]').innerHTML)
-        // this.$editor.querySelector('[name=title]').value = this.state.title;
-        // this.$editor.querySelector('[name=content]').innerHTML = this.state.content;
+        console.log(this.$editor.querySelector('[name=title]').value, this.$editor.querySelector('[name=content]').innerHTML)
+        this.$editor.querySelector('[name=title]').value = this.state.title;
+        this.$editor.querySelector('[name=content]').innerHTML = this.state.content;
     }
 
 

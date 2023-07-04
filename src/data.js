@@ -48,5 +48,6 @@ export default class Data {
                 content: content
             })
         })
+        return this.getDocumentStructure();
     }
 } 

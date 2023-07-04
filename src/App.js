@@ -18,8 +18,10 @@ export default class App {
                     }
                     if (this.sideBar.state.postId) {
                         this.timer = setTimeout(async () => {
-                            this.data.editDocument(this.sideBar.state.postId, post.title, post.content);
-                            this.sideBar.render();
+                            this.data.editDocument(this.sideBar.state.postId, post.title, post.content).then(documentStructure => {
+                                this.sideBar.setState({ list: documentStructure });
+                                console.log(documentStructure)
+                            });
                         }, 1000)
                     }
                 }
@@ -31,9 +33,6 @@ export default class App {
             })
             this.route();
         })
-
-
-
         initRouter(() => this.route());
     }
 
@@ -42,7 +41,6 @@ export default class App {
 
         if (pathname.indexOf('/posts/') === 0) {
             const [, , postId] = pathname.split('/');
-            console.log(this.sideBar);
             this.sideBar.setState({ postId: postId })
         }
     }
