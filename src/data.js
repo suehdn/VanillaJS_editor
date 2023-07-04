@@ -33,9 +33,10 @@ export default class Data {
         const addDocumentStructure = await request('', {
             method: 'POST',
             body: JSON.stringify({
-                title: "title",
+                title: "새로운 페이지",
                 parent: id
             })
         })
+        return addDocumentStructure;
     }
 } 
