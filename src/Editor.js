@@ -20,10 +20,34 @@ export default class Editor {
 
     render() {
         console.log("render")
+
+        if (this.state.content) {
+            console.log(this.state.content)
+            const richContent = this.state.content.split('<div>').map(enter => {
+
+                let content = enter.split('<br>').map(line => {
+                    if (line.indexOf('# ') === 0) {
+                        return `<h1>${line.substr(2)}</h1>`
+                    } else if (line.indexOf("## ") === 0) {
+                        return `<h2>${line.substr(3)}</h2>`
+                    } else if (line.indexOf('### ') === 0) {
+                        return `<h3>${line.substr(4)}</h3>`
+                    }
+                    return line
+                })
+                console.log("content", content)
+                return content.join('');
+            }).join('<br>').replace(/<\/div>/g, '');
+            const nextState = {
+                ...this.state,
+                content: richContent
+            }
+            this.setState(nextState, false);
+            console.log("richContent:", richContent)
+        }
+
+
         this.makeEditor();
-        console.log(this.$editor.querySelector('[name=title]').value, this.$editor.querySelector('[name=content]').innerHTML)
-        this.$editor.querySelector('[name=title]').value = this.state.title;
-        this.$editor.querySelector('[name=content]').innerHTML = this.state.content;
     }
 
 
@@ -68,6 +92,7 @@ export default class Editor {
                 content: e.target.innerHTML
             }
             this.setState(nextState, false);
+            console.log(this.state)
             this.onEditing(this.state);
         })
     }

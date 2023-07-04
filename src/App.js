@@ -20,7 +20,9 @@ export default class App {
                         this.timer = setTimeout(async () => {
                             this.data.editDocument(this.sideBar.state.postId, post.title, post.content).then(documentStructure => {
                                 this.sideBar.setState({ list: documentStructure });
-                                console.log(documentStructure)
+                                this.data.getDocumentContent(this.sideBar.state.postId).then(content => {
+                                    this.editor.setState(content)
+                                })
                             });
                         }, 1000)
                     }

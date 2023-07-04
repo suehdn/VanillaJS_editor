@@ -46,7 +46,6 @@ export default class SideBar {
     }
 
     render() {
-        console.log('sidebar render')
         this.$page.className = 'sidebar__aside--flex'
         this.$page.appendChild(this.$filePage);
         this.$target.appendChild(this.$page);
