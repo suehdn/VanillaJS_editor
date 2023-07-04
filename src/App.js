@@ -6,9 +6,9 @@ import { initRouter } from './router.js';
 export default class App {
     constructor({ $target }) {
         this.$target = $target;
-        const data = new Data();
+        this.data = new Data();
 
-        data.getDocumentStructure().then(x => {
+        this.data.getDocumentStructure().then(x => {
             this.editor = new Editor({
                 $target: this.$target,
                 initialState: {},
@@ -19,7 +19,7 @@ export default class App {
                     if (this.sideBar.state.postId) {
                         this.timer = setTimeout(async () => {
                             this.data.editDocument(this.sideBar.state.postId, post.title, post.content);
-                            this.render();
+                            this.sideBar.render();
                         }, 1000)
                     }
                 }
