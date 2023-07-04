@@ -39,4 +39,14 @@ export default class Data {
         })
         return addDocumentStructure;
     }
+
+    editDocument = async (id, title, content) => {
+        const editDocument = await request(`/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                title: title,
+                content: content
+            })
+        })
+    }
 } 

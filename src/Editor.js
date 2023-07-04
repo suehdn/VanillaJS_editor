@@ -1,5 +1,3 @@
-
-
 export default class Editor {
     constructor({ $target, initialstate = { title: null, content: null }, onEditing }) {
         console.log(initialstate)
@@ -9,16 +7,15 @@ export default class Editor {
         this.timer = null;
         this.postLocalSavekey = '';
         this.onEditing = onEditing;
-        console.log(typeof this.onEditing)
-        console.log(this.state)
         this.makeEditor();
         this.eventAdd();
     }
 
-    setState = (nextState) => {
+    setState = (nextState, render = true) => {
         this.state = nextState;
-        console.log(this.state)
-        this.render();
+        if (render) {
+            this.render();
+        }
     }
 
     render() {
@@ -62,14 +59,16 @@ export default class Editor {
                 ...this.state,
                 title: e.target.value
             }
-            this.onEditing(nextState);
+            this.setState(nextState, false);
+            this.onEditing(this.state);
         })
         this.$editor.querySelector('[name=content]').addEventListener('input', (e) => {
             const nextState = {
                 ...this.state,
                 content: e.target.innerHTML
             }
-            this.onEditing(nextState);
+            this.setState(nextState, false);
+            this.onEditing(this.state);
         })
     }
 }
