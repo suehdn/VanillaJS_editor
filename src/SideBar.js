@@ -115,7 +115,8 @@ export default class SideBar {
                 else if ($add) {
                     const { id } = $add.dataset;
                     await this.data.addDocumentStructure(id).then(x => {
-                        // push(`/posts/${x.id}`);
+                        console.log(x)
+                        push(`/posts/${x.id}`);
                     });
                     this.data.getDocumentStructure().then(x => {
                         this.setState({ list: x });
