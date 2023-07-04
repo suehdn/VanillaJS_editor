@@ -2,6 +2,7 @@
 // 1. sidebar의 file name과 추가 삭제버튼 위치 css flex로 변경하기 
 // 2. 페이지 추가,삭제하면 열려있던 토글이 닫힌채로 전부 렌더링 되는 현상 발생.. -> 어떻게 해결?
 // 3. 페이지가 많아지면 스크롤도 넣어야할듯
+// 4. 새로운 루트페이지 추가했을때 그 화면으로 넘어가기
 
 import { push } from './router.js';
 import Data from './data.js';
@@ -15,11 +16,13 @@ export default class SideBar {
         this.$filePage = document.createElement('section');
         this.$namePage.className = 'sidebar__section--name';
         this.$namePage.innerHTML = 'Hyesu님의 Notion🥳'
+        this.$filePage.className = 'sidebar__section--file';
         this.$page.appendChild(this.$namePage);
         this.$target = $target;
         this.data = new Data();
         this.postLocalSavekey = '';
         this.editorsetState = editorsetState;
+        // this.selectedFile;
         this.timer = null;
         this.state = initialState;
         this.render();
@@ -98,6 +101,9 @@ export default class SideBar {
                 const { id } = $summary.dataset;
                 this.setState({ postId: id })
                 push(`/posts/${id}`);
+                // this.highlight($summary);
+                // console.log($summary)
+                // this.setState({});
             } else {
                 if ($delete) {
                     const { id } = $delete.dataset;
@@ -118,4 +124,15 @@ export default class SideBar {
             }
         }
     }
+
+    // highlight(file) {
+    //     if (this.selectedFile) {
+    //         this.selectedFile.style.fontWeight = "normal";
+    //         // this.selectedFile.className = "filePage__text--page-summary"
+    //     }
+    //     this.selectedFile = file;
+    //     // this.selectedFile.className = "filePage__text--page-bold"
+    //     this.selectedFile.style.fontWeight = "bold"
+    //     console.log("gudrhkd")
+    // }
 }

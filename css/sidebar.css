@@ -34,7 +34,12 @@ details>span {
 
 .filePage__text--page-summary {
     display: inline;
+    font-weight: normal;
+}
 
+.filePage__text--page-bold {
+    display: inline;
+    font-weight: bold;
 }
 
 .filePage__text--white-space {
@@ -66,6 +71,10 @@ details>span {
 
 .filePage__root-add--add {
     margin: auto;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 25px;
+    color: gray;
 }
 
 .sidebar__aside--flex {
@@ -78,9 +87,18 @@ details>span {
 }
 
 .sidebar__section--name {
-    font-size: 30px;
+    font-size: 40px;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.sidebar__section--file {
+    width: 90%;
+    font-size: 20px;
+    color: rgba(55, 55, 55, 0.841);
+    font-weight: normal;
+    margin-left: auto;
+    margin-right: auto;
 }
