@@ -1,5 +1,6 @@
 import Data from './data.js';
 import SideBar from './SideBar.js';
+import Editor from './Editor.js';
 import { initRouter } from './router.js';
 
 export default class App {
@@ -11,7 +12,23 @@ export default class App {
             this.sideBar = new SideBar({
                 $target: this.$target,
                 initialState: { list: x },
+                editorsetState: this.editor.setState
             })
+        })
+        this.editor = new Editor({
+            $target: this.$target,
+            initialState: {},
+            onEditing: (post) => {
+                if (this.timer !== null) {
+                    clearTimeout(this.timer);
+                }
+                if (this.sideBar.state.postId) {
+                    this.timer = setTimeout(async () => {
+                        this.data.editDocument(this.sideBar.state.postId, post.title, post.content);
+                        this.render();
+                    }, 1000)
+                }
+            }
         })
 
 

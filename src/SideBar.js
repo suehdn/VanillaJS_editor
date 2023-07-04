@@ -5,12 +5,11 @@
 
 import { push } from './router.js';
 import Data from './data.js';
-import Editor from './Editor.js';
 /**
  * SideBar를 만들어주는 컴포넌트
  */
 export default class SideBar {
-    constructor({ $target, initialState }) {
+    constructor({ $target, initialState, editorsetState }) {
         this.$page = document.createElement('aside');
         this.$namePage = document.createElement('section');
         this.$filePage = document.createElement('section');
@@ -20,23 +19,9 @@ export default class SideBar {
         this.$target = $target;
         this.data = new Data();
         this.postLocalSavekey = '';
+        this.editorsetState = editorsetState;
         this.timer = null;
         this.state = initialState;
-        this.editor = new Editor({
-            $target: this.$target,
-            initialState: {},
-            onEditing: (post) => {
-                if (this.timer !== null) {
-                    clearTimeout(this.timer);
-                }
-                if (this.state.postId) {
-                    this.timer = setTimeout(async () => {
-                        this.data.editDocument(this.state.postId, post.title, post.content);
-                        this.render();
-                    }, 1000)
-                }
-            }
-        })
         this.render();
         this.eventAdd();
     }
@@ -49,7 +34,7 @@ export default class SideBar {
                     postId: nextState.postId
                 };
                 this.postLocalSavekey = `temp-post-${this.state.postId}`;
-                this.editor.setState(x);
+                this.editorsetState(x);
             })
         } else {
             this.state = {
