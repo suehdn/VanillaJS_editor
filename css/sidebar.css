@@ -12,24 +12,29 @@ details {
 details>summary {
     padding-top: 2px;
     padding-bottom: 2px;
-    margin-right: -10px;
+    margin-right: 0px;
     border: none;
     cursor: pointer;
     list-style: none;
 }
 
-details>summary::marker {
-    content: '👉';
+/* details>summary::marker {
+
     font-size: 12px;
 }
 
 details[open]>summary::marker {
-    content: '👇';
+
     font-size: 12px;
-}
+} */
 
 details>span {
     margin: 0;
+}
+
+.filePage__page {
+    height: 70%;
+    overflow: auto;
 }
 
 .filePage__text--page-summary {
@@ -39,11 +44,13 @@ details>span {
 
 
 .filePage__summary {
+    /* width: 90%; */
     background-color: rgb(254, 231, 246);
 }
 
 .filePage__summary--highlight {
-    background-color: rgb(196, 179, 190);
+    /* width: 90%; */
+    background-color: rgb(238, 201, 222);
 }
 
 .filePage__text--white-space {
@@ -78,7 +85,7 @@ details>span {
     margin-bottom: 20px;
     text-align: center;
     font-size: 25px;
-    color: gray;
+    color: rgba(55, 55, 55, 0.841);
 }
 
 .sidebar__aside--flex {
@@ -87,7 +94,6 @@ details>span {
     order: 1;
     flex-direction: column;
     background-color: rgb(254, 231, 246);
-    /* border: 1px solid blueviolet; */
 }
 
 .sidebar__section--name {
@@ -100,6 +106,7 @@ details>span {
 
 .sidebar__section--file {
     width: 90%;
+    height: 80%;
     font-size: 20px;
     color: rgba(55, 55, 55, 0.841);
     font-weight: normal;

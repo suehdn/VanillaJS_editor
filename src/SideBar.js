@@ -3,10 +3,9 @@
 // 2. 페이지 추가,삭제하면 열려있던 토글이 닫힌채로 전부 렌더링 되는 현상 발생.. -> 어떻게 해결?
 // 3. 페이지가 많아지면 스크롤도 넣어야할듯
 // 4. 뒤로가기 누르면 렌더링 다시...
-// 5. render에서 class가 덮어씌워지는것 같다..
+
 // 6. 검색기능 있으면 좋을듯(이전에 구현했던 자동완성기능 응용하면 될것같다!) ****
 // 7. 스타일 지정.. 하면 좋은데...
-// 8. 하이라이트 하기..
 
 import { push } from './router.js';
 import Data from './data.js';
@@ -59,10 +58,11 @@ export default class SideBar {
 
         this.$filePage.innerHTML = `
             <div class = 'filePage__root-add--add'>         
-                <span>새로운 루트 페이지 추가</span>
-                <button class = "filePage__button--add" data-id="null">➕</button>
+                <button class = "filePage__button--add" data-id="null"><span class = 'filePage__root-add--add'>새로운 페이지 추가 <img src="../png/square_plus_icon_24.png"></span></button>
             </div>
-            ${this.printFile(this.state.list)}
+            <div class = "filePage__page">
+                ${this.printFile(this.state.list)}
+            </div>
         `
     }
 
@@ -75,17 +75,17 @@ export default class SideBar {
         if (parent.length) {
             parent.map(child => {
                 detail += `
-                <details>
-                    <summary>
-                        <div class = ${this.selectedFileId == child.id ? "filePage__summary--highlight" : "filePage__summary"}>
-                            <span class = "filePage__text--page-summary"} data-id=${child.id}>&nbsp;&nbsp;${child.title}</span>
-                            <div class = "filePage__button">
-                                <button class = "filePage__button--delete" data-id=${child.id}>🗑️</button>
-                                <button class = "filePage__button--add" data-id=${child.id}>➕</button>
+                    <details>
+                        <summary>
+                            <div class = ${this.selectedFileId == child.id ? "filePage__summary--highlight" : "filePage__summary"}>
+                                <img src="../png/file_text_icon.png">
+                                <span class = "filePage__text--page-summary" data-id=${child.id}>&nbsp;${child.title}</span>
+                                <div class = "filePage__button">
+                                    <button class = "filePage__button--delete" data-id=${child.id}><img src="../png/trash_2_icon.png"></button>
+                                    <button class = "filePage__button--add" data-id=${child.id}><img src="../png/plus_add_icon.png"></button>
+                                </div>
                             </div>
-                        </div>
-                    </summary>
-                    
+                        </summary>
                 `
                 detail = this.printFile(child.documents, detail)
                 detail += `
