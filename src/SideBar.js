@@ -2,6 +2,11 @@
 // 1. sidebar의 file name과 추가 삭제버튼 위치 css flex로 변경하기 
 // 2. 페이지 추가,삭제하면 열려있던 토글이 닫힌채로 전부 렌더링 되는 현상 발생.. -> 어떻게 해결?
 // 3. 페이지가 많아지면 스크롤도 넣어야할듯
+// 4. 뒤로가기 누르면 렌더링 다시...
+// 5. render에서 class가 덮어씌워지는것 같다..
+// 6. 검색기능 있으면 좋을듯(이전에 구현했던 자동완성기능 응용하면 될것같다!) ****
+// 7. 스타일 지정.. 하면 좋은데...
+// 8. 하이라이트 하기..
 
 import { push } from './router.js';
 import Data from './data.js';
@@ -21,7 +26,7 @@ export default class SideBar {
         this.data = new Data();
         this.postLocalSavekey = '';
         this.editorsetState = editorsetState;
-        // this.selectedFile;
+        this.selectedFileId;
         this.timer = null;
         this.state = initialState;
         this.render();
@@ -72,12 +77,15 @@ export default class SideBar {
                 detail += `
                 <details>
                     <summary>
-                        <span class = "filePage__text--page-summary" data-id=${child.id}>${child.title}</span>
-                        <div class = "filePage__button">
-                            <button class = "filePage__button--delete" data-id=${child.id}>🗑️</button>
-                            <button class = "filePage__button--add" data-id=${child.id}>➕</button>
+                        <div class = ${this.selectedFileId == child.id ? "filePage__summary--highlight" : "filePage__summary"}>
+                            <span class = "filePage__text--page-summary"} data-id=${child.id}>&nbsp;&nbsp;${child.title}</span>
+                            <div class = "filePage__button">
+                                <button class = "filePage__button--delete" data-id=${child.id}>🗑️</button>
+                                <button class = "filePage__button--add" data-id=${child.id}>➕</button>
+                            </div>
                         </div>
                     </summary>
+                    
                 `
                 detail = this.printFile(child.documents, detail)
                 detail += `
@@ -100,9 +108,8 @@ export default class SideBar {
                 const { id } = $summary.dataset;
                 this.setState({ postId: id })
                 push(`/posts/${id}`);
-                // this.highlight($summary);
-                // console.log($summary)
-                // this.setState({});
+                this.highlight(id);
+                this.setState({});
             } else {
                 if ($delete) {
                     const { id } = $delete.dataset;
@@ -125,14 +132,10 @@ export default class SideBar {
         }
     }
 
-    // highlight(file) {
-    //     if (this.selectedFile) {
-    //         this.selectedFile.style.fontWeight = "normal";
-    //         // this.selectedFile.className = "filePage__text--page-summary"
-    //     }
-    //     this.selectedFile = file;
-    //     // this.selectedFile.className = "filePage__text--page-bold"
-    //     this.selectedFile.style.fontWeight = "bold"
-    //     console.log("gudrhkd")
-    // }
+    highlight(id) {
+        if (this.selectedFileId) {
+            this.selectedFileId = id;
+        }
+        this.selectedFileId = id;
+    }
 }

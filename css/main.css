@@ -4,5 +4,5 @@ main {
     flex-direction: row;
     background-color: white;
     height: 100%;
-    border: 1px solid antiquewhite;
+    border: 1px solid rgb(254, 231, 246);
 }

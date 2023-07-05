@@ -37,9 +37,13 @@ details>span {
     font-weight: normal;
 }
 
-.filePage__text--page-bold {
-    display: inline;
-    font-weight: bold;
+
+.filePage__summary {
+    background-color: rgb(254, 231, 246);
+}
+
+.filePage__summary--highlight {
+    background-color: rgb(196, 179, 190);
 }
 
 .filePage__text--white-space {
@@ -82,7 +86,7 @@ details>span {
     display: flex;
     order: 1;
     flex-direction: column;
-    background-color: antiquewhite;
+    background-color: rgb(254, 231, 246);
     /* border: 1px solid blueviolet; */
 }
 
