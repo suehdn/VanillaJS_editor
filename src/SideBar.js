@@ -9,6 +9,7 @@
 
 import { push } from './router.js';
 import Data from './data.js';
+import { setItem, getItem } from './storage.js';
 /**
  * SideBar를 만들어주는 컴포넌트
  */
@@ -30,6 +31,9 @@ export default class SideBar {
         this.state = initialState;
         this.render();
         this.eventAdd();
+        this.detailMap = new Map();
+        this.detail = getItem('detail', ({ detail: [...window.detail].map(x => (({ id: x.dataset.id, opend: x.open }))) })).detail;
+        this.detail.map(x => { this.detailMap.set(x.id, x.opend) });
     }
 
     setState = (nextState) => {
@@ -50,7 +54,6 @@ export default class SideBar {
         }
         this.render();
     }
-
     render() {
         this.$page.className = 'sidebar__aside--flex'
         this.$page.appendChild(this.$filePage);
@@ -72,10 +75,14 @@ export default class SideBar {
      * @param {*} detail 파일 토글버튼 생성 HTML
      */
     printFile(parent, detail = '') {
+        let opend = false;
         if (parent.length) {
-            parent.map(child => {
+            parent.map((child) => {
+                if (this.detailMap !== undefined) {
+                    opend = this.detailMap.get(String(child.id));
+                }
                 detail += `
-                    <details>
+                    <details id = "detail" class = "detail" data-id=${child.id} ${opend ? 'open' : ''}>
                         <summary>
                             <div class = ${this.selectedFileId == child.id ? "filePage__summary--highlight" : "filePage__summary"}>
                                 <img src="../png/file_text_icon.png">
@@ -101,6 +108,7 @@ export default class SideBar {
      */
     eventAdd() {
         this.$filePage.onclick = async (e) => {
+            const $detail = e.target.closest('.detail');
             const $summary = e.target.closest('.filePage__text--page-summary');
             const $delete = e.target.closest('.filePage__button--delete');
             const $add = e.target.closest('.filePage__button--add');
@@ -110,6 +118,20 @@ export default class SideBar {
                 push(`/posts/${id}`);
                 this.highlight(id);
                 this.setState({});
+            } else if ($detail) {
+                const { id } = $detail.dataset;
+                this.detail.map((x, i) => {
+                    if (x.id === id) {
+                        if (window.detail[i].open) {
+                            this.detail[i]['opend'] = false;
+                        } else {
+                            this.detail[i]['opend'] = true;
+                        }
+                    }
+                })
+                setItem('detail', {
+                    detail: this.detail,
+                })
             } else {
                 if ($delete) {
                     const { id } = $delete.dataset;

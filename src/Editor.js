@@ -1,6 +1,6 @@
 export default class Editor {
     constructor({ $target, initialstate = { title: null, content: null }, onEditing }) {
-        console.log(initialstate)
+        // console.log(initialstate)
         this.$editor = document.createElement('div');
         this.$target = $target;
         this.state = initialstate;
@@ -19,12 +19,12 @@ export default class Editor {
     }
 
     render() {
-        console.log("render")
+        // console.log("render")
         if (this.state.content) {
-            console.log(this.state.content)
-            console.log(this.state.content.replace(/div/g, 'p'))
+            // console.log(this.state.content)
+            // console.log(this.state.content.replace(/div/g, 'p'))
             const richContent = this.state.content.replace(/div/g, 'p').split('<p>').map(line => {
-                console.log(line)
+                // console.log(line)
                 if (line) {
                     if (line.indexOf('<br>') === 0) {
                         return '<br>';
@@ -49,7 +49,7 @@ export default class Editor {
                 content: richContent
             }
             this.setState(nextState, false);
-            console.log("richContent:", richContent)
+            // console.log("richContent:", richContent)
         }
         this.makeEditor();
     }
@@ -98,7 +98,7 @@ export default class Editor {
                 content: e.target.innerHTML
             }
             this.setState(nextState, false);
-            console.log(this.state)
+            // console.log(this.state)
             this.onEditing(this.state);
         })
     }
