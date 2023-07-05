@@ -61,7 +61,9 @@ export default class Editor {
 
             this.$editor.innerHTML = `
                 <input name="title" type="text" placeholder = "제목 없음" class = "editor__input" value = "${this.state.title}"/>
-                <div name="content" contentEditable="true" placeholedr = "내용을 입력하세요." class = "editor__content">${this.state.content}</div>
+                <div class = "editor__input--area">
+                    <div name="content" contentEditable="true" placeholedr = "내용을 입력하세요." class = "editor__content">${this.state.content}</div>
+                </div>
             `
             this.eventAdd();
         } else {
