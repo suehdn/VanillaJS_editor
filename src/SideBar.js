@@ -118,7 +118,25 @@ export default class SideBar {
                 push(`/posts/${id}`);
                 this.highlight(id);
                 this.setState({});
-            } else if ($detail) {
+            }
+            else if ($delete) {
+                const { id } = $delete.dataset;
+                await this.data.deleteDocumentStructure(id);
+                this.data.getDocumentStructure().then(x => {
+                    this.setState({ list: x });
+                })
+            }
+            else if ($add) {
+                const { id } = $add.dataset;
+                await this.data.addDocumentStructure(id).then(x => {
+                    console.log(x)
+                    push(`/posts/${x.id}`);
+                });
+                this.data.getDocumentStructure().then(x => {
+                    this.setState({ list: x });
+                })
+            }
+            else if ($detail) {
                 const { id } = $detail.dataset;
                 this.detail.map((x, i) => {
                     if (x.id === id) {
@@ -132,24 +150,6 @@ export default class SideBar {
                 setItem('detail', {
                     detail: this.detail,
                 })
-            } else {
-                if ($delete) {
-                    const { id } = $delete.dataset;
-                    await this.data.deleteDocumentStructure(id);
-                    this.data.getDocumentStructure().then(x => {
-                        this.setState({ list: x });
-                    })
-                }
-                else if ($add) {
-                    const { id } = $add.dataset;
-                    await this.data.addDocumentStructure(id).then(x => {
-                        console.log(x)
-                        push(`/posts/${x.id}`);
-                    });
-                    this.data.getDocumentStructure().then(x => {
-                        this.setState({ list: x });
-                    })
-                }
             }
         }
     }
