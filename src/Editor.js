@@ -59,7 +59,7 @@ export default class Editor {
      *  문서 편집기를 만드는 함수
      */
     makeEditor() {
-        if (this.state.title) {
+        if (this.state.id) {
             this.$editor.className = 'editor__div--flex'
             this.$target.appendChild(this.$editor);
 
