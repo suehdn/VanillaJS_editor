@@ -125,6 +125,8 @@ export default class SideBar {
                 this.data.getDocumentStructure().then(x => {
                     this.setState({ list: x });
                 })
+                this.detail = { detail: [...window.detail].map(x => (({ id: x.dataset.id, opend: x.open }))) }.detail;
+                this.detail.map(x => { this.detailMap.set(x.id, x.opend) });
             }
             else if ($add) {
                 const { id } = $add.dataset;
@@ -135,6 +137,8 @@ export default class SideBar {
                 this.data.getDocumentStructure().then(x => {
                     this.setState({ list: x });
                 })
+                this.detail = { detail: [...window.detail].map(x => (({ id: x.dataset.id, opend: x.open }))) }.detail;
+                this.detail.map(x => { this.detailMap.set(x.id, x.opend) });
             }
             else if ($detail) {
                 const { id } = $detail.dataset;
