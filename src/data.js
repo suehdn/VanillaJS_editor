@@ -41,6 +41,9 @@ export default class Data {
     }
 
     editDocument = async (id, title, content) => {
+        if (!title) {
+            title = "제목이 삭제됨"
+        }
         const editDocument = await request(`/${id}`, {
             method: 'PUT',
             body: JSON.stringify({

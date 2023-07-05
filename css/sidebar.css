@@ -4,9 +4,9 @@
 } */
 
 details {
-    display: inline;
     width: 95%;
     margin-left: 5%;
+    margin-bottom: -8%;
 }
 
 details>summary {
@@ -38,7 +38,6 @@ details>span {
 }
 
 .filePage__text--page-summary {
-    display: inline;
     font-weight: normal;
 }
 
@@ -63,7 +62,6 @@ details>span {
 }
 
 .filePage__button {
-    display: inline;
     float: right;
     margin-bottom: -10px;
 }
