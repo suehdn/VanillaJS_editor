@@ -1,11 +1,12 @@
 //해야할 작업
 // 1. sidebar의 file name과 추가 삭제버튼 위치 css flex로 변경하기 
 // 2. 페이지 추가,삭제하면 열려있던 토글이 닫힌채로 전부 렌더링 되는 현상 발생.. -> 어떻게 해결?
-
+// 3. 전부 삭제했을 때 페이지 3000/ 으로 이동
 // 4. 뒤로가기 누르면 렌더링 다시...
 // 5. 페이지 안에 하위 페이지 넣기
 // 6. 검색기능 있으면 좋을듯(이전에 구현했던 자동완성기능 응용하면 될것같다!) ****
 // 7. 스타일 지정.. 하면 좋은데...
+
 
 import { push } from './router.js';
 import Data from './data.js';
@@ -32,7 +33,10 @@ export default class SideBar {
         this.render();
         this.eventAdd();
         this.detailMap = new Map();
-        this.detail = getItem('detail', ({ detail: [...window.detail].map(x => (({ id: x.dataset.id, opend: x.open }))) })).detail;
+        console.log(window.detail)
+        this.detail = getItem('detail', (window.detail ?
+            window.detail.length ? { detail: [...window.detail].map(x => (({ id: x.dataset.id, opend: x.open }))) } : { detail: ({ id: window.detail.dataset.id, opend: window.detail.open }) }
+            : { detail: null })).detail;
         this.detail.map(x => { this.detailMap.set(x.id, x.opend) });
     }
 
@@ -124,9 +128,9 @@ export default class SideBar {
                 await this.data.deleteDocumentStructure(id);
                 this.data.getDocumentStructure().then(x => {
                     this.setState({ list: x });
+                    this.detail = { detail: [...window.detail].map(x => (({ id: x.dataset.id, opend: x.open }))) }.detail;
+                    this.detail.map(x => { this.detailMap.set(x.id, x.opend) });
                 })
-                this.detail = { detail: [...window.detail].map(x => (({ id: x.dataset.id, opend: x.open }))) }.detail;
-                this.detail.map(x => { this.detailMap.set(x.id, x.opend) });
             }
             else if ($add) {
                 const { id } = $add.dataset;
@@ -134,11 +138,14 @@ export default class SideBar {
                     console.log(x)
                     push(`/posts/${x.id}`);
                 });
-                this.data.getDocumentStructure().then(x => {
+                await this.data.getDocumentStructure().then(x => {
                     this.setState({ list: x });
+                    console.log(window.detail)
+                    this.detail = { detail: [...window.detail].map(x => (({ id: x.dataset.id, opend: x.open }))) }.detail;
+                    console.log(this.detail)
+                    this.detail.map(x => { this.detailMap.set(x.id, x.opend) });
                 })
-                this.detail = { detail: [...window.detail].map(x => (({ id: x.dataset.id, opend: x.open }))) }.detail;
-                this.detail.map(x => { this.detailMap.set(x.id, x.opend) });
+
             }
             else if ($detail) {
                 const { id } = $detail.dataset;
@@ -154,6 +161,7 @@ export default class SideBar {
                 setItem('detail', {
                     detail: this.detail,
                 })
+                console.log(this.detail)
             }
         }
     }
