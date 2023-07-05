@@ -20,24 +20,30 @@ export default class Editor {
 
     render() {
         console.log("render")
-
         if (this.state.content) {
             console.log(this.state.content)
-            const richContent = this.state.content.split('<div>').map(enter => {
-
-                let content = enter.split('<br>').map(line => {
-                    if (line.indexOf('# ') === 0) {
-                        return `<h1>${line.substr(2)}</h1>`
-                    } else if (line.indexOf("## ") === 0) {
-                        return `<h2>${line.substr(3)}</h2>`
+            console.log(this.state.content.replace(/div/g, 'p'))
+            const richContent = this.state.content.replace(/div/g, 'p').split('<p>').map(line => {
+                console.log(line)
+                if (line) {
+                    if (line.indexOf('<br>') === 0) {
+                        return '<br>';
+                    } else if (line.indexOf('# ') === 0) {
+                        return `<h1>${line.substring(2, line.length - 4)}</h1>`
+                    } else if (line.indexOf('## ') === 0) {
+                        return `<h2>${line.substring(3, line.length - 4)}</h2>`
                     } else if (line.indexOf('### ') === 0) {
-                        return `<h3>${line.substr(4)}</h3>`
+                        return `<h3>${line.substring(4, line.length - 4)}</h3>`
                     }
-                    return line
-                })
-                console.log("content", content)
-                return content.join('');
-            }).join('<br>').replace(/<\/div>/g, '');
+                    else {
+                        if (line.includes('</p>')) {
+                            return `<p>${line}`;
+                        } else {
+                            return `<p>${line}</p>`;
+                        }
+                    }
+                }
+            }).join("");
             const nextState = {
                 ...this.state,
                 content: richContent
@@ -45,8 +51,6 @@ export default class Editor {
             this.setState(nextState, false);
             console.log("richContent:", richContent)
         }
-
-
         this.makeEditor();
     }
 
