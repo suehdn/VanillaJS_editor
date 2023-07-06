@@ -17,7 +17,7 @@ export default class SideBar {
         this.data = new Data();
         this.postLocalSavekey = '';
         this.editorsetState = editorsetState;
-        this.selectedFileId;
+        this.selectedFileId = getItem('highlight', ({ id: '' })).id;
         this.timer = null;
         this.state = initialState;
         this.render();
@@ -185,5 +185,8 @@ export default class SideBar {
             this.selectedFileId = id;
         }
         this.selectedFileId = id;
+        setItem('highlight', {
+            id: id
+        })
     }
 }
