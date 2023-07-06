@@ -135,6 +135,7 @@ export default class SideBar {
                 const { id } = $add.dataset;
                 await this.data.addDocumentStructure(id).then(x => {
                     push(`/posts/${x.id}`);
+                    this.highlight(x.id);
                 });
                 await this.data.getDocumentStructure().then(x => {
                     this.setState({ list: x });
@@ -144,6 +145,7 @@ export default class SideBar {
                     } else {
                         this.detailMap.set(this.detail.id, this.detail.opend);
                     }
+
                     setItem('detail', {
                         detail: this.detail,
                     })
