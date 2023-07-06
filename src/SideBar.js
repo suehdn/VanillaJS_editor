@@ -1,6 +1,6 @@
 //해야할 작업
 // 1. sidebar의 file name과 추가 삭제버튼 위치 css flex로 변경하기 
-// 2. 페이지 추가,삭제하면 열려있던 토글이 닫힌채로 전부 렌더링 되는 현상 발생.. -> 어떻게 해결?
+
 // 3. 전부 삭제했을 때 페이지 3000/ 으로 이동
 // 4. 뒤로가기 누르면 렌더링 다시...
 // 5. 페이지 안에 하위 페이지 넣기
@@ -33,11 +33,19 @@ export default class SideBar {
         this.render();
         this.eventAdd();
         this.detailMap = new Map();
-        console.log(window.detail)
-        this.detail = getItem('detail', (window.detail ?
+        this.detail = getItem('detail', this.setDetail()).detail;
+        if (this.detail) {
+            if (this.detail.length) {
+                this.detail.map(x => { this.detailMap.set(x.id, x.opend) });
+            } else {
+                this.detailMap.set(this.detail.id, this.detail.opend);
+            }
+        }
+    }
+    setDetail() {
+        return (window.detail ?
             window.detail.length ? { detail: [...window.detail].map(x => (({ id: x.dataset.id, opend: x.open }))) } : { detail: ({ id: window.detail.dataset.id, opend: window.detail.open }) }
-            : { detail: null })).detail;
-        this.detail.map(x => { this.detailMap.set(x.id, x.opend) });
+            : { detail: null });
     }
 
     setState = (nextState) => {
@@ -128,40 +136,56 @@ export default class SideBar {
                 await this.data.deleteDocumentStructure(id);
                 this.data.getDocumentStructure().then(x => {
                     this.setState({ list: x });
-                    this.detail = { detail: [...window.detail].map(x => (({ id: x.dataset.id, opend: x.open }))) }.detail;
-                    this.detail.map(x => { this.detailMap.set(x.id, x.opend) });
+                    this.detail = this.setDetail().detail;
+                    this.detailMap.delete(id);
+                    setItem('detail', {
+                        detail: this.detail,
+                    })
                 })
+
             }
             else if ($add) {
                 const { id } = $add.dataset;
                 await this.data.addDocumentStructure(id).then(x => {
-                    console.log(x)
                     push(`/posts/${x.id}`);
                 });
                 await this.data.getDocumentStructure().then(x => {
                     this.setState({ list: x });
-                    console.log(window.detail)
-                    this.detail = { detail: [...window.detail].map(x => (({ id: x.dataset.id, opend: x.open }))) }.detail;
-                    console.log(this.detail)
-                    this.detail.map(x => { this.detailMap.set(x.id, x.opend) });
+                    this.detail = this.setDetail().detail;
+                    if (this.detail.length) {
+                        this.detail.map(x => { this.detailMap.set(x.id, x.opend) });
+                    } else {
+                        this.detailMap.set(this.detail.id, this.detail.opend);
+                    }
+                    setItem('detail', {
+                        detail: this.detail,
+                    })
                 })
-
             }
             else if ($detail) {
                 const { id } = $detail.dataset;
-                this.detail.map((x, i) => {
-                    if (x.id === id) {
-                        if (window.detail[i].open) {
-                            this.detail[i]['opend'] = false;
-                        } else {
-                            this.detail[i]['opend'] = true;
+                if (this.detail.length) {
+                    this.detail.map((x, i) => {
+                        if (x.id === id) {
+                            if (window.detail[i].open) {
+                                this.detail[i]['opend'] = false;
+                            } else {
+                                this.detail[i]['opend'] = true;
+                            }
                         }
+                        this.detailMap.set(x.id, x.opend);
+                    })
+                } else {
+                    if (window.detail.open) {
+                        this.detail['opend'] = false;
+                    } else {
+                        this.detail['opend'] = true;
                     }
-                })
+                    this.detailMap.set(this.detail.id, this.detail.opend);
+                }
                 setItem('detail', {
                     detail: this.detail,
                 })
-                console.log(this.detail)
             }
         }
     }
