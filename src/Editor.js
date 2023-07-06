@@ -1,6 +1,7 @@
+import { push } from './router.js';
+
 export default class Editor {
     constructor({ $target, initialstate = { title: null, content: null }, onEditing }) {
-        // console.log(initialstate)
         this.$editor = document.createElement('div');
         this.$target = $target;
         this.state = initialstate;
@@ -16,6 +17,7 @@ export default class Editor {
         if (render) {
             this.render();
         }
+        console.log(this.state.documents)
     }
 
     render() {
@@ -67,7 +69,9 @@ export default class Editor {
                 <input name="title" type="text" placeholder = "제목 없음" class = "editor__input" value = "${this.state.title}"/>
                 <div class = "editor__input--area">
                     <div name="content" contentEditable="true" placeholedr = "내용을 입력하세요." class = "editor__content">${this.state.content}</div>
+                    ${this.childPage(this.state.documents)}
                 </div>
+                
             `
             this.eventAdd();
         } else {
@@ -84,6 +88,15 @@ export default class Editor {
      * 문자를 입력했을 때 입력 받은 문자열을 this.state에 넣어주는 함수
      */
     eventAdd() {
+        this.$editor.onclick = (e) => {
+            const $childPage = e.target.closest('.childPage');
+
+
+            if ($childPage) {
+                const { id } = $childPage.dataset;
+                push(`/posts/${id}`);
+            }
+        }
         this.$editor.querySelector('[name=title]').addEventListener('keyup', (e) => {
             const nextState = {
                 ...this.state,
@@ -101,5 +114,20 @@ export default class Editor {
             // console.log(this.state)
             this.onEditing(this.state);
         })
+    }
+    /**
+     * 하위 문서 링크 추가하는 함수
+     */
+    childPage(child) {
+        let pageLink = '';
+        console.log(child)
+        child.forEach(element => {
+            console.log("ele", element)
+            pageLink += `<p class = "childPage"  data-id=${element.id}>
+            <img src="../png/file_text_icon.png">
+            <span class = "filePage__text--page-summary">&nbsp;${element.title}</span>
+            <p>`
+        });
+        return pageLink;
     }
 }
