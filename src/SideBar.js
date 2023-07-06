@@ -115,7 +115,7 @@ export default class SideBar {
             if ($summary) {
                 const { id } = $summary.dataset;
                 this.setState({ postId: id })
-                push(`/posts/${id}`);
+                push(`/documents/${id}`);
                 this.highlight(id);
                 this.setState({});
             }
@@ -134,7 +134,7 @@ export default class SideBar {
             else if ($add) {
                 const { id } = $add.dataset;
                 await this.data.addDocumentStructure(id).then(x => {
-                    push(`/posts/${x.id}`);
+                    push(`/documents/${x.id}`);
                     this.highlight(x.id);
                 });
                 await this.data.getDocumentStructure().then(x => {

@@ -39,7 +39,7 @@ export default class App {
 
     route = () => {
         const { pathname } = window.location;
-        if (pathname.indexOf('/posts/') === 0) {
+        if (pathname.indexOf('/documents/') === 0) {
             const [, , postId] = pathname.split('/');
             this.sideBar.setState({ postId: postId })
         }

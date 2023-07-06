@@ -79,7 +79,7 @@ export default class Editor {
             const $childPage = e.target.closest('.childPage');
             if ($childPage) {
                 const { id } = $childPage.dataset;
-                push(`/posts/${id}`);
+                push(`/documents/${id}`);
             }
         }
         this.$editor.querySelector('[name=title]').addEventListener('keyup', (e) => {
