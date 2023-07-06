@@ -1,0 +1,95 @@
+details {
+    width: 95%;
+    margin-left: 5%;
+    margin-bottom: -8%;
+}
+
+details>summary {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-right: 0px;
+    border: none;
+    cursor: pointer;
+    list-style: none;
+}
+
+details>span {
+    margin: 0;
+}
+
+.filePage__page {
+    height: 70%;
+    overflow: auto;
+}
+
+.filePage__text--page-summary {
+    font-weight: normal;
+}
+
+.filePage__summary {
+    background-color: rgb(254, 231, 246);
+}
+
+.filePage__summary--highlight {
+    background-color: rgb(238, 201, 222);
+}
+
+.filePage__text--white-space {
+    white-space: pre;
+}
+
+.filePage__text--empty {
+    color: grey;
+    font-size: 15px;
+}
+
+.filePage__button {
+    float: right;
+    margin-bottom: -10px;
+}
+
+.filePage__button--delete {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.filePage__button--add {
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    cursor: pointer;
+}
+
+.filePage__root-add--add {
+    margin: auto;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 25px;
+    color: rgba(55, 55, 55, 0.841);
+}
+
+.sidebar__aside--flex {
+    width: 20%;
+    display: flex;
+    order: 1;
+    flex-direction: column;
+    background-color: rgb(254, 231, 246);
+}
+
+.sidebar__section--name {
+    font-size: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.sidebar__section--file {
+    width: 90%;
+    height: 80%;
+    font-size: 20px;
+    color: rgba(55, 55, 55, 0.841);
+    font-weight: normal;
+    margin-left: auto;
+    margin-right: auto;
+}
