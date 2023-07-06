@@ -7,7 +7,6 @@ export default class App {
     constructor({ $target }) {
         this.$target = $target;
         this.data = new Data();
-
         this.data.getDocumentStructure().then(x => {
             this.editor = new Editor({
                 $target: this.$target,
@@ -40,7 +39,6 @@ export default class App {
 
     route = () => {
         const { pathname } = window.location;
-
         if (pathname.indexOf('/posts/') === 0) {
             const [, , postId] = pathname.split('/');
             this.sideBar.setState({ postId: postId })

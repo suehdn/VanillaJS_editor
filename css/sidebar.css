@@ -1,8 +1,3 @@
-/* details {
-    font: 16px "Open Sans", Calibri, sans-serif;
-    width: 620px;
-} */
-
 details {
     width: 95%;
     margin-left: 5%;
@@ -18,16 +13,6 @@ details>summary {
     list-style: none;
 }
 
-/* details>summary::marker {
-
-    font-size: 12px;
-}
-
-details[open]>summary::marker {
-
-    font-size: 12px;
-} */
-
 details>span {
     margin: 0;
 }
@@ -41,14 +26,11 @@ details>span {
     font-weight: normal;
 }
 
-
 .filePage__summary {
-    /* width: 90%; */
     background-color: rgb(254, 231, 246);
 }
 
 .filePage__summary--highlight {
-    /* width: 90%; */
     background-color: rgb(238, 201, 222);
 }
 

@@ -1,7 +1,6 @@
 export const API_END_POINT = "https://kdt-frontend.programmers.co.kr/documents"
 
 export const request = async (url = "", options = {}) => {
-    console.log(options)
     try {
         const res = await fetch(`${API_END_POINT}${url}`, {
             ...options,

@@ -1,13 +1,3 @@
-//해야할 작업
-// 1. sidebar의 file name과 추가 삭제버튼 위치 css flex로 변경하기 
-
-// 3. 전부 삭제했을 때 페이지 3000/ 으로 이동
-// 4. 뒤로가기 누르면 렌더링 다시...
-
-// 6. 검색기능 있으면 좋을듯(이전에 구현했던 자동완성기능 응용하면 될것같다!) ****
-// 7. 스타일 지정.. 하면 좋은데...
-
-
 import { push } from './router.js';
 import Data from './data.js';
 import { setItem, getItem } from './storage.js';
@@ -70,7 +60,6 @@ export default class SideBar {
         this.$page.className = 'sidebar__aside--flex'
         this.$page.appendChild(this.$filePage);
         this.$target.appendChild(this.$page);
-
         this.$filePage.innerHTML = `
             <div class = 'filePage__root-add--add'>         
                 <button class = "filePage__button--add" data-id="null"><span class = 'filePage__root-add--add'>새로운 페이지 추가 <img src="../png/square_plus_icon_24.png"></span></button>
@@ -80,7 +69,6 @@ export default class SideBar {
             </div>
         `
     }
-
     /**
      * 파일을 토글 버튼으로 하위항목까지 보여주도록 만들어주는 DOM을 생성하는 함수
      * @param {*} parent 상위 파일 객체 
@@ -142,7 +130,6 @@ export default class SideBar {
                         detail: this.detail,
                     })
                 })
-
             }
             else if ($add) {
                 const { id } = $add.dataset;
@@ -189,7 +176,10 @@ export default class SideBar {
             }
         }
     }
-
+    /**
+     * 선택한 페이지 highlight해주는 함수
+     * @param {*} id 
+     */
     highlight(id) {
         if (this.selectedFileId) {
             this.selectedFileId = id;
