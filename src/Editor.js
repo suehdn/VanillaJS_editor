@@ -92,7 +92,7 @@ export default class Editor {
             this.setState(nextState, false);
             this.onEditing(this.state);
         })
-        this.$editor.querySelector('[name=content]').addEventListener('input', (e) => {
+        this.$editor.querySelector('[name=content]').addEventListener('keyup', (e) => {
             const nextState = {
                 ...this.state,
                 content: e.target.innerHTML
