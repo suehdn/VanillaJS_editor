@@ -12,6 +12,7 @@
     "vite": "^5.3.4",
     "rollup": "^3.0.0",
     "@rollup/plugin-node-resolve": "^15.0.0",
-    "@rollup/plugin-commonjs": "^23.0.0"
+    "@rollup/plugin-commonjs": "^23.0.0",
+    "esbuild": "^0.14.0"
   }
 }
