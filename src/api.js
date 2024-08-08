@@ -1,11 +1,12 @@
 const API_END_POINT = import.meta.env.VITE_API_URL;
+const USERNAME = import.meta.env.VITE_USERNAME;
 
 export const request = async (url = "", options = {}) => {
   try {
     const res = await fetch(`${API_END_POINT}${url}`, {
       ...options,
       headers: {
-        "x-username": "hyesu",
+        "x-username": USERNAME,
         "Content-Type": "application/json",
       },
     });
