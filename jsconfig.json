@@ -16,7 +16,8 @@
 
     "baseUrl": "src",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@components": ["./components/index.js"]
     }
   },
   "include": ["src"]
