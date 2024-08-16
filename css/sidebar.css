@@ -1,95 +1,141 @@
-details {
-    width: 95%;
-    margin-left: 5%;
-    margin-bottom: -8%;
+/* details {
+  width: 95%;
+  margin-left: 5%;
+  margin-bottom: -8%;
+} */
+
+details > summary {
+  /* padding-top: 2px; */
+  /* padding-bottom: 2px; */
+  /* margin-right: 0px; */
+  /* border: none; */
+  cursor: pointer;
+  /* list-style: none; */
 }
 
-details>summary {
-    padding-top: 2px;
-    padding-bottom: 2px;
-    margin-right: 0px;
-    border: none;
-    cursor: pointer;
-    list-style: none;
-}
-
-details>span {
-    margin: 0;
-}
+/* details > span {
+  margin: 0;
+} */
 
 .filePage__page {
-    height: 70%;
-    overflow: auto;
+  /* height: 70%; */
+  max-height: 90vh;
+  overflow: auto;
 }
 
 .filePage__text--page-summary {
-    font-weight: normal;
+  font-weight: normal;
 }
 
 .filePage__summary {
-    background-color: rgb(254, 231, 246);
+  padding: 0.5rem;
+}
+.filePage__summary:hover {
+  background-color: #eeeeee;
 }
 
 .filePage__summary--highlight {
-    background-color: rgb(238, 201, 222);
+  background-color: var(--sidebar-selected);
 }
 
 .filePage__text--white-space {
-    white-space: pre;
+  white-space: pre;
 }
 
 .filePage__text--empty {
-    color: grey;
-    font-size: 15px;
+  color: grey;
+  font-size: 15px;
 }
 
 .filePage__button {
-    float: right;
-    margin-bottom: -10px;
+  float: right;
+  margin-bottom: -10px;
 }
 
 .filePage__button--delete {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 }
 
 .filePage__button--add {
-    background-color: rgba(0, 0, 0, 0);
-    border: none;
-    cursor: pointer;
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+  cursor: pointer;
 }
 
 .filePage__root-add--add {
-    margin: auto;
-    margin-bottom: 20px;
-    text-align: center;
-    font-size: 25px;
-    color: rgba(55, 55, 55, 0.841);
+  /* margin: auto; */
+  /* margin-bottom: 20px; */
+  /* text-align: center; */
+  /* font-size: 25px; */
+  color: var(--sidebar-font-color-200);
 }
 
 .sidebar__aside--flex {
-    width: 20%;
-    display: flex;
-    order: 1;
-    flex-direction: column;
-    background-color: rgb(254, 231, 246);
+  --sidebar-header-height: 10vh;
+  --sidebar-padding-top: 0.5rem;
+  --sidebar-padding-left: 1rem;
+  --sidebar-padding-depth: 0.5;
+  --sidebar-pages-detail-padding-top: calc(var(--sidebar-padding-top) / 2);
+  width: 15rem;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--sidebar-background);
 }
 
-.sidebar__section--name {
-    font-size: 40px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 50px;
-    margin-bottom: 50px;
+.sidebar__header {
+  font-weight: bold;
+  color: var(--sidebar-header-color);
+  padding: var(--sidebar-padding-top) var(--sidebar-padding-left);
+  height: var(--sidebar-header-height);
 }
 
-.sidebar__section--file {
-    width: 90%;
-    height: 80%;
-    font-size: 20px;
-    color: rgba(55, 55, 55, 0.841);
-    font-weight: normal;
-    margin-left: auto;
-    margin-right: auto;
+.sidebar__pages {
+  font-size: 1.25rem;
+  color: rgba(55, 55, 55, 0.841);
+  padding: 0 calc(var(--sidebar-padding-left) / 2);
+  font-weight: normal;
+  height: calc(100vh - var(--sidebar-header-height));
+  overflow-y: auto;
+  list-style-type: none;
+}
+
+.sidebar__pages--container :hover {
+  cursor: pointer;
+}
+
+.sidebar__pages--detail :hover {
+  background-color: var(--sidebar-selected);
+  border-radius: 0.25rem;
+}
+
+.sidebar__pages--detail-container {
+  padding: var(--sidebar-pages-detail-padding-top) 0
+    var(--sidebar-pages-detail-padding-top)
+    calc(
+      (var(--depth) + var(--sidebar-padding-depth)) *
+        var(--sidebar-padding-left)
+    );
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sidebar__pages--detail-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar__pages--empty {
+  color: var(--sidebar-font-color-200);
+  padding: var(--sidebar-pages-detail-padding-top) 0
+    var(--sidebar-pages-detail-padding-top)
+    calc(
+      (var(--depth) + var(--sidebar-padding-depth)) *
+        var(--sidebar-padding-left)
+    );
+  white-space: nowrap;
+  overflow: hidden;
 }

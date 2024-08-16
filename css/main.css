@@ -1,8 +1,21 @@
+:root {
+  --sidebar-background: #f7f7f5;
+  --sidebar-selected: #e6e6e6;
+  --sidebar-header-color: rgb(55, 53, 47);
+  --sidebar-font-color-200: #91918e;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
 main {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    background-color: white;
-    height: 100%;
-    border: 1px solid rgb(254, 231, 246);
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  background-color: white;
+  height: 100%;
 }
