@@ -117,7 +117,8 @@ details > summary {
 }
 
 .sidebar__pages--detail-container {
-  padding: var(--sidebar-pages-detail-padding-top) 0
+  padding: var(--sidebar-pages-detail-padding-top)
+    calc(var(--sidebar-padding-left) / 2)
     var(--sidebar-pages-detail-padding-top)
     calc(
       (var(--depth) + var(--sidebar-padding-depth)) *
@@ -145,6 +146,9 @@ details > summary {
 
 .sidebar__pages--detail-contents {
   display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .sidebar__pages--detail-title {
