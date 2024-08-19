@@ -109,7 +109,9 @@ export default class SideBarPages {
       const scrollPositon = this.$sideBarPages.scrollTop;
       const eventArea = document.querySelector(".sidebar__pages");
       if (scrollPositon > 0) {
-        eventArea.classList.add("scrolled");
+        if (!eventArea.classList.contains("scrolled")) {
+          eventArea.classList.add("scrolled");
+        }
       } else {
         eventArea.classList.remove("scrolled");
       }
