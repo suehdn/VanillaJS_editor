@@ -8,7 +8,6 @@ export default class SideBarPages {
     this.$target = $target;
     this.data = new Data();
     this.editorsetState = editorsetState;
-    console.log(initialState);
 
     this.$sideBarPages = document.createElement("section");
     this.$sideBarPages.className = "sidebar__pages";
@@ -71,7 +70,6 @@ export default class SideBarPages {
    * @param {*} detail 파일 토글버튼 생성 HTML
    */
   printFile($target, pageList, depth = 0) {
-    console.log(pageList);
     if (pageList.length) {
       let $sideBarPagesContainer = document.createElement("ul");
       $sideBarPagesContainer.className = "sidebar__pages--container";
@@ -102,9 +100,6 @@ export default class SideBarPages {
    *  클릭했을때 동작을 add 해주는 함수
    */
   eventAdd() {
-    this.$sideBarPages.onclick = async (e) => {
-      console.log(e);
-    };
     this.$sideBarPages.addEventListener("scroll", (e) => {
       const scrollPositon = this.$sideBarPages.scrollTop;
       const eventArea = document.querySelector(".sidebar__pages");
