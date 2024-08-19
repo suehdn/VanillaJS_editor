@@ -81,7 +81,6 @@ export default class SideBarPages {
           pageObject,
           depth,
         });
-        // if (pageObject.documents.length) {
         $sideBarPagesContainer.appendChild(
           this.printFile(
             $sideBarPagesContainer,
@@ -89,11 +88,9 @@ export default class SideBarPages {
             depth + 1
           )
         );
-        // }
       });
       return $sideBarPagesContainer;
     } else {
-      console.log("없나?");
       let $sideBarPagesContainerEmpty = document.createElement("div");
       $sideBarPagesContainerEmpty.className = "sidebar__pages--empty";
       $sideBarPagesContainerEmpty.textContent = "하위 페이지 없음";
@@ -106,64 +103,76 @@ export default class SideBarPages {
    */
   eventAdd() {
     this.$sideBarPages.onclick = async (e) => {
-      const $detail = e.target.closest(".detail");
-      const $summary = e.target.closest(".sideBarPages__text--page-summary");
-      const $delete = e.target.closest(".sideBarPages__button--delete");
-      const $add = e.target.closest(".sideBarPages__button--add");
-      if ($summary) {
-        const { id } = $summary.dataset;
-        this.setState({ postId: id });
-        push(`/documents/${id}`);
-        this.highlight(id);
-        this.setState({});
-      } else if ($delete) {
-        const { id } = $delete.dataset;
-        await this.data.deleteDocumentStructure(id);
-        this.data.getDocumentStructure().then((x) => {
-          this.setState({ list: x });
-          this.detail = this.setDetail().detail;
-          this.detailMap.delete(id);
-        });
-      } else if ($add) {
-        const { id } = $add.dataset;
-        await this.data.addDocumentStructure(id).then((x) => {
-          push(`/documents/${x.id}`);
-          this.highlight(x.id);
-        });
-        await this.data.getDocumentStructure().then((x) => {
-          this.setState({ list: x });
-          this.detail = this.setDetail().detail;
-          if (this.detail.length) {
-            this.detail.map((x) => {
-              this.detailMap.set(x.id, x.opend);
-            });
-          } else {
-            this.detailMap.set(this.detail.id, this.detail.opend);
-          }
-        });
-      } else if ($detail) {
-        const { id } = $detail.dataset;
-        if (this.detail.length) {
-          this.detail.map((x, i) => {
-            if (x.id === id) {
-              if (window.detail[i].open) {
-                this.detail[i]["opend"] = false;
-              } else {
-                this.detail[i]["opend"] = true;
-              }
-            }
-            this.detailMap.set(x.id, x.opend);
-          });
-        } else {
-          if (window.detail.open) {
-            this.detail["opend"] = false;
-          } else {
-            this.detail["opend"] = true;
-          }
-          this.detailMap.set(this.detail.id, this.detail.opend);
-        }
-      }
+      console.log(e);
     };
+    this.$sideBarPages.addEventListener("scroll", (e) => {
+      const scrollPositon = this.$sideBarPages.scrollTop;
+      const eventArea = document.querySelector(".sidebar__pages");
+      if (scrollPositon > 0) {
+        eventArea.classList.add("scrolled");
+      } else {
+        eventArea.classList.remove("scrolled");
+      }
+    });
+    // this.$sideBarPages.onclick = async (e) => {
+    //   const $detail = e.target.closest(".detail");
+    //   const $summary = e.target.closest(".sideBarPages__text--page-summary");
+    //   const $delete = e.target.closest(".sideBarPages__button--delete");
+    //   const $add = e.target.closest(".sideBarPages__button--add");
+    //   if ($summary) {
+    //     const { id } = $summary.dataset;
+    //     this.setState({ postId: id });
+    //     push(`/documents/${id}`);
+    //     this.highlight(id);
+    //     this.setState({});
+    //   } else if ($delete) {
+    //     const { id } = $delete.dataset;
+    //     await this.data.deleteDocumentStructure(id);
+    //     this.data.getDocumentStructure().then((x) => {
+    //       this.setState({ list: x });
+    //       this.detail = this.setDetail().detail;
+    //       this.detailMap.delete(id);
+    //     });
+    //   } else if ($add) {
+    //     const { id } = $add.dataset;
+    //     await this.data.addDocumentStructure(id).then((x) => {
+    //       push(`/documents/${x.id}`);
+    //       this.highlight(x.id);
+    //     });
+    //     await this.data.getDocumentStructure().then((x) => {
+    //       this.setState({ list: x });
+    //       this.detail = this.setDetail().detail;
+    //       if (this.detail.length) {
+    //         this.detail.map((x) => {
+    //           this.detailMap.set(x.id, x.opend);
+    //         });
+    //       } else {
+    //         this.detailMap.set(this.detail.id, this.detail.opend);
+    //       }
+    //     });
+    //   } else if ($detail) {
+    //     const { id } = $detail.dataset;
+    //     if (this.detail.length) {
+    //       this.detail.map((x, i) => {
+    //         if (x.id === id) {
+    //           if (window.detail[i].open) {
+    //             this.detail[i]["opend"] = false;
+    //           } else {
+    //             this.detail[i]["opend"] = true;
+    //           }
+    //         }
+    //         this.detailMap.set(x.id, x.opend);
+    //       });
+    //     } else {
+    //       if (window.detail.open) {
+    //         this.detail["opend"] = false;
+    //       } else {
+    //         this.detail["opend"] = true;
+    //       }
+    //       this.detailMap.set(this.detail.id, this.detail.opend);
+    //     }
+    //   }
+    // };
   }
   /**
    * 선택한 페이지 highlight해주는 함수

@@ -101,6 +101,10 @@ details > summary {
   list-style-type: none;
 }
 
+.sidebar__pages.scrolled {
+  border-top: 0.1rem solid var(--sidebar-selected);
+}
+
 .sidebar__pages--container :hover {
   cursor: pointer;
 }
