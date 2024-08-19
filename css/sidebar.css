@@ -126,6 +126,20 @@ details > summary {
   gap: 0.5rem;
 }
 
+.sidebar__pages--detail-button {
+  border-style: none;
+  background-color: transparent;
+  display: flex;
+}
+
+.sidebar__pages--detail-button :hover {
+  background-color: var(--sidebar-icon-background-color);
+}
+.sidebar__pages--detail-button span {
+  color: var(--sidebar-font-color-200);
+  font-size: 1.2rem;
+}
+
 .sidebar__pages--detail-title {
   white-space: nowrap;
   overflow: hidden;
