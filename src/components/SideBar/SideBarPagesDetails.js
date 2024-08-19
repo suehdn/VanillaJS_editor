@@ -46,14 +46,19 @@ export default class SideBarPagesDetails {
         $sideBarPagesDetailsToolkit.className =
           "sidebar__pages--detail-toolkit";
         $sideBarPagesDetailsToolkit.innerHTML = `
-          <button class = "sidebar__pages--detail-button" data-action='toggle'>
+          <button class = "sidebar__pages--detail-button" data-action='remove'>
             <span class = "material-symbols-rounded"> remove </span>
           </button>
-          <button class = "sidebar__pages--detail-button" data-action='toggle'>
+          <button class = "sidebar__pages--detail-button" data-action='add'>
             <span class = "material-symbols-rounded"> add </span>
           </button>
         `;
         $targetContainer.appendChild($sideBarPagesDetailsToolkit);
+
+        this.$sideBarPagesDetails.addEventListener(
+          "click",
+          this.toolkitEventAdd
+        );
       }
     });
 
@@ -62,5 +67,24 @@ export default class SideBarPagesDetails {
       isHovered = false;
       $targetContainer.removeChild($sideBarPagesDetailsToolkit);
     });
+  }
+
+  toolkitEventAdd(e) {
+    if (e.target.closest(".sidebar__pages--detail-button")) {
+      const action = e.target.closest(".sidebar__pages--detail-button").dataset
+        .action;
+
+      switch (action) {
+        case "toggle":
+          console.log("Toggle action triggered");
+          break;
+        case "remove":
+          console.log("Remove action triggered");
+          break;
+        case "add":
+          console.log("Add action triggered");
+          break;
+      }
+    }
   }
 }
