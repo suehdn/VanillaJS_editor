@@ -74,11 +74,13 @@ details > summary {
 
 .sidebar__aside--flex {
   --sidebar-header-height: 10vh;
+  --sidebar-width: 15rem;
   --sidebar-padding-top: 0.5rem;
   --sidebar-padding-left: 1rem;
   --sidebar-padding-depth: 0.5;
   --sidebar-pages-detail-padding-top: calc(var(--sidebar-padding-top) / 2);
-  width: 15rem;
+
+  width: var(--sidebar-width);
   display: flex;
   flex-direction: column;
   background-color: var(--sidebar-background);
