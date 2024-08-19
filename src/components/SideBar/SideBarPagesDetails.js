@@ -15,11 +15,13 @@ export default class SideBarPagesDetails {
       <div class = 'sidebar__pages--detail-container' style = '--depth: ${
         this.$depth
       }'>
-        <button class = "sidebar__pages--detail-button" data-action='toggle'>
-          <span class = "material-symbols-rounded"> description </span>
-        </button>
-        <div class = 'sidebar__pages--detail-title'>
-          ${this.state.title || "제목 없음"}
+        <div class = 'sidebar__pages--detail-contents'>
+          <button class = "sidebar__pages--detail-button" data-action='toggle'>
+            <span class = "material-symbols-rounded"> description </span>
+          </button>
+          <div class = 'sidebar__pages--detail-title'>
+            ${this.state.title || "제목 없음"}
+          </div>
         </div>
       </div>
     `;
@@ -27,6 +29,10 @@ export default class SideBarPagesDetails {
   }
 
   eventAdd() {
+    const $sideBarPagesDetailsToolkit = document.createElement("div");
+    const $targetContainer = this.$sideBarPagesDetails.querySelector(
+      ".sidebar__pages--detail-container"
+    );
     const button = this.$sideBarPagesDetails.querySelector(
       ".sidebar__pages--detail-button"
     );
@@ -37,12 +43,24 @@ export default class SideBarPagesDetails {
       if (!isHovered) {
         icon.textContent = "keyboard_arrow_right";
         isHovered = true;
+        $sideBarPagesDetailsToolkit.className =
+          "sidebar__pages--detail-toolkit";
+        $sideBarPagesDetailsToolkit.innerHTML = `
+          <button class = "sidebar__pages--detail-button" data-action='toggle'>
+            <span class = "material-symbols-rounded"> remove </span>
+          </button>
+          <button class = "sidebar__pages--detail-button" data-action='toggle'>
+            <span class = "material-symbols-rounded"> add </span>
+          </button>
+        `;
+        $targetContainer.appendChild($sideBarPagesDetailsToolkit);
       }
     });
 
     this.$sideBarPagesDetails.addEventListener("mouseleave", () => {
       icon.textContent = "description";
       isHovered = false;
+      $targetContainer.removeChild($sideBarPagesDetailsToolkit);
     });
   }
 }

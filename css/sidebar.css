@@ -122,6 +122,7 @@ details > summary {
         var(--sidebar-padding-left)
     );
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 0.5rem;
 }
@@ -140,10 +141,18 @@ details > summary {
   font-size: 1.2rem;
 }
 
+.sidebar__pages--detail-contents {
+  display: flex;
+}
+
 .sidebar__pages--detail-title {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.sidebar__pages--detail-toolkit {
+  display: flex;
 }
 
 .sidebar__pages--empty {
