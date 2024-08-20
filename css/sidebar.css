@@ -75,6 +75,7 @@ details > summary {
 .sidebar__aside--flex {
   --sidebar-header-height: 10vh;
   --sidebar-width: 15rem;
+  --sidebar-border: 0.25rem;
   --sidebar-padding-top: 0.5rem;
   --sidebar-padding-left: 1rem;
   --sidebar-padding-depth: 0.5;
@@ -111,12 +112,7 @@ details > summary {
   cursor: pointer;
 }
 
-.sidebar__pages--detail :hover {
-  background-color: var(--sidebar-selected);
-  border-radius: 0.25rem;
-}
-
-.sidebar__pages--detail-container {
+.sidebar__pages--detail {
   padding: var(--sidebar-pages-detail-padding-top)
     calc(var(--sidebar-padding-left) / 2)
     var(--sidebar-pages-detail-padding-top)
@@ -125,8 +121,17 @@ details > summary {
         var(--sidebar-padding-left)
     );
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar__pages--detail:hover {
+  background-color: var(--sidebar-selected);
+  border-radius: var(--sidebar-border);
+}
+
+.sidebar__pages--detail-container {
+  display: flex;
 }
 
 .sidebar__pages--detail-button {
@@ -135,8 +140,9 @@ details > summary {
   display: flex;
 }
 
-.sidebar__pages--detail-button :hover {
+.sidebar__pages--detail-button:hover {
   background-color: var(--sidebar-icon-background-color);
+  border-radius: var(--sidebar-border);
 }
 .sidebar__pages--detail-button span {
   color: var(--sidebar-font-color-200);
@@ -158,6 +164,10 @@ details > summary {
 }
 
 .sidebar__pages--detail-toolkit {
+  display: none;
+}
+
+.sidebar__pages--detail:hover .sidebar__pages--detail-toolkit {
   display: flex;
 }
 

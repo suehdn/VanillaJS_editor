@@ -9,23 +9,28 @@ export default class SideBarPagesDetails {
     this.$sideBarPagesDetails = document.createElement("li");
     this.$sideBarPagesDetails.className = "sidebar__pages--detail";
     this.$sideBarPagesDetails.setAttribute("data-id", this.state.id);
+    this.$sideBarPagesDetails.style.setProperty("--depth", this.$depth);
     this.render();
     this.eventAdd();
   }
 
   render() {
     this.$sideBarPagesDetails.innerHTML = `
-      <div class = 'sidebar__pages--detail-container' style = '--depth: ${
-        this.$depth
-      }'>
-        <div class = 'sidebar__pages--detail-contents'>
-          <button class = "sidebar__pages--detail-button" data-action='toggle'>
-            <span class = "material-symbols-rounded"> description </span>
-          </button>
-          <div class = 'sidebar__pages--detail-title'>
-            ${this.state.title || "제목 없음"}
-          </div>
-        </div>
+      <div class = "sidebar__pages--detail-contents">
+        <button class = "sidebar__pages--detail-button" data-action='toggle'>
+          <span class = "material-symbols-rounded"> description </span>
+        </button>
+        <span class = 'sidebar__pages--detail-title'>
+          ${this.state.title || "제목 없음"}
+        </span>
+      </div>
+      <div class = "sidebar__pages--detail-toolkit">
+        <button class = "sidebar__pages--detail-button" data-action='remove'>
+          <span class = "material-symbols-rounded"> remove </span>
+        </button>
+        <button class = "sidebar__pages--detail-button" data-action='add'>
+          <span class = "material-symbols-rounded"> add </span>
+        </button>
       </div>
     `;
     this.$target.appendChild(this.$sideBarPagesDetails);
@@ -47,17 +52,6 @@ export default class SideBarPagesDetails {
           icon.textContent = "keyboard_arrow_down";
         } else icon.textContent = "keyboard_arrow_right";
         isHovered = true;
-        $sideBarPagesDetailsToolkit.className =
-          "sidebar__pages--detail-toolkit";
-        $sideBarPagesDetailsToolkit.innerHTML = `
-          <button class = "sidebar__pages--detail-button" data-action='remove'>
-            <span class = "material-symbols-rounded"> remove </span>
-          </button>
-          <button class = "sidebar__pages--detail-button" data-action='add'>
-            <span class = "material-symbols-rounded"> add </span>
-          </button>
-        `;
-        $targetContainer.appendChild($sideBarPagesDetailsToolkit);
         this.$sideBarPagesDetails.addEventListener(
           "click",
           this.toolkitEventAdd
@@ -68,7 +62,6 @@ export default class SideBarPagesDetails {
     this.$sideBarPagesDetails.addEventListener("mouseleave", () => {
       icon.textContent = "description";
       isHovered = false;
-      $targetContainer.removeChild($sideBarPagesDetailsToolkit);
     });
   }
 
