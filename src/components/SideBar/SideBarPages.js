@@ -29,16 +29,21 @@ export default class SideBarPages {
         this.openedDetail.delete(id);
       }
 
-      const selectedList = [this.findClickedById(this.state.list, id)];
+      const [selectedList, depth] = this.findClickedById(this.state.list, id);
 
-      console.log(selectedList[0].id);
+      console.log(selectedList);
       console.log("대체 전:", updatedFileContainer);
       // console.log(
       //   "대체 후:",
       //   this.printFile(this.$sideBarPages, selectedList, selectedList[0].id)
       // );
       updatedFileContainer.replaceWith(
-        this.printFile(this.$sideBarPages, selectedList, selectedList[0].id)
+        this.printFile(
+          this.$sideBarPages,
+          [selectedList],
+          selectedList.id,
+          depth
+        )
       );
     }
   };
@@ -72,7 +77,7 @@ export default class SideBarPages {
    * @param {*} detail 파일 토글버튼 생성 HTML
    */
   printFile = ($target, pageList, parentId = "", depth = 0) => {
-    console.log("pagelist:", pageList, parentId);
+    console.log("depth:", depth, "pagelist:", pageList, parentId);
     if (pageList.length) {
       let $sideBarPagesContainer = document.createElement("ul");
       $sideBarPagesContainer.className = "sidebar__pages--container";
@@ -189,21 +194,25 @@ export default class SideBarPages {
     this.selectedFileId = id;
   }
 
-  findClickedById(data, targetId) {
+  findClickedById(data, targetId, depth = 0) {
     for (const item of data) {
       if (item.id == targetId) {
-        console.log("내가 누른거:", item);
-        return item;
+        console.log("내가 누른거:", item, depth);
+        return [item, depth];
       } else {
         if (item.documents && item.documents.length) {
-          const parent = this.findClickedById(item.documents, targetId);
-          if (parent !== null) {
-            console.log("내가 누른거:", parent);
-            return parent;
+          const [clicked, newDepth] = this.findClickedById(
+            item.documents,
+            targetId,
+            depth + 1
+          );
+          if (clicked !== null) {
+            console.log("내가 누른거:", clicked, newDepth);
+            return [clicked, newDepth];
           }
         }
       }
     }
-    return null;
+    return [null, depth];
   }
 }
