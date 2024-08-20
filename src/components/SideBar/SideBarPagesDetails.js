@@ -1,11 +1,13 @@
 export default class SideBarPagesDetails {
-  constructor({ $target, pageObject, depth }) {
+  constructor({ $target, pageObject, setOpenedDetail, depth }) {
     this.state = pageObject;
     this.$target = $target;
+    this.setOpenedDetail = setOpenedDetail;
     this.$depth = depth;
+
     this.$sideBarPagesDetails = document.createElement("li");
     this.$sideBarPagesDetails.className = "sidebar__pages--detail";
-
+    this.$sideBarPagesDetails.setAttribute("data-id", this.state.id);
     this.render();
     this.eventAdd();
   }
@@ -54,7 +56,6 @@ export default class SideBarPagesDetails {
           </button>
         `;
         $targetContainer.appendChild($sideBarPagesDetailsToolkit);
-
         this.$sideBarPagesDetails.addEventListener(
           "click",
           this.toolkitEventAdd
@@ -69,13 +70,13 @@ export default class SideBarPagesDetails {
     });
   }
 
-  toolkitEventAdd(e) {
+  toolkitEventAdd = (e) => {
     if (e.target.closest(".sidebar__pages--detail-button")) {
       const action = e.target.closest(".sidebar__pages--detail-button").dataset
         .action;
-
       switch (action) {
         case "toggle":
+          this.setOpenedDetail(this.state.id);
           console.log("Toggle action triggered");
           break;
         case "remove":
@@ -86,5 +87,5 @@ export default class SideBarPagesDetails {
           break;
       }
     }
-  }
+  };
 }

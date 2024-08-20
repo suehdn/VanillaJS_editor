@@ -7,6 +7,7 @@ export default class SideBarPages {
     this.state = initialState;
     this.$target = $target;
     this.data = new Data();
+    this.openedDetail = new Set();
     this.editorsetState = editorsetState;
 
     this.$sideBarPages = document.createElement("section");
@@ -14,32 +15,33 @@ export default class SideBarPages {
 
     this.render();
     this.eventAdd();
-    this.detailMap = new Map();
-    if (this.detail) {
-      if (this.detail.length) {
-        this.detail.map((x) => {
-          this.detailMap.set(x.id, x.opend);
-        });
+  }
+
+  setOpenedDetail = (id) => {
+    const updatedFileContainer = this.$sideBarPages.querySelector(
+      `.sidebar__pages--container [data-id="${id}"]`
+    );
+
+    if (updatedFileContainer) {
+      if (!this.openedDetail.has(id)) {
+        this.openedDetail.add(id);
       } else {
-        this.detailMap.set(this.detail.id, this.detail.opend);
-        console.log(this.detailMap);
+        this.openedDetail.delete(id);
       }
+
+      const selectedList = [this.findClickedById(this.state.list, id)];
+
+      console.log(selectedList[0].id);
+      console.log("대체 전:", updatedFileContainer);
+      // console.log(
+      //   "대체 후:",
+      //   this.printFile(this.$sideBarPages, selectedList, selectedList[0].id)
+      // );
+      updatedFileContainer.replaceWith(
+        this.printFile(this.$sideBarPages, selectedList, selectedList[0].id)
+      );
     }
-  }
-  setDetail() {
-    return window.detail
-      ? window.detail.length
-        ? {
-            detail: [...window.detail].map((x) => ({
-              id: x.dataset.id,
-              opend: x.open,
-            })),
-          }
-        : {
-            detail: { id: window.detail.dataset.id, opend: window.detail.open },
-          }
-      : { detail: null };
-  }
+  };
 
   setState = (nextState) => {
     if (nextState.postId) {
@@ -69,23 +71,28 @@ export default class SideBarPages {
    * @param {*} parent 상위 파일 객체
    * @param {*} detail 파일 토글버튼 생성 HTML
    */
-  printFile($target, pageList, depth = 0) {
+  printFile = ($target, pageList, parentId = "", depth = 0) => {
+    console.log("pagelist:", pageList, parentId);
     if (pageList.length) {
       let $sideBarPagesContainer = document.createElement("ul");
       $sideBarPagesContainer.className = "sidebar__pages--container";
+      $sideBarPagesContainer.setAttribute("data-id", parentId);
       pageList.map((pageObject) => {
         new SideBarPagesDetails({
           $target: $sideBarPagesContainer,
           pageObject,
+          setOpenedDetail: this.setOpenedDetail,
           depth,
         });
-        $sideBarPagesContainer.appendChild(
-          this.printFile(
-            $sideBarPagesContainer,
-            pageObject.documents,
-            depth + 1
-          )
-        );
+        if (this.openedDetail.has(pageObject.id))
+          $sideBarPagesContainer.appendChild(
+            this.printFile(
+              $sideBarPagesContainer,
+              pageObject.documents,
+              pageObject.id,
+              depth + 1
+            )
+          );
       });
       return $sideBarPagesContainer;
     } else {
@@ -95,7 +102,7 @@ export default class SideBarPages {
       $sideBarPagesContainerEmpty.style.setProperty("--depth", depth);
       return $sideBarPagesContainerEmpty;
     }
-  }
+  };
   /**
    *  클릭했을때 동작을 add 해주는 함수
    */
@@ -180,5 +187,23 @@ export default class SideBarPages {
       this.selectedFileId = id;
     }
     this.selectedFileId = id;
+  }
+
+  findClickedById(data, targetId) {
+    for (const item of data) {
+      if (item.id == targetId) {
+        console.log("내가 누른거:", item);
+        return item;
+      } else {
+        if (item.documents && item.documents.length) {
+          const parent = this.findClickedById(item.documents, targetId);
+          if (parent !== null) {
+            console.log("내가 누른거:", parent);
+            return parent;
+          }
+        }
+      }
+    }
+    return null;
   }
 }
