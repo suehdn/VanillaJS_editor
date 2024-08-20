@@ -127,7 +127,6 @@ details > summary {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 0.5rem;
 }
 
 .sidebar__pages--detail-button {
@@ -149,6 +148,7 @@ details > summary {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  gap: 0.5rem;
 }
 
 .sidebar__pages--detail-title {

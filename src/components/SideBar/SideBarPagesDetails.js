@@ -1,8 +1,9 @@
 export default class SideBarPagesDetails {
-  constructor({ $target, pageObject, setOpenedDetail, depth }) {
+  constructor({ $target, pageObject, setOpenedDetail, openedDetail, depth }) {
     this.state = pageObject;
     this.$target = $target;
     this.setOpenedDetail = setOpenedDetail;
+    this.openedDetail = openedDetail;
     this.$depth = depth;
 
     this.$sideBarPagesDetails = document.createElement("li");
@@ -35,15 +36,16 @@ export default class SideBarPagesDetails {
     const $targetContainer = this.$sideBarPagesDetails.querySelector(
       ".sidebar__pages--detail-container"
     );
-    const button = this.$sideBarPagesDetails.querySelector(
-      ".sidebar__pages--detail-button"
+    const icon = this.$sideBarPagesDetails.querySelector(
+      ".sidebar__pages--detail-button .material-symbols-rounded"
     );
-    const icon = button.querySelector(".material-symbols-rounded");
     let isHovered = false;
 
     this.$sideBarPagesDetails.addEventListener("mouseover", () => {
       if (!isHovered) {
-        icon.textContent = "keyboard_arrow_right";
+        if (this.openedDetail.has(this.state.id)) {
+          icon.textContent = "keyboard_arrow_down";
+        } else icon.textContent = "keyboard_arrow_right";
         isHovered = true;
         $sideBarPagesDetailsToolkit.className =
           "sidebar__pages--detail-toolkit";

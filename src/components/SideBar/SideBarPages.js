@@ -87,6 +87,7 @@ export default class SideBarPages {
           $target: $sideBarPagesContainer,
           pageObject,
           setOpenedDetail: this.setOpenedDetail,
+          openedDetail: this.openedDetail,
           depth,
         });
         if (this.openedDetail.has(pageObject.id))
