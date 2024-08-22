@@ -21,22 +21,23 @@ export default class SideBarPages {
     const updatedFileContainer = this.$sideBarPages.querySelector(
       `.sidebar__pages--container [data-id="${id}"]`
     );
+    const updatedFileContainerNextSibling =
+      updatedFileContainer.nextElementSibling;
+    const [selectedList, depth] = this.findClickedById(this.state.list, id);
 
     if (updatedFileContainer) {
       if (!this.openedDetail.has(id)) {
         this.openedDetail.add(id);
       } else {
         this.openedDetail.delete(id);
+
+        if (
+          updatedFileContainerNextSibling?.className === "sidebar__pages--empty"
+        ) {
+          updatedFileContainerNextSibling.remove();
+        }
       }
 
-      const [selectedList, depth] = this.findClickedById(this.state.list, id);
-
-      console.log(selectedList);
-      console.log("대체 전:", updatedFileContainer);
-      // console.log(
-      //   "대체 후:",
-      //   this.printFile(this.$sideBarPages, selectedList, selectedList[0].id)
-      // );
       updatedFileContainer.replaceWith(
         this.printFile(
           this.$sideBarPages,
@@ -77,7 +78,6 @@ export default class SideBarPages {
    * @param {*} detail 파일 토글버튼 생성 HTML
    */
   printFile = ($target, pageList, parentId = "", depth = 0) => {
-    console.log("depth:", depth, "pagelist:", pageList, parentId);
     if (pageList.length) {
       let $sideBarPagesContainer = document.createElement("ul");
       $sideBarPagesContainer.className = "sidebar__pages--container";
@@ -90,7 +90,7 @@ export default class SideBarPages {
           openedDetail: this.openedDetail,
           depth,
         });
-        if (this.openedDetail.has(pageObject.id))
+        if (this.openedDetail.has(pageObject.id)) {
           $sideBarPagesContainer.appendChild(
             this.printFile(
               $sideBarPagesContainer,
@@ -99,6 +99,7 @@ export default class SideBarPages {
               depth + 1
             )
           );
+        }
       });
       return $sideBarPagesContainer;
     } else {
@@ -198,7 +199,6 @@ export default class SideBarPages {
   findClickedById(data, targetId, depth = 0) {
     for (const item of data) {
       if (item.id == targetId) {
-        console.log("내가 누른거:", item, depth);
         return [item, depth];
       } else {
         if (item.documents && item.documents.length) {
@@ -208,7 +208,6 @@ export default class SideBarPages {
             depth + 1
           );
           if (clicked !== null) {
-            console.log("내가 누른거:", clicked, newDepth);
             return [clicked, newDepth];
           }
         }
