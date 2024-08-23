@@ -3,20 +3,13 @@ import { setItem, getItem } from "@/store/localStorage";
 import Data from "@/data";
 
 export default class SideBarPagesDetails {
-  constructor({
-    $target,
-    pageObject,
-    setOpenedDetail,
-    setAddDetail,
-    openedDetail,
-    depth,
-  }) {
+  constructor({ $target, pageObject, openedDetail, setDetail, depth }) {
     this.state = pageObject;
     this.$target = $target;
     this.data = new Data();
-    this.setOpenedDetail = setOpenedDetail;
-    this.setAddDetail = setAddDetail;
     this.openedDetail = openedDetail;
+    this.setDetail = setDetail;
+
     this.$depth = depth;
     this.$beforeSelected = 0;
 
@@ -102,19 +95,23 @@ export default class SideBarPagesDetails {
         .action;
       switch (action) {
         case "toggle":
-          this.setOpenedDetail(this.state.id);
+          this.setDetail(this.state.id, "toggle");
           console.log("Toggle action triggered");
           break;
         case "remove":
           await this.data.deleteDocumentStructure(this.state.id).then(() => {
             push(`/`);
+            this.setDetail(
+              this.$sideBarPagesDetails.parentNode.getAttribute("data-id"),
+              "remove"
+            );
           });
           console.log("Remove action triggered");
           break;
         case "add":
           await this.data.addDocumentStructure(this.state.id).then((x) => {
             push(`/${x.id}`);
-            this.setAddDetail(this.state.id);
+            this.setDetail(this.state.id, "add");
             this.$beforeSelected = getItem("selected");
             setItem("selected", x.id);
             this.render();

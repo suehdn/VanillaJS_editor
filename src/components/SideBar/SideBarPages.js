@@ -38,16 +38,18 @@ export default class SideBarPages {
 
   render() {
     this.$sideBarPages.appendChild(
-      this.printFile(this.$sideBarPages, this.state.list)
+      this.printPage(this.$sideBarPages, this.state.list)
     );
     this.$target.appendChild(this.$sideBarPages);
   }
   /**
-   * 파일을 토글 버튼으로 하위항목까지 보여주도록 만들어주는 DOM을 생성하는 함수
-   * @param {*} parent 상위 파일 객체
-   * @param {*} detail 파일 토글버튼 생성 HTML
+   * 페이지들을 사이드바에 출력하는 함수
+   * @param {*} $target 출력해야하는 노드
+   * @param {*} pageList 출력해야하는 페이지들의 List
+   * @param {*} parentId 출력해야하는 페이지의 부모 Id
+   * @param {*} depth 페이지의 깊이 (들여쓰기 깊이)
    */
-  printFile = ($target, pageList, parentId = "", depth = 0) => {
+  printPage = ($target, pageList, parentId = "", depth = 0) => {
     if (pageList.length) {
       let $sideBarPagesContainer = document.createElement("ul");
       $sideBarPagesContainer.className = "sidebar__pages--container";
@@ -56,14 +58,13 @@ export default class SideBarPages {
         new SideBarPagesDetails({
           $target: $sideBarPagesContainer,
           pageObject,
-          setOpenedDetail: this.setOpenedDetail,
-          setAddDetail: this.setAddDetail,
           openedDetail: this.openedDetail,
+          setDetail: this.setDetail,
           depth,
         });
         if (this.openedDetail.has(pageObject.id)) {
           $sideBarPagesContainer.appendChild(
-            this.printFile(
+            this.printPage(
               $sideBarPagesContainer,
               pageObject.documents,
               pageObject.id,
@@ -96,22 +97,32 @@ export default class SideBarPages {
     });
   }
   /**
-   * 파일을 생성할 때 해당 페이지가 보이도록 노드를 렌더링하는 함수
-   * @param {*} id 생성하는 페이지의 부모 id
+   * 파일을 열고 닫을 때 해당 페이지가 보여지거나 숨겨지도록 노드를 렌더링하는 함수
+   * @param {*} id
+   * 1. action - 'toggle' : 해당하는 페이지의 id
+   * 2. action - 'add', 'delete' : 해당하는 페이지의 부모 id
+   * @param {*} action
+   * 1. 'toggle' : 파일을 열고 닫을 때 해당 페이지가 보여지거나 숨겨지도록 노드를 렌더링
+   * 2. 'add' : 파일을 생성할 때 해당 페이지가 보이도록 노드를 렌더링
+   * 3. 'delete' : 파일을 제거할 때 해당 페이지가 사라지도록 노드를 렌더링
    */
-  setOpenedDetail = (id) => {
+  setDetail = async (id, action) => {
     const updatedFileContainer = this.$sideBarPages.querySelector(
       `.sidebar__pages--container [data-id="${id}"]`
     );
     const updatedFileContainerNextSibling =
       updatedFileContainer?.nextElementSibling;
+
+    if (action === "add" || action === "remove")
+      this.state.list = await this.data.getDocumentStructure();
+
     const [selectedList, depth] = this.findClickedById(this.state.list, id);
 
     if (updatedFileContainer) {
       if (!this.openedDetail.has(id)) {
         this.openedDetail.add(id);
-      } else {
-        this.openedDetail.delete(id);
+      } else if (this.openedDetail.has(id)) {
+        if (action !== "add") this.openedDetail.delete(id);
 
         if (
           updatedFileContainerNextSibling?.className ===
@@ -124,7 +135,7 @@ export default class SideBarPages {
         }
       }
       updatedFileContainer.replaceWith(
-        this.printFile(
+        this.printPage(
           this.$sideBarPages,
           [selectedList],
           selectedList.id,
@@ -135,34 +146,11 @@ export default class SideBarPages {
     }
   };
   /**
-   * 파일을 생성할 때 해당 페이지가 보이도록 노드를 렌더링하는 함수
-   * @param {*} id 생성하는 페이지의 부모 id
+   * 클릭한 페이지(하위 목록 포함)를 Id로 찾아 depth와 함께 출력해주는 함수
+   * @param {*} data 사이드바 전체 페이지 목록
+   * @param {*} targetId 클릭한 페이지의 Id
+   * @param {*} depth 페이지의 깊이 (들여쓰기 깊이)
    */
-  setAddDetail = async (id) => {
-    const updatedFileContainer = this.$sideBarPages.querySelector(
-      `.sidebar__pages--container [data-id="${id}"]`
-    );
-    const pageList = await this.data.getDocumentStructure();
-    const [selectedList, depth] = this.findClickedById(pageList, id);
-
-    if (updatedFileContainer) {
-      if (!this.openedDetail.has(id)) {
-        this.openedDetail.add(id);
-      }
-
-      updatedFileContainer.replaceWith(
-        this.printFile(
-          this.$sideBarPages,
-          [selectedList],
-          selectedList.id,
-          depth
-        )
-      );
-      setItem("openedDetail", this.openedDetail);
-    }
-    console.log(updatedFileContainer);
-  };
-
   findClickedById(data, targetId, depth = 0) {
     for (const item of data) {
       if (item.id == targetId) {
