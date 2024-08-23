@@ -18,43 +18,6 @@ export default class SideBarPages {
     this.eventAdd();
   }
 
-  setOpenedDetail = (id) => {
-    const updatedFileContainer = this.$sideBarPages.querySelector(
-      `.sidebar__pages--container [data-id="${id}"]`
-    );
-    const updatedFileContainerNextSibling =
-      updatedFileContainer.nextElementSibling;
-    const [selectedList, depth] = this.findClickedById(this.state.list, id);
-
-    if (updatedFileContainer) {
-      if (!this.openedDetail.has(id)) {
-        this.openedDetail.add(id);
-      } else {
-        this.openedDetail.delete(id);
-
-        if (
-          updatedFileContainerNextSibling?.className ===
-            "sidebar__pages--empty" ||
-          updatedFileContainerNextSibling?.querySelector(
-            `.sidebar__pages--detail[data-id="${selectedList.documents[0].id}"]`
-          )
-        ) {
-          updatedFileContainerNextSibling.remove();
-        }
-      }
-
-      updatedFileContainer.replaceWith(
-        this.printFile(
-          this.$sideBarPages,
-          [selectedList],
-          selectedList.id,
-          depth
-        )
-      );
-      setItem("openedDetail", this.openedDetail);
-    }
-  };
-
   setState = (nextState) => {
     if (nextState.postId) {
       this.data.getDocumentContent(nextState.postId).then((x) => {
@@ -72,6 +35,7 @@ export default class SideBarPages {
     }
     this.render();
   };
+
   render() {
     this.$sideBarPages.appendChild(
       this.printFile(this.$sideBarPages, this.state.list)
@@ -93,6 +57,7 @@ export default class SideBarPages {
           $target: $sideBarPagesContainer,
           pageObject,
           setOpenedDetail: this.setOpenedDetail,
+          setAddDetail: this.setAddDetail,
           openedDetail: this.openedDetail,
           depth,
         });
@@ -116,9 +81,7 @@ export default class SideBarPages {
       return $sideBarPagesContainerEmpty;
     }
   };
-  /**
-   *  클릭했을때 동작을 add 해주는 함수
-   */
+
   eventAdd() {
     this.$sideBarPages.addEventListener("scroll", (e) => {
       const scrollPositon = this.$sideBarPages.scrollTop;
@@ -131,76 +94,74 @@ export default class SideBarPages {
         eventArea.classList.remove("scrolled");
       }
     });
-    // this.$sideBarPages.onclick = async (e) => {
-    //   const $detail = e.target.closest(".detail");
-    //   const $summary = e.target.closest(".sideBarPages__text--page-summary");
-    //   const $delete = e.target.closest(".sideBarPages__button--delete");
-    //   const $add = e.target.closest(".sideBarPages__button--add");
-    //   if ($summary) {
-    //     const { id } = $summary.dataset;
-    //     this.setState({ postId: id });
-    //     push(`/documents/${id}`);
-    //     this.highlight(id);
-    //     this.setState({});
-    //   } else if ($delete) {
-    //     const { id } = $delete.dataset;
-    //     await this.data.deleteDocumentStructure(id);
-    //     this.data.getDocumentStructure().then((x) => {
-    //       this.setState({ list: x });
-    //       this.detail = this.setDetail().detail;
-    //       this.detailMap.delete(id);
-    //     });
-    //   } else if ($add) {
-    //     const { id } = $add.dataset;
-    //     await this.data.addDocumentStructure(id).then((x) => {
-    //       push(`/documents/${x.id}`);
-    //       this.highlight(x.id);
-    //     });
-    //     await this.data.getDocumentStructure().then((x) => {
-    //       this.setState({ list: x });
-    //       this.detail = this.setDetail().detail;
-    //       if (this.detail.length) {
-    //         this.detail.map((x) => {
-    //           this.detailMap.set(x.id, x.opend);
-    //         });
-    //       } else {
-    //         this.detailMap.set(this.detail.id, this.detail.opend);
-    //       }
-    //     });
-    //   } else if ($detail) {
-    //     const { id } = $detail.dataset;
-    //     if (this.detail.length) {
-    //       this.detail.map((x, i) => {
-    //         if (x.id === id) {
-    //           if (window.detail[i].open) {
-    //             this.detail[i]["opend"] = false;
-    //           } else {
-    //             this.detail[i]["opend"] = true;
-    //           }
-    //         }
-    //         this.detailMap.set(x.id, x.opend);
-    //       });
-    //     } else {
-    //       if (window.detail.open) {
-    //         this.detail["opend"] = false;
-    //       } else {
-    //         this.detail["opend"] = true;
-    //       }
-    //       this.detailMap.set(this.detail.id, this.detail.opend);
-    //     }
-    //   }
-    // };
   }
   /**
-   * 선택한 페이지 highlight해주는 함수
-   * @param {*} id
+   * 파일을 생성할 때 해당 페이지가 보이도록 노드를 렌더링하는 함수
+   * @param {*} id 생성하는 페이지의 부모 id
    */
-  highlight(id) {
-    if (this.selectedFileId) {
-      this.selectedFileId = id;
+  setOpenedDetail = (id) => {
+    const updatedFileContainer = this.$sideBarPages.querySelector(
+      `.sidebar__pages--container [data-id="${id}"]`
+    );
+    const updatedFileContainerNextSibling =
+      updatedFileContainer?.nextElementSibling;
+    const [selectedList, depth] = this.findClickedById(this.state.list, id);
+
+    if (updatedFileContainer) {
+      if (!this.openedDetail.has(id)) {
+        this.openedDetail.add(id);
+      } else {
+        this.openedDetail.delete(id);
+
+        if (
+          updatedFileContainerNextSibling?.className ===
+            "sidebar__pages--empty" ||
+          updatedFileContainerNextSibling?.querySelector(
+            `.sidebar__pages--detail[data-id="${selectedList.documents[0]?.id}"]`
+          )
+        ) {
+          updatedFileContainerNextSibling.remove();
+        }
+      }
+      updatedFileContainer.replaceWith(
+        this.printFile(
+          this.$sideBarPages,
+          [selectedList],
+          selectedList.id,
+          depth
+        )
+      );
+      setItem("openedDetail", this.openedDetail);
     }
-    this.selectedFileId = id;
-  }
+  };
+  /**
+   * 파일을 생성할 때 해당 페이지가 보이도록 노드를 렌더링하는 함수
+   * @param {*} id 생성하는 페이지의 부모 id
+   */
+  setAddDetail = async (id) => {
+    const updatedFileContainer = this.$sideBarPages.querySelector(
+      `.sidebar__pages--container [data-id="${id}"]`
+    );
+    const pageList = await this.data.getDocumentStructure();
+    const [selectedList, depth] = this.findClickedById(pageList, id);
+
+    if (updatedFileContainer) {
+      if (!this.openedDetail.has(id)) {
+        this.openedDetail.add(id);
+      }
+
+      updatedFileContainer.replaceWith(
+        this.printFile(
+          this.$sideBarPages,
+          [selectedList],
+          selectedList.id,
+          depth
+        )
+      );
+      setItem("openedDetail", this.openedDetail);
+    }
+    console.log(updatedFileContainer);
+  };
 
   findClickedById(data, targetId, depth = 0) {
     for (const item of data) {

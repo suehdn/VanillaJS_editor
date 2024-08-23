@@ -1,10 +1,21 @@
 import { push } from "@/router";
 import { setItem, getItem } from "@/store/localStorage";
+import Data from "@/data";
+
 export default class SideBarPagesDetails {
-  constructor({ $target, pageObject, setOpenedDetail, openedDetail, depth }) {
+  constructor({
+    $target,
+    pageObject,
+    setOpenedDetail,
+    setAddDetail,
+    openedDetail,
+    depth,
+  }) {
     this.state = pageObject;
     this.$target = $target;
+    this.data = new Data();
     this.setOpenedDetail = setOpenedDetail;
+    this.setAddDetail = setAddDetail;
     this.openedDetail = openedDetail;
     this.$depth = depth;
     this.$beforeSelected = 0;
@@ -27,7 +38,7 @@ export default class SideBarPagesDetails {
           <span class = "material-symbols-rounded"> description </span>
         </button>
         <span class = 'sidebar__pages--detail-title'>
-          ${this.state.title || "제목 없음"}
+          ${this.state.id || "제목 없음"}
         </span>
       </div>
       <div class = "sidebar__pages--detail-toolkit">
@@ -85,7 +96,7 @@ export default class SideBarPagesDetails {
     });
   }
 
-  clickEventAdd = (e) => {
+  clickEventAdd = async (e) => {
     if (e.target.closest(".sidebar__pages--detail-button")) {
       const action = e.target.closest(".sidebar__pages--detail-button").dataset
         .action;
@@ -95,9 +106,19 @@ export default class SideBarPagesDetails {
           console.log("Toggle action triggered");
           break;
         case "remove":
+          await this.data.deleteDocumentStructure(this.state.id).then(() => {
+            push(`/`);
+          });
           console.log("Remove action triggered");
           break;
         case "add":
+          await this.data.addDocumentStructure(this.state.id).then((x) => {
+            push(`/${x.id}`);
+            this.setAddDetail(this.state.id);
+            this.$beforeSelected = getItem("selected");
+            setItem("selected", x.id);
+            this.render();
+          });
           console.log("Add action triggered");
           break;
       }
