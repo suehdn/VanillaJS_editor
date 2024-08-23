@@ -1,5 +1,6 @@
 import Data from "../../data.js";
 import { push } from "../../router.js";
+import { setItem, getItem } from "@/store/localStorage";
 import SideBarPagesDetails from "./SideBarPagesDetails.js";
 
 export default class SideBarPages {
@@ -7,7 +8,7 @@ export default class SideBarPages {
     this.state = initialState;
     this.$target = $target;
     this.data = new Data();
-    this.openedDetail = new Set();
+    this.openedDetail = new Set(getItem("openedDetail", []));
     this.editorsetState = editorsetState;
 
     this.$sideBarPages = document.createElement("section");
@@ -50,6 +51,7 @@ export default class SideBarPages {
           depth
         )
       );
+      setItem("openedDetail", this.openedDetail);
     }
   };
 
