@@ -32,7 +32,11 @@ export default class SideBarPages {
         this.openedDetail.delete(id);
 
         if (
-          updatedFileContainerNextSibling?.className === "sidebar__pages--empty"
+          updatedFileContainerNextSibling?.className ===
+            "sidebar__pages--empty" ||
+          updatedFileContainerNextSibling?.querySelector(
+            `.sidebar__pages--detail[data-id="${selectedList.documents[0].id}"]`
+          )
         ) {
           updatedFileContainerNextSibling.remove();
         }
