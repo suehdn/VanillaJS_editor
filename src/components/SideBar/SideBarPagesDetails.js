@@ -1,3 +1,5 @@
+import { push } from "@/router";
+import { setItem, getItem } from "@/store/localStorage";
 export default class SideBarPagesDetails {
   constructor({ $target, pageObject, setOpenedDetail, openedDetail, depth }) {
     this.state = pageObject;
@@ -5,16 +7,20 @@ export default class SideBarPagesDetails {
     this.setOpenedDetail = setOpenedDetail;
     this.openedDetail = openedDetail;
     this.$depth = depth;
+    this.$beforeSelected = 0;
 
     this.$sideBarPagesDetails = document.createElement("li");
     this.$sideBarPagesDetails.className = "sidebar__pages--detail";
     this.$sideBarPagesDetails.setAttribute("data-id", this.state.id);
+    this.$sideBarPagesDetails.setAttribute("data-action", "select");
     this.$sideBarPagesDetails.style.setProperty("--depth", this.$depth);
+
+    this.initialize();
     this.render();
     this.eventAdd();
   }
 
-  render() {
+  initialize() {
     this.$sideBarPagesDetails.innerHTML = `
       <div class = "sidebar__pages--detail-contents">
         <button class = "sidebar__pages--detail-button" data-action='toggle'>
@@ -36,6 +42,24 @@ export default class SideBarPagesDetails {
     this.$target.appendChild(this.$sideBarPagesDetails);
   }
 
+  render() {
+    const selected = getItem("selected");
+    // const titleElement = this.$sideBarPagesDetails.querySelector(
+    //   ".sidebar__pages--detail-title"
+    // );
+    // titleElement.textContent = this.state.title || "제목 없음";
+    if (this.state.id !== this.$beforeSelected) {
+      document
+        .querySelector(
+          `.sidebar__pages--detail[data-id="${this.$beforeSelected}"]`
+        )
+        ?.classList.remove("highlight");
+    }
+    if (this.state.id === selected) {
+      this.$sideBarPagesDetails.classList.add("highlight");
+    }
+  }
+
   eventAdd() {
     const $sideBarPagesDetailsToolkit = document.createElement("div");
     const $targetContainer = this.$sideBarPagesDetails.querySelector(
@@ -46,26 +70,22 @@ export default class SideBarPagesDetails {
     );
     let isHovered = false;
 
+    this.$sideBarPagesDetails.addEventListener("click", this.clickEventAdd);
     this.$sideBarPagesDetails.addEventListener("mouseover", () => {
       if (!isHovered) {
         if (this.openedDetail.has(this.state.id)) {
           icon.textContent = "keyboard_arrow_down";
         } else icon.textContent = "keyboard_arrow_right";
         isHovered = true;
-        this.$sideBarPagesDetails.addEventListener(
-          "click",
-          this.toolkitEventAdd
-        );
       }
     });
-
     this.$sideBarPagesDetails.addEventListener("mouseleave", () => {
       icon.textContent = "description";
       isHovered = false;
     });
   }
 
-  toolkitEventAdd = (e) => {
+  clickEventAdd = (e) => {
     if (e.target.closest(".sidebar__pages--detail-button")) {
       const action = e.target.closest(".sidebar__pages--detail-button").dataset
         .action;
@@ -80,6 +100,15 @@ export default class SideBarPagesDetails {
         case "add":
           console.log("Add action triggered");
           break;
+      }
+    } else {
+      const action = e.target.closest(".sidebar__pages--detail").dataset.action;
+      if (action === "select") {
+        console.log("Select action triggered");
+        push(`/${this.state.id}`);
+        this.$beforeSelected = getItem("selected");
+        setItem("selected", this.state.id);
+        this.render();
       }
     }
   };

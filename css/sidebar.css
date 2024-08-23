@@ -113,6 +113,7 @@ details > summary {
 }
 
 .sidebar__pages--detail {
+  margin: 0.1rem 0;
   padding: var(--sidebar-pages-detail-padding-top)
     calc(var(--sidebar-padding-left) / 2)
     var(--sidebar-pages-detail-padding-top)
@@ -130,6 +131,11 @@ details > summary {
   border-radius: var(--sidebar-border);
 }
 
+.sidebar__pages--detail.highlight {
+  background-color: var(--sidebar-selected);
+  border-radius: var(--sidebar-border);
+  font-weight: bold;
+}
 .sidebar__pages--detail-container {
   display: flex;
 }
