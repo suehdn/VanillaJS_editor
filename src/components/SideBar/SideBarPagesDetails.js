@@ -101,11 +101,16 @@ export default class SideBarPagesDetails {
         case "remove":
           await this.data.deleteDocumentStructure(this.state.id).then(() => {
             push(`/`);
+            console.log("deleted: ", this.state.id);
+            console.log(this.$sideBarPagesDetails.parentNode);
             this.setDetail(
-              this.$sideBarPagesDetails.parentNode.getAttribute("data-id"),
+              this.findParentId(this.$sideBarPagesDetails, this.state.id),
               "remove"
             );
           });
+          console.log(
+            this.findParentId(this.$sideBarPagesDetails, this.state.id)
+          );
           console.log("Remove action triggered");
           break;
         case "add":
@@ -128,6 +133,19 @@ export default class SideBarPagesDetails {
         setItem("selected", this.state.id);
         this.render();
       }
+    }
+  };
+
+  findParentId = ($target, id) => {
+    if ($target.getAttribute("data-id") == id) {
+      console.log(
+        $target.getAttribute("data-id") == id,
+        $target.getAttribute("data-id")
+      );
+      return this.findParentId($target.parentNode, id);
+    } else {
+      console.log($target.getAttribute("data-id"));
+      return $target.getAttribute("data-id");
     }
   };
 }

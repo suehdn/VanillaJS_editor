@@ -107,7 +107,7 @@ export default class SideBarPages {
    * 3. 'delete' : 파일을 제거할 때 해당 페이지가 사라지도록 노드를 렌더링
    */
   setDetail = async (id, action) => {
-    const updatedFileContainer = this.$sideBarPages.querySelector(
+    let updatedFileContainer = this.$sideBarPages.querySelector(
       `.sidebar__pages--container [data-id="${id}"]`
     );
     const updatedFileContainerNextSibling =
@@ -117,6 +117,9 @@ export default class SideBarPages {
       this.state.list = await this.data.getDocumentStructure();
 
     const [selectedList, depth] = this.findClickedById(this.state.list, id);
+    console.log(this.state.list, id);
+    console.log(selectedList, depth);
+    console.log(updatedFileContainer);
 
     if (updatedFileContainer) {
       if (!this.openedDetail.has(id)) {
@@ -143,6 +146,15 @@ export default class SideBarPages {
         )
       );
       setItem("openedDetail", this.openedDetail);
+    } else {
+      //삭제되어 부모를 찾지 못할 경우 전체 렌더링
+      updatedFileContainer = document.querySelector(
+        ".sidebar__pages--container"
+      );
+      console.log(updatedFileContainer);
+      updatedFileContainer.replaceWith(
+        this.printPage(this.$sideBarPages, this.state.list)
+      );
     }
   };
   /**
