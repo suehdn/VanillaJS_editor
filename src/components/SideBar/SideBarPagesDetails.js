@@ -1,5 +1,5 @@
 import { push } from "@/router";
-import { setItem, getItem } from "@/store/localStorage";
+import { setItem, getItem } from "@stores";
 import Data from "@/data";
 
 export default class SideBarPagesDetails {

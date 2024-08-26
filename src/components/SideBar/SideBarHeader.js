@@ -1,6 +1,6 @@
 import { push } from "@/router";
 import Data from "@/data";
-import { setItem, getItem } from "@/store/localStorage";
+import { setItem, getItem } from "@stores";
 
 export default class SideBarHeader {
   constructor({ $target }) {

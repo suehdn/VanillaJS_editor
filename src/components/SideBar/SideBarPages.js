@@ -1,6 +1,6 @@
 import Data from "../../data.js";
 import { push } from "../../router.js";
-import { setItem, getItem } from "@/store/localStorage";
+import { setItem, getItem } from "@stores";
 import SideBarPagesDetails from "./SideBarPagesDetails.js";
 
 export default class SideBarPages {
