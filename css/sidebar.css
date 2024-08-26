@@ -1,5 +1,5 @@
 .sidebar__aside--flex {
-  --sidebar-header-height: 17vh;
+  --sidebar-header-height: 9.5rem;
   --sidebar-width: 15rem;
   --sidebar-border: 0.25rem;
   --sidebar-icon-size: 1.2rem;
@@ -69,6 +69,7 @@
   padding: 0 calc(var(--sidebar-padding-left) / 2);
   font-weight: normal;
   height: calc(100vh - var(--sidebar-header-height));
+  overflow-x: hidden;
   overflow-y: auto;
   list-style-type: none;
 }
