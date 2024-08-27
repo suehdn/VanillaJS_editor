@@ -19,7 +19,8 @@
       "@/*": ["./*"],
       "@components": ["./components/index.js"],
       "@utils": ["./utils/index.js"],
-      "@stores": ["./stores/index.js"]
+      "@stores": ["./stores/index.js"],
+      "@core": ["./core/index.js"]
     }
   },
   "include": ["src"]
