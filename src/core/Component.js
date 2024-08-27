@@ -1,7 +1,8 @@
 export default class Component {
   $target;
+  props;
   state;
-  constructor($target) {
+  constructor({ $target, props }) {
     this.$target = $target;
     this.props = props;
     this.setup();
@@ -26,7 +27,7 @@ export default class Component {
   addEvent(eventType, selector, callback) {
     const children = [...this.$target.querySelectorAll(selector)];
     this.$target.addEventListener(eventType, (e) => {
-      if (!e.$target.closest(selector)) return false;
+      if (!e.target.closest(selector)) return false;
       callback(e);
     });
   }
