@@ -1,0 +1,1 @@
+export { areEqual } from "./areEqual";
