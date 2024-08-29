@@ -8,7 +8,7 @@ export default class SideBarPages extends Component {
     this.state = {
       pages: this.props,
       openedDetail: new Set(getItem("openedDetail", [])),
-      hoveredId: null,
+      selected: getItem("selected") || null,
     };
     this.data = new Data();
     this.hoveredElementId = null;
@@ -18,6 +18,7 @@ export default class SideBarPages extends Component {
       this.state.pages,
       this.state.openedDetail,
       0,
+      this.state.selected,
       this.hoveredElementId
     )}`;
   }
@@ -78,10 +79,9 @@ export default class SideBarPages extends Component {
           break;
         case "select":
           console.log("Select action triggered");
-          // push(`/${this.state.id}`);
-          // this.$beforeSelected = getItem("selected");
-          // setItem("selected", this.state.id);
-          // this.render();
+          push(`/${id}`);
+          setItem("selected", id);
+          this.setState({ selected: id });
           break;
       }
     });
@@ -96,9 +96,10 @@ export default class SideBarPages extends Component {
         this.hoveredElementId = e.target.closest(
           ".sidebar__pages--detail"
         ).dataset.id;
-        if (this.state.openedDetail.has(this.hoveredElementId)) {
-          icon.textContent = "keyboard_arrow_down";
-        } else icon.textContent = "keyboard_arrow_right";
+        if (icon)
+          this.state.openedDetail.has(this.hoveredElementId)
+            ? (icon.textContent = "keyboard_arrow_down")
+            : (icon.textContent = "keyboard_arrow_right");
       }
     );
 
@@ -123,7 +124,7 @@ export default class SideBarPages extends Component {
  * @param {*} depth 페이지의 깊이 (들여쓰기 깊이)
  */
 // prettier-ignore
-const printPage = (pageList, openedDetail, depth = 0, hoveredElementId) => {
+const printPage = (pageList, openedDetail, depth = 0, selected, hoveredElementId) => {
   let content = '<ul class="sidebar__pages--container">';
   let icon = null;
   pageList.forEach((list, index) => {
@@ -134,7 +135,7 @@ const printPage = (pageList, openedDetail, depth = 0, hoveredElementId) => {
       else icon =  "keyboard_arrow_right";
     }
     content += `
-      <li class="sidebar__pages--detail sidebar__pages--detail-click" data-id="${list.id}" data-action="select" style="--depth:${depth}">
+      <li class="sidebar__pages--detail sidebar__pages--detail-click ${String(list.id) === selected?"highlight":""}" data-id="${list.id}" data-action="select" style="--depth:${depth}">
         <div class="sidebar__pages--detail-contents">
           <button class="sidebar__pages--detail-button sidebar__pages--detail-click" data-action="toggle">` +
             `<span class="material-symbols-rounded"> ${icon} </span> `+
@@ -154,7 +155,7 @@ const printPage = (pageList, openedDetail, depth = 0, hoveredElementId) => {
       </li>`;
     if (openedDetail.has(String(list.id))) {
       if (list.documents.length) {
-        content += printPage(list.documents, openedDetail, depth + 1,hoveredElementId);
+        content += printPage(list.documents, openedDetail, depth + 1, selected, hoveredElementId);
       } else {
         content += `<div class="sidebar__pages--empty" style="--depth:${depth + 1}">하위 페이지 없음</div>`;
       }
