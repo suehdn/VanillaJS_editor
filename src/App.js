@@ -1,4 +1,3 @@
-import Data from "./data.js";
 import SideBar from "./SideBar.js";
 import Editor from "./Editor.js";
 import { initRouter } from "./router.js";
@@ -6,14 +5,12 @@ import Component from "./core/Component.js";
 
 export default class App extends Component {
   setup() {
-    this.data = new Data();
-    this.data.getDocumentStructure().then((x) => {
-      new SideBar({
-        $target: this.$target,
-        props: x,
-      });
-    });
     initRouter(() => {});
+  }
+  mounted() {
+    new SideBar({
+      $target: this.$target,
+    });
   }
 }
 

@@ -6,7 +6,7 @@ import { Component } from "@core";
 export default class SideBarHeader extends Component {
   setup() {
     this.data = new Data();
-    this.$beforeSelected = 0;
+    console.log("SideBarHeader렌더");
   }
   template() {
     return `
@@ -39,8 +39,8 @@ export default class SideBarHeader extends Component {
           case "add":
             await this.data.addDocumentStructure().then((x) => {
               push(`/${x.id}`);
-              this.$beforeSelected = getItem("selected");
               setItem("selected", x.id);
+              this.props.sideBarPagesRender();
             });
             break;
           case "quick_start":
