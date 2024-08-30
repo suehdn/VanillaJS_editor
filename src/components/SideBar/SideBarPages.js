@@ -42,11 +42,21 @@ export default class SideBarPages extends Component {
       const id = e.target.closest(".sidebar__pages--detail").dataset.id;
       const setOpenedDetail = (action, id) => {
         const tempOpenedDetail = new Set(this.state.openedDetail);
-        if (action === "add" || !tempOpenedDetail.has(id)) {
-          tempOpenedDetail.add(id);
-        } else if (action === "delete" || tempOpenedDetail.has(id)) {
-          tempOpenedDetail.delete(id);
+        switch (action) {
+          case "add":
+            tempOpenedDetail.add(id);
+            break;
+          case "remove":
+            tempOpenedDetail.delete(id);
+            break;
+          default:
+            if (!tempOpenedDetail.has(id)) {
+              tempOpenedDetail.add(id);
+            } else if (tempOpenedDetail.has(id)) {
+              tempOpenedDetail.delete(id);
+            }
         }
+        setItem("openedDetail", tempOpenedDetail);
         return tempOpenedDetail;
       };
       const getPages = (action, id, selected) => {
@@ -64,7 +74,6 @@ export default class SideBarPages extends Component {
       switch (action) {
         case "toggle":
           const tempOpenedDetail = setOpenedDetail(action, id);
-          setItem("openedDetail", tempOpenedDetail);
           this.setState({ openedDetail: tempOpenedDetail });
           break;
         case "remove":
