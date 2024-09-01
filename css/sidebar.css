@@ -127,6 +127,10 @@
   font-size: var(--sidebar-icon-size);
 }
 
+.sidebar__pages--detail-click.mousedown-background {
+  background-color: var(--sidebar-icon-background-click-color);
+}
+
 .sidebar__pages--detail-contents {
   display: flex;
   overflow: hidden;
