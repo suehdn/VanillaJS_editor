@@ -56,7 +56,10 @@ const updateNode = (parent, realNode, virtualNode) => {
   }
   if (realNode.nodeName !== virtualNode.nodeName) {
     const index = [...parent.childNodes].indexOf(realNode);
-    return realNode.remove(), parent.appendChild(virtualNode, index);
+    return (
+      realNode.remove(),
+      parent.insertBefore(virtualNode, parent.children[index] || null)
+    );
   }
   updateAttributes(realNode, virtualNode);
 
