@@ -136,25 +136,31 @@ export default class SideBarPages extends Component {
  * @param {*} selected 선택된 노드 id -> highlight처리
  * @param {*} hoveredElementId 리렌더링 되었을 때 이전에 hover한 노드 id
  */
-// prettier-ignore
-const printPage = (pageList, openedDetail, depth = 0, selected, hoveredElementId) => {
+const printPage = (
+  pageList,
+  openedDetail,
+  depth = 0,
+  selected,
+  hoveredElementId
+) => {
   let content = '<ul class="sidebar__pages--container">';
   let icon = null;
   pageList.forEach((list, index) => {
-    if(list.id != hoveredElementId){
-      icon =  "description";
-    }else{
-      if(openedDetail.has(String(list.id))) icon = "keyboard_arrow_down";
-      else icon =  "keyboard_arrow_right";
+    if (list.id != hoveredElementId) {
+      icon = "description";
+    } else {
+      if (openedDetail.has(String(list.id))) icon = "keyboard_arrow_down";
+      else icon = "keyboard_arrow_right";
     }
-    content += `
-      <li class="sidebar__pages--detail sidebar__pages--detail-click ${list.id == selected?"highlight":""}" data-id="${list.id}" data-action="select" style="--depth:${depth}">
+    content += `<li class="sidebar__pages--detail sidebar__pages--detail-click ${
+      list.id == selected ? "highlight" : ""
+    }" data-id="${list.id}" data-action="select" style="--depth:${depth}">
         <div class="sidebar__pages--detail-contents">
-          <button class="sidebar__pages--detail-button sidebar__pages--detail-click" data-action="toggle">` +
-            `<span class="material-symbols-rounded"> ${icon} </span> `+
-          `</button>
+          <button class="sidebar__pages--detail-button sidebar__pages--detail-click" data-action="toggle">
+            <span class="material-symbols-rounded"> ${icon} </span>
+          </button>
           <span class="sidebar__pages--detail-title">
-            ${list.id || "제목 없음"}
+            ${list.title || "제목 없음"}
           </span>
         </div>
         <div class="sidebar__pages--detail-toolkit">
@@ -168,12 +174,20 @@ const printPage = (pageList, openedDetail, depth = 0, selected, hoveredElementId
       </li>`;
     if (openedDetail.has(String(list.id))) {
       if (list.documents.length) {
-        content += printPage(list.documents, openedDetail, depth + 1, selected, hoveredElementId);
+        content += printPage(
+          list.documents,
+          openedDetail,
+          depth + 1,
+          selected,
+          hoveredElementId
+        );
       } else {
-        content += `<div class="sidebar__pages--empty" style="--depth:${depth + 1}">하위 페이지 없음</div>`;
+        content += `<div class="sidebar__pages--empty" style="--depth:${
+          depth + 1
+        }">하위 페이지 없음</div>`;
       }
     }
   });
-  content += '</ul>';
+  content += "</ul>";
   return content;
 };
