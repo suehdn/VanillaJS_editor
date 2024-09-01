@@ -6,7 +6,6 @@ import { Component } from "@core";
 export default class SideBarHeader extends Component {
   setup() {
     this.data = new Data();
-    console.log("SideBarHeader렌더");
   }
   template() {
     return `
