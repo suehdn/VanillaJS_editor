@@ -59,6 +59,10 @@
   border-radius: var(--sidebar-border);
 }
 
+.sidebar__header--action.mousedown-background {
+  background-color: var(--sidebar-icon-background-click-color);
+}
+
 .sidebar__header--container .material-symbols-rounded {
   font-size: var(--sidebar-icon-size);
   color: var(--sidebar-font-color-300);

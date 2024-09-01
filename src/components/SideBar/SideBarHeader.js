@@ -51,5 +51,20 @@ export default class SideBarHeader extends Component {
         }
       }
     });
+
+    this.addEvent("mousedown", ".sidebar__header--action", (e) => {
+      const target = e.target.closest(".sidebar__header--action");
+      target.classList.add("mousedown-background");
+    });
+
+    this.addEvent("mouseup", ".sidebar__header--action", (e) => {
+      const target = e.target.closest(".sidebar__header--action");
+      target.classList.remove("mousedown-background");
+    });
+
+    this.addEvent("mouseout", ".sidebar__header--action", (e) => {
+      const target = e.target.closest(".sidebar__header--action");
+      target.classList.remove("mousedown-background");
+    });
   }
 }
