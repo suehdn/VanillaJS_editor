@@ -90,11 +90,27 @@ export default class SideBarPages extends Component {
           });
           break;
         case "select":
+          const target = e.target.closest(".sidebar__pages--detail-click");
           push(`/${id}`);
           setItem("selected", id);
           this.setState({ selected: id });
           break;
       }
+    });
+
+    this.addEvent("mousedown", ".sidebar__pages--detail-click", (e) => {
+      const target = e.target.closest(".sidebar__pages--detail-click");
+      target.classList.add("mousedown-background");
+    });
+
+    this.addEvent("mouseup", ".sidebar__pages--detail-click", (e) => {
+      const target = e.target.closest(".sidebar__pages--detail-click");
+      target.classList.remove("mousedown-background");
+    });
+
+    this.addEvent("mouseout", ".sidebar__pages--detail-click", (e) => {
+      const target = e.target.closest(".sidebar__pages--detail-click");
+      target.classList.remove("mousedown-background");
     });
 
     this.addEvent(
