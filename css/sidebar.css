@@ -7,6 +7,7 @@
   --sidebar-padding-top: 0.5rem;
   --sidebar-padding-left: 1rem;
   --sidebar-padding-depth: 0.5;
+  --sidebar-margin-gap: 0.1rem;
   --sidebar-pages-detail-padding-top: calc(var(--sidebar-padding-top) / 2);
 
   width: var(--sidebar-width);
@@ -43,7 +44,7 @@
 }
 
 .sidebar__header--action {
-  margin: 0.1rem 0;
+  margin: var(--sidebar-margin-gap) 0;
   padding: var(--sidebar-pages-detail-padding-top)
     calc(var(--sidebar-padding-left) / 2)
     var(--sidebar-pages-detail-padding-top)
@@ -66,7 +67,8 @@
 .sidebar__pages {
   font-size: 1.25rem;
   color: var(--sidebar-font-color-300);
-  padding: 0 calc(var(--sidebar-padding-left) / 2);
+  padding: 0 calc(var(--sidebar-padding-left) / 2) var(--sidebar-padding-top)
+    calc(var(--sidebar-padding-left) / 2);
   font-weight: normal;
   height: calc(100vh - var(--sidebar-header-height));
   overflow-x: hidden;
@@ -83,7 +85,7 @@
 }
 
 .sidebar__pages--detail {
-  margin: 0.1rem 0;
+  margin: var(--sidebar-margin-gap) 0;
   padding: var(--sidebar-pages-detail-padding-top)
     calc(var(--sidebar-padding-left) / 2)
     var(--sidebar-pages-detail-padding-top)
