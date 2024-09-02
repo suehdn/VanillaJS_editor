@@ -14,13 +14,6 @@ export default class SideBar extends Component {
       });
     };
   }
-  template() {
-    return `<aside class="sidebar__aside--flex">
-      <section class="sidebar__header"></section>
-      <section class="sidebar__pages"></section>
-    </aside>`;
-  }
-
   mounted() {
     const $sidebarHeader = this.$target.querySelector(".sidebar__header");
     const $sidebarPages = this.$target.querySelector(".sidebar__pages");
