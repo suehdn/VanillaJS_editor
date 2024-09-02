@@ -1,6 +1,5 @@
 import Data from "./data.js";
 import { Component } from "@core";
-import { push } from "./router.js";
 import { SideBarHeader, SideBarPages } from "@components";
 import { getItem } from "./stores/localStorage.js";
 
