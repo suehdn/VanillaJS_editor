@@ -168,8 +168,8 @@ const printPage = (
       if (openedDetail.has(String(list.id))) icon = "keyboard_arrow_down";
       else icon = "keyboard_arrow_right";
     }
-    content += `<li class="sidebar__pages--detail sidebar__pages--detail-click ${
-      list.id == selected ? "highlight" : ""
+    content += `<li class="sidebar__pages--detail sidebar__pages--detail-click${
+      list.id == selected ? " highlight" : ""
     }" data-id="${list.id}" data-action="select" style="--depth:${depth}">
         <div class="sidebar__pages--detail-contents">
           <button class="sidebar__pages--detail-button sidebar__pages--detail-click" data-action="toggle">
