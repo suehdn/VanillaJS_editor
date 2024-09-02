@@ -33,7 +33,7 @@ export default class SideBarHeader extends Component {
           .action;
         switch (action) {
           case "main":
-            push(`/`);
+            push(`/main`);
             store_documentId.dispatch(setID(getDocumentId()));
             break;
           case "add":
