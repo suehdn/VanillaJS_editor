@@ -1,24 +1,47 @@
 import { Component } from "@core";
-import { push } from "./router.js";
-import { EditorTitle } from "./components/index.js";
+import { push, getDocumentId } from "./router.js";
+import { EditorTitle } from "@components";
 import Data from "./data.js";
+import { store_documentId, setID } from "@stores";
 
 export default class Editor extends Component {
   setup() {
     this.data = new Data();
-
     this.state = {
       title: "",
       content: "",
     };
+    store_documentId.subscribe(() => {
+      console.log("구독");
+      this.render();
+    });
+    store_documentId.dispatch(setID(getDocumentId()));
   }
   mounted() {
     const $editorTitle = this.$target.querySelector(".editor__title");
     const $editorContent = this.$target.querySelector(".editor__content");
+    const current_documentId = store_documentId.getState().documentId;
 
-    new EditorTitle({
-      $target: $editorTitle,
-    });
+    if (current_documentId * 1) {
+      this.data.getDocumentContent(current_documentId).then((x) => {
+        new EditorTitle({
+          $target: $editorTitle,
+          props: {
+            title: x.title,
+            setTitle: (title) => {
+              this.setState({ title });
+            },
+          },
+        });
+        console.log(x);
+      });
+    } else {
+      console.log("다른 페이지");
+    }
+
+    console.log("에디터 타이틀 렌더링");
+    console.log(store_documentId.getState().documentId);
+    console.log("this.state", this.state);
   }
 }
 // export default class Editor {
