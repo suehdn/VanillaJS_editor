@@ -1,6 +1,6 @@
 import Data from "../../data.js";
-import { push } from "../../router.js";
-import { setItem, getItem } from "@stores";
+import { push, getDocumentId } from "../../router.js";
+import { setItem, getItem, store_documentId, setID } from "@stores";
 import { Component } from "@core";
 
 export default class SideBarPages extends Component {
@@ -79,12 +79,14 @@ export default class SideBarPages extends Component {
         case "remove":
           await this.data.deleteDocumentStructure(id).then(() => {
             push(`/`);
+            store_documentId.dispatch(setID(getDocumentId()));
             getPages("remove", id);
           });
           break;
         case "add":
           await this.data.addDocumentStructure(id).then((x) => {
             push(`/${x.id}`);
+            store_documentId.dispatch(setID(getDocumentId()));
             setItem("selected", x.id);
             getPages("add", id, x.id);
           });
@@ -92,6 +94,7 @@ export default class SideBarPages extends Component {
         case "select":
           const target = e.target.closest(".sidebar__pages--detail-click");
           push(`/${id}`);
+          store_documentId.dispatch(setID(getDocumentId()));
           setItem("selected", id);
           this.setState({ selected: id });
           break;

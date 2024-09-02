@@ -1,6 +1,6 @@
-import { push } from "@/router";
+import { getDocumentId, push } from "@/router";
 import Data from "@/data";
-import { setItem, getItem } from "@stores";
+import { setItem, getItem, store_documentId, setID } from "@stores";
 import { Component } from "@core";
 
 export default class SideBarHeader extends Component {
@@ -34,19 +34,23 @@ export default class SideBarHeader extends Component {
         switch (action) {
           case "main":
             push(`/`);
+            store_documentId.dispatch(setID(getDocumentId()));
             break;
           case "add":
             await this.data.addDocumentStructure().then((x) => {
               push(`/${x.id}`);
+              store_documentId.dispatch(setID(getDocumentId()));
               setItem("selected", x.id);
               this.props.sideBarPagesRender();
             });
             break;
           case "quick_start":
             push(`/quick_start`);
+            store_documentId.dispatch(setID(getDocumentId()));
             break;
           case "guestbook":
             push(`/guestbook`);
+            store_documentId.dispatch(setID(getDocumentId()));
             break;
         }
       }
