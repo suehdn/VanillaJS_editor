@@ -7,10 +7,43 @@ export default class App extends Component {
   setup() {
     initRouter(() => {});
   }
+  template() {
+    return `<aside class="sidebar__aside--flex">
+      <section class="sidebar__header"></section>
+      <section class="sidebar__pages"></section>
+    </aside>
+    <div class="editor__div--flex"></div>`;
+  }
   mounted() {
     new SideBar({
       $target: this.$target,
     });
+    new Editor({
+      $target: this.$target,
+    });
+    // new Editor({
+    //   $target: this.$target,
+    //   initialState: {},
+    //   onEditing: (post) => {
+    //     if (this.timer !== null) {
+    //       clearTimeout(this.timer);
+    //     }
+    //     if (this.sideBar.state.postId) {
+    //       this.timer = setTimeout(async () => {
+    //         this.data
+    //           .editDocument(this.sideBar.state.postId, post.title, post.content)
+    //           .then((documentStructure) => {
+    //             this.sideBar.setState({ list: documentStructure });
+    //             this.data
+    //               .getDocumentContent(this.sideBar.state.postId)
+    //               .then((content) => {
+    //                 this.editor.setState(content);
+    //               });
+    //           });
+    //       }, 1000);
+    //     }
+    //   },
+    // });
   }
 }
 
