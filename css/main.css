@@ -2,10 +2,13 @@
   --sidebar-background: #f7f7f5;
   --sidebar-selected: #e6e6e6;
   --sidebar-header-color: rgb(55, 53, 47);
+  --sidebar-font-color-100: #e1e1e0;
   --sidebar-font-color-200: #91918e;
   --sidebar-font-color-300: rgba(55, 55, 55, 0.841);
   --sidebar-icon-background-color: #cececb;
   --sidebar-icon-background-click-color: #bbbbb8;
+
+  --sidebar-width: 15rem;
 }
 
 * {
@@ -21,5 +24,4 @@ main {
   flex-direction: row;
   background-color: white;
   height: 100vh;
-  overflow: hidden;
 }
