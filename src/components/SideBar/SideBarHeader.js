@@ -44,16 +44,22 @@ export default class SideBarHeader extends Component {
             store_documentId.dispatch(setID(getDocumentId()));
             break;
           case "add":
-            await this.data.addDocumentStructure().then((x) => {
-              push(`/${x.id}`);
+            try {
+              const document = await this.data.addDocumentStructure();
+              push(`/${document.id}`);
               store_documentId.dispatch(setID(getDocumentId()));
-              setItem("selected", x.id);
-              this.data.getDocumentStructure().then((x) => {
-                store_pages.dispatch(
-                  setPAGES({ pages: x, selected: getItem("selected") })
-                );
-              });
-            });
+              setItem("selected", document.id);
+
+              const pages = await this.data.getDocumentStructure();
+              store_pages.dispatch(
+                setPAGES({ pages, selected: getItem("selected") })
+              );
+            } catch (error) {
+              console.error(
+                "Error adding document structure SideBarHeader:",
+                error
+              );
+            }
             break;
           case "quick_start":
             push(`/quick_start`);
