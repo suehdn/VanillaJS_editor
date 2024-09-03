@@ -1,4 +1,5 @@
 import Data from "@/data";
+import { setPAGES, store_pages } from "@stores";
 import { Component } from "@core";
 import { debounce, executeWithTryCatch } from "@utils";
 
@@ -14,11 +15,12 @@ export default class EditorTotalContents extends Component {
 
       if (newState.title !== prevTitle || newState.content !== prevContent) {
         await executeWithTryCatch(async () => {
-          const pages = this.data.editDocument(
+          const pages = await this.data.editDocument(
             this.state.current_documentId,
             newState.title || prevTitle,
             newState.content || prevContent
           );
+          store_pages.dispatch(setPAGES({ pages }));
           console.log("문서 업데이트됨:", {
             title: newState.title || prevTitle,
             content: newState.content || prevContent,
