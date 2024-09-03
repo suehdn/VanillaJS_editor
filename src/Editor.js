@@ -3,6 +3,7 @@ import { push, getDocumentId } from "./router.js";
 import { EditorTotalContents } from "@components";
 import Data from "./data.js";
 import { store_documentId, setID } from "@stores";
+import { executeWithTryCatch } from "@utils";
 
 export default class Editor extends Component {
   setup() {
@@ -20,7 +21,7 @@ export default class Editor extends Component {
     });
   }
 
-  mounted() {
+  async mounted() {
     this.current_documentId = store_documentId.getState().documentId;
 
     if (!this.editorTotalContents && this.current_documentId * 1) {
@@ -35,15 +36,18 @@ export default class Editor extends Component {
     if (!(this.current_documentId * 1)) {
       console.log("다른 페이지:", this.current_documentId);
     } else {
-      this.data.getDocumentContent(this.current_documentId).then((x) => {
+      await executeWithTryCatch(async () => {
+        const document = await this.data.getDocumentContent(
+          this.current_documentId
+        );
         this.editorTotalContents.setState({
           current_documentId: this.current_documentId,
           totalContents: {
-            title: x.title,
-            content: x.content,
+            title: document.title,
+            content: document.content,
           },
         });
-      });
+      }, "Error get document structure Editor");
     }
   }
 }
