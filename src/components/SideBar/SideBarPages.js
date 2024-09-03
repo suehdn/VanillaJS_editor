@@ -3,6 +3,7 @@ import { push, getDocumentId } from "../../router.js";
 import { setItem, getItem, store_documentId, setID } from "@stores";
 import { Component } from "@core";
 import { store_pages, setPAGES } from "@stores";
+import { executeWithTryCatch } from "@utils";
 
 export default class SideBarPages extends Component {
   setup() {
@@ -65,23 +66,25 @@ export default class SideBarPages extends Component {
         setItem("openedDetail", tempOpenedDetail);
         return tempOpenedDetail;
       };
-      const getPages = (action, id, selected) => {
+      const getPages = async (action, id, selected) => {
         const tempOpenedDetail = setOpenedDetail(action, id);
         if (action === "add") {
-          this.data.getDocumentStructure().then((pages) => {
+          await executeWithTryCatch(async () => {
+            const pages = await this.data.getDocumentStructure();
             store_pages.dispatch(
               setPAGES({ pages, openedDetail: tempOpenedDetail, selected })
             );
-          });
+          }, "Error getPages add document structure SideBarPages");
         } else {
-          this.data.getDocumentStructure().then((pages) => {
+          await executeWithTryCatch(async () => {
+            const pages = await this.data.getDocumentStructure();
             store_pages.dispatch(
               setPAGES({
                 pages,
                 openedDetail: tempOpenedDetail,
               })
             );
-          });
+          }, "Error getPages another document structure SideBarPages");
         }
       };
       switch (action) {
@@ -94,19 +97,21 @@ export default class SideBarPages extends Component {
           );
           break;
         case "remove":
-          await this.data.deleteDocumentStructure(id).then(() => {
+          await executeWithTryCatch(async () => {
+            await this.data.deleteDocumentStructure(id);
             push(`/main`);
             store_documentId.dispatch(setID(getDocumentId()));
             getPages("remove", id);
-          });
+          }, "Error remove document structure SideBarPages");
           break;
         case "add":
-          await this.data.addDocumentStructure(id).then((x) => {
-            push(`/${x.id}`);
+          await executeWithTryCatch(async () => {
+            const document = await this.data.addDocumentStructure(id);
+            push(`/${document.id}`);
             store_documentId.dispatch(setID(getDocumentId()));
-            setItem("selected", x.id);
-            getPages("add", id, x.id);
-          });
+            setItem("selected", document.id);
+            getPages("add", id, document.id);
+          }, "Error add document structure SideBarPages");
           break;
         case "select":
           const target = e.target.closest(".sidebar__pages--detail-click");
