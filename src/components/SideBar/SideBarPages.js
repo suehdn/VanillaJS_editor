@@ -95,7 +95,7 @@ export default class SideBarPages extends Component {
           break;
         case "remove":
           await this.data.deleteDocumentStructure(id).then(() => {
-            push(`/`);
+            push(`/main`);
             store_documentId.dispatch(setID(getDocumentId()));
             getPages("remove", id);
           });
