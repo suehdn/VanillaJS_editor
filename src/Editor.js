@@ -1,47 +1,50 @@
 import { Component } from "@core";
 import { push, getDocumentId } from "./router.js";
-import { EditorTitle } from "@components";
+import { EditorTotalContents } from "@components";
 import Data from "./data.js";
 import { store_documentId, setID } from "@stores";
 
 export default class Editor extends Component {
   setup() {
     this.data = new Data();
+    this.$editorTotalContents = this.$target.querySelector(".editor__title");
+    this.editorTotalContents = null;
+    this.current_documentId = null;
     this.state = {
       title: "",
       content: "",
     };
+    store_documentId.dispatch(setID(getDocumentId()));
     store_documentId.subscribe(() => {
-      console.log("구독");
       this.render();
     });
-    store_documentId.dispatch(setID(getDocumentId()));
   }
-  mounted() {
-    const $editorTitle = this.$target.querySelector(".editor__title");
-    const $editorContent = this.$target.querySelector(".editor__content");
-    const current_documentId = store_documentId.getState().documentId;
 
-    if (current_documentId * 1) {
-      this.data.getDocumentContent(current_documentId).then((x) => {
-        new EditorTitle({
-          $target: $editorTitle,
-          props: {
+  mounted() {
+    this.current_documentId = store_documentId.getState().documentId;
+
+    if (!this.editorTotalContents && this.current_documentId * 1) {
+      this.editorTotalContents = new EditorTotalContents({
+        $target: this.$editorTotalContents,
+        props: {
+          current_documentId: this.current_documentId,
+          totalContents: { ...this.state },
+        },
+      });
+    }
+    if (!(this.current_documentId * 1)) {
+      console.log("다른 페이지:", this.current_documentId);
+    } else {
+      this.data.getDocumentContent(this.current_documentId).then((x) => {
+        this.editorTotalContents.setState({
+          current_documentId: this.current_documentId,
+          totalContents: {
             title: x.title,
-            setTitle: (title) => {
-              this.setState({ title });
-            },
+            content: x.content,
           },
         });
-        console.log(x);
       });
-    } else {
-      console.log("다른 페이지");
     }
-
-    console.log("에디터 타이틀 렌더링");
-    console.log(store_documentId.getState().documentId);
-    console.log("this.state", this.state);
   }
 }
 // export default class Editor {
