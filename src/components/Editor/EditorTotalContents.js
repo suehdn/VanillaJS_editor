@@ -26,7 +26,6 @@ export default class EditorTotalContents extends Component {
             });
           });
       }
-      this.render();
     };
     this.debounceSetInput = debounce(this.setInput, 1000);
   }
