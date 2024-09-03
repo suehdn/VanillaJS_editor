@@ -9,6 +9,7 @@ import {
   setPAGES,
 } from "@stores";
 import { Component } from "@core";
+import { executeWithTryCatch } from "@utils";
 
 export default class SideBarHeader extends Component {
   setup() {
@@ -44,7 +45,7 @@ export default class SideBarHeader extends Component {
             store_documentId.dispatch(setID(getDocumentId()));
             break;
           case "add":
-            try {
+            await executeWithTryCatch(async () => {
               const document = await this.data.addDocumentStructure();
               push(`/${document.id}`);
               store_documentId.dispatch(setID(getDocumentId()));
@@ -54,12 +55,7 @@ export default class SideBarHeader extends Component {
               store_pages.dispatch(
                 setPAGES({ pages, selected: getItem("selected") })
               );
-            } catch (error) {
-              console.error(
-                "Error adding document structure SideBarHeader:",
-                error
-              );
-            }
+            }, "Error adding document structure SideBarHeader");
             break;
           case "quick_start":
             push(`/quick_start`);
