@@ -2,27 +2,31 @@ import Data from "../../data.js";
 import { push, getDocumentId } from "../../router.js";
 import { setItem, getItem, store_documentId, setID } from "@stores";
 import { Component } from "@core";
+import { store_pages, setPAGES } from "@stores";
 
 export default class SideBarPages extends Component {
   setup() {
-    this.state = {
-      pages: this.props,
-      openedDetail: new Set(getItem("openedDetail", [])),
-      selected: getItem("selected") || null,
-    };
+    store_pages.dispatch(
+      setPAGES({
+        pages: this.props,
+      })
+    );
+    store_pages.subscribe(() => {
+      this.render();
+    });
+
     this.data = new Data();
     this.hoveredElementId = null;
   }
   template() {
     return `${printPage(
-      this.state.pages,
-      this.state.openedDetail,
+      store_pages.getState().pages.pages,
+      store_pages.getState().pages.openedDetail,
       0,
-      this.state.selected,
+      store_pages.getState().pages.selected,
       this.hoveredElementId
     )}`;
   }
-  mounted() {}
   setEvent() {
     this.addEvent("scroll", ".sidebar__pages", (e) => {
       const scrollPositon = this.$target.scrollTop;
@@ -41,7 +45,9 @@ export default class SideBarPages extends Component {
         .action;
       const id = e.target.closest(".sidebar__pages--detail").dataset.id;
       const setOpenedDetail = (action, id) => {
-        const tempOpenedDetail = new Set(this.state.openedDetail);
+        const tempOpenedDetail = new Set(
+          store_pages.getState().pages.openedDetail
+        );
         switch (action) {
           case "add":
             tempOpenedDetail.add(id);
@@ -63,18 +69,29 @@ export default class SideBarPages extends Component {
         const tempOpenedDetail = setOpenedDetail(action, id);
         if (action === "add") {
           this.data.getDocumentStructure().then((pages) => {
-            this.setState({ pages, openedDetail: tempOpenedDetail, selected });
+            store_pages.dispatch(
+              setPAGES({ pages, openedDetail: tempOpenedDetail, selected })
+            );
           });
         } else {
           this.data.getDocumentStructure().then((pages) => {
-            this.setState({ pages, openedDetail: tempOpenedDetail });
+            store_pages.dispatch(
+              setPAGES({
+                pages,
+                openedDetail: tempOpenedDetail,
+              })
+            );
           });
         }
       };
       switch (action) {
         case "toggle":
           const tempOpenedDetail = setOpenedDetail(action, id);
-          this.setState({ openedDetail: tempOpenedDetail });
+          store_pages.dispatch(
+            setPAGES({
+              openedDetail: tempOpenedDetail,
+            })
+          );
           break;
         case "remove":
           await this.data.deleteDocumentStructure(id).then(() => {
@@ -96,7 +113,11 @@ export default class SideBarPages extends Component {
           push(`/${id}`);
           store_documentId.dispatch(setID(getDocumentId()));
           setItem("selected", id);
-          this.setState({ selected: id });
+          store_pages.dispatch(
+            setPAGES({
+              selected: id,
+            })
+          );
           break;
       }
     });
@@ -127,7 +148,7 @@ export default class SideBarPages extends Component {
           ".sidebar__pages--detail"
         ).dataset.id;
         if (icon)
-          this.state.openedDetail.has(this.hoveredElementId)
+          store_pages.getState().pages.openedDetail.has(this.hoveredElementId)
             ? (icon.textContent = "keyboard_arrow_down")
             : (icon.textContent = "keyboard_arrow_right");
       }
