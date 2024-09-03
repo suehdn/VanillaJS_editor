@@ -1,6 +1,13 @@
 import { getDocumentId, push } from "@/router";
 import Data from "@/data";
-import { setItem, getItem, store_documentId, setID } from "@stores";
+import {
+  setItem,
+  getItem,
+  store_documentId,
+  setID,
+  store_pages,
+  setPAGES,
+} from "@stores";
 import { Component } from "@core";
 
 export default class SideBarHeader extends Component {
@@ -41,7 +48,11 @@ export default class SideBarHeader extends Component {
               push(`/${x.id}`);
               store_documentId.dispatch(setID(getDocumentId()));
               setItem("selected", x.id);
-              this.props.sideBarPagesRender();
+              this.data.getDocumentStructure().then((x) => {
+                store_pages.dispatch(
+                  setPAGES({ pages: x, selected: getItem("selected") })
+                );
+              });
             });
             break;
           case "quick_start":

@@ -7,11 +7,6 @@ export default class SideBar extends Component {
   setup() {
     this.data = new Data();
     this.sideBarPages = null;
-    this.sideBarPagesRender = () => {
-      this.data.getDocumentStructure().then((x) => {
-        this.sideBarPages.setState({ pages: x, selected: getItem("selected") });
-      });
-    };
   }
   mounted() {
     const $sidebarHeader = this.$target.querySelector(".sidebar__header");
@@ -19,9 +14,6 @@ export default class SideBar extends Component {
 
     new SideBarHeader({
       $target: $sidebarHeader,
-      props: {
-        sideBarPagesRender: this.sideBarPagesRender,
-      },
     });
     this.data.getDocumentStructure().then((x) => {
       this.sideBarPages = new SideBarPages({
