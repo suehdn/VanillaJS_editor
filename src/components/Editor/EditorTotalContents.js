@@ -43,7 +43,7 @@ export default class EditorTotalContents extends Component {
     return editor +
           `<div class = "editor__content--container">`+
             `<span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>`+
-            `<div name="content" contentEditable="true" data-placeholder = "글을 자유롭게 작성하세요. 명령어를 사용하려면 '/' 키를 누르세요." class = "editor__input--content">${this.state.totalContents.content || ""}</div>`+
+            `<div name="content" contentEditable="true" class = "editor__input--content">${this.state.totalContents.content || ""}</div>`+
           `</div>`+
         `</div>`;
   }
@@ -110,6 +110,12 @@ export default class EditorTotalContents extends Component {
         "글을 자유롭게 작성하세요. 명령어를 사용하려면 '/' 키를 누르세요."
       );
       this.currentPlaceholderElement = e.target;
+    });
+    this.addEvent("focusout", ".editor__input--content", (e) => {
+      if (this.currentPlaceholderElement === e.target) {
+        this.currentPlaceholderElement.removeAttribute("data-placeholder");
+      }
+      this.currentPlaceholderElement = null;
     });
   }
 
