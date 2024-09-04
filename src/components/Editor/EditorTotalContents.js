@@ -31,21 +31,15 @@ export default class EditorTotalContents extends Component {
     this.debounceSetInput = debounce(this.setInput, 1000);
     console.log(this.state.totalContents);
   }
-
+  //prettier-ignore
   template() {
-    return `
-      <input name="title" type="text" placeholder = "제목 없음" class = "editor__input--title" value = "${
-        this.state.totalContents.title
-      }"/>
-      <div class = "editor__content">
-        <div class = "editor__content--container">
-          <span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
-          <div name="content" contentEditable="true" data-placeholder = "글을 자유롭게 작성하세요. 명령어를 사용하려면 '/' 키를 누르세요." class = "editor__input--content">${
-            this.state.totalContents.content || ""
-          }</div>
-        </div>
-      </div>
-      `;
+    return `<input name="title" type="text" placeholder = "제목 없음" class = "editor__input--title" value = "${this.state.totalContents.title}"/>`+
+      `<div class = "editor__content">`+
+        `<div class = "editor__content--container">`+
+          `<span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>`+
+          `<div name="content" contentEditable="true" data-placeholder = "글을 자유롭게 작성하세요. 명령어를 사용하려면 '/' 키를 누르세요." class = "editor__input--content">${this.state.totalContents.content || ""}</div>`+
+        `</div>`+
+      `</div>`;
   }
 
   setEvent() {
@@ -59,7 +53,6 @@ export default class EditorTotalContents extends Component {
     });
 
     this.addEvent("keydown", ".editor__content", (e) => {
-      console.log(e.key);
       if (e.key === "Enter") {
         if (e.shiftKey) {
           return;
@@ -71,7 +64,8 @@ export default class EditorTotalContents extends Component {
           <div name="content" contentEditable="true" class = "editor__input--content"></div>`; // 초기 내용 비우기
 
           const selection = this.$target.querySelector(".editor__content");
-          selection.appendChild(newDiv);
+          const index = [...selection.childNodes].indexOf(e.target.parentNode);
+          selection.insertBefore(newDiv, selection.children[index + 1] || null);
 
           const newContent = newDiv.querySelector(".editor__input--content");
           newContent.focus();
