@@ -1,7 +1,7 @@
 import Data from "@/data";
 import { setPAGES, store_pages } from "@stores";
 import { Component } from "@core";
-import { debounce, executeWithTryCatch, saveCursor } from "@utils";
+import { debounce, executeWithTryCatch, saveCursor, lastCursor } from "@utils";
 
 export default class EditorTotalContents extends Component {
   setup() {
@@ -49,6 +49,7 @@ export default class EditorTotalContents extends Component {
   setEvent() {
     this.currentPlaceholderElement = null;
     this.addEvent("keyup", "[name=title]", (e) => {
+      console.log("방향키 인식됨 타이틀:수정요망");
       if (this.state.totalContents.title !== e.target.textContent) {
         this.currentTitle = e.target.textContent;
         this.debounceSetInput({
@@ -59,6 +60,7 @@ export default class EditorTotalContents extends Component {
     });
 
     this.addEvent("keyup", ".editor__input--content", (e) => {
+      console.log("방향키 인식됨 컨텐츠 :수정요망");
       const contentDivs = this.$target.querySelectorAll(
         ".editor__input--content"
       );
@@ -125,6 +127,36 @@ export default class EditorTotalContents extends Component {
             const nextDiv = contentDivs[index + 1];
             nextDiv.focus();
             saveCursor(nextDiv, caretOffset);
+          }
+          break;
+        case "Backspace":
+          if (
+            currentDiv.textContent.trim() !== "" &&
+            caretOffset === 0 &&
+            index > 0
+          ) {
+            e.preventDefault();
+            const prevDiv = contentDivs[index - 1];
+
+            if (prevDiv) {
+              prevDiv.innerHTML += `${currentDiv.innerHTML}`;
+              const currentContentContainer = currentDiv.parentNode;
+              currentContentContainer.parentNode.removeChild(
+                currentContentContainer
+              );
+              lastCursor(prevDiv);
+            }
+          } else if (currentDiv.textContent.trim() === "") {
+            e.preventDefault();
+            const currentContentContainer = currentDiv.parentNode;
+            currentContentContainer.parentNode.removeChild(
+              currentContentContainer
+            );
+
+            if (index > 0) {
+              const prevDiv = contentDivs[index - 1];
+              lastCursor(prevDiv);
+            }
           }
           break;
       }
