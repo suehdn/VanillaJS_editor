@@ -1,7 +1,7 @@
 import Data from "@/data";
 import { setPAGES, store_pages } from "@stores";
 import { Component } from "@core";
-import { debounce, executeWithTryCatch } from "@utils";
+import { debounce, executeWithTryCatch, saveCursor } from "@utils";
 
 export default class EditorTotalContents extends Component {
   setup() {
@@ -77,23 +77,56 @@ export default class EditorTotalContents extends Component {
     });
 
     this.addEvent("keydown", ".editor__content", (e) => {
-      if (e.key === "Enter") {
-        if (e.shiftKey) {
-          return;
-        } else {
+      const contentDivs = this.$target.querySelectorAll(
+        ".editor__input--content"
+      );
+      const currentDiv = e.target;
+      const index = Array.from(contentDivs).indexOf(currentDiv);
+
+      const selection = window.getSelection();
+      const range = selection.getRangeAt(0);
+      const caretOffset = range.startOffset;
+
+      switch (e.key) {
+        case "Enter":
+          if (e.shiftKey) {
+            return;
+          } else {
+            e.preventDefault();
+            const newDiv = document.createElement("div");
+            newDiv.classList.add("editor__content--container");
+            newDiv.innerHTML = `<span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
+            <div name="content" contentEditable="true" class = "editor__input--content"></div>`; // 초기 내용 비우기
+
+            const selection = this.$target.querySelector(".editor__content");
+            const index = [...selection.childNodes].indexOf(
+              e.target.parentNode
+            );
+            selection.insertBefore(
+              newDiv,
+              selection.children[index + 1] || null
+            );
+
+            const newContent = newDiv.querySelector(".editor__input--content");
+            newContent.focus();
+          }
+          break;
+        case "ArrowUp":
           e.preventDefault();
-          const newDiv = document.createElement("div");
-          newDiv.classList.add("editor__content--container");
-          newDiv.innerHTML = `<span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
-          <div name="content" contentEditable="true" class = "editor__input--content"></div>`; // 초기 내용 비우기
-
-          const selection = this.$target.querySelector(".editor__content");
-          const index = [...selection.childNodes].indexOf(e.target.parentNode);
-          selection.insertBefore(newDiv, selection.children[index + 1] || null);
-
-          const newContent = newDiv.querySelector(".editor__input--content");
-          newContent.focus();
-        }
+          if (index > 0) {
+            const prevDiv = contentDivs[index - 1];
+            prevDiv.focus();
+            saveCursor(prevDiv, caretOffset);
+          }
+          break;
+        case "ArrowDown":
+          e.preventDefault();
+          if (index < contentDivs.length - 1) {
+            const nextDiv = contentDivs[index + 1];
+            nextDiv.focus();
+            saveCursor(nextDiv, caretOffset);
+          }
+          break;
       }
     });
 
