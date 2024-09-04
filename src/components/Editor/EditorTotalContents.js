@@ -25,21 +25,27 @@ export default class EditorTotalContents extends Component {
             title: newState.title || prevTitle,
             content: newState.content || prevContent,
           });
+          this.currentTitle = newState.title;
+          this.currentContents = newState.content;
         }, "Error get document structure EditorTotalContents");
       }
     };
     this.debounceSetInput = debounce(this.setInput, 1000);
-    console.log(this.state.totalContents);
   }
   //prettier-ignore
   template() {
-    return `<input name="title" type="text" placeholder = "제목 없음" class = "editor__input--title" value = "${this.state.totalContents.title}"/>`+
-      `<div class = "editor__content">`+
-        `<div class = "editor__content--container">`+
-          `<span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>`+
-          `<div name="content" contentEditable="true" data-placeholder = "글을 자유롭게 작성하세요. 명령어를 사용하려면 '/' 키를 누르세요." class = "editor__input--content">${this.state.totalContents.content || ""}</div>`+
-        `</div>`+
-      `</div>`;
+    let editor = `<input name="title" type="text" placeholder = "제목 없음" class = "editor__input--title" value = "${this.state.totalContents.title}"/>`+
+                `<div class = "editor__content">`;
+    if(this.state.totalContents.content) {
+      editor += this.state.totalContents.content + `</div>`;
+      return editor;
+    }
+    return editor +
+          `<div class = "editor__content--container">`+
+            `<span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>`+
+            `<div name="content" contentEditable="true" data-placeholder = "글을 자유롭게 작성하세요. 명령어를 사용하려면 '/' 키를 누르세요." class = "editor__input--content">${this.state.totalContents.content || ""}</div>`+
+          `</div>`+
+        `</div>`;
   }
 
   setEvent() {
@@ -48,7 +54,28 @@ export default class EditorTotalContents extends Component {
     this.addEvent("keyup", "[name=title]", (e) => {
       if (this.currentTitle !== e.target.value) {
         this.currentTitle = e.target.value;
-        this.debounceSetInput({ title: e.target.value });
+        this.debounceSetInput({
+          title: e.target.value,
+          content: this.currentContents,
+        });
+      }
+    });
+
+    this.addEvent("keyup", ".editor__input--content", (e) => {
+      const contentDivs = this.$target.querySelectorAll(
+        ".editor__input--content"
+      );
+      const newContent = Array.from(contentDivs)
+        .map((div) => {
+          return `${div.parentNode.outerHTML}`;
+        })
+        .join("");
+      if (this.currentContents !== newContent) {
+        this.currentContents = newContent;
+        this.debounceSetInput({
+          title: this.currentTitle,
+          content: newContent,
+        });
       }
     });
 
