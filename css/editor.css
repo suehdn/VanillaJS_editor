@@ -3,9 +3,11 @@ p {
 }
 
 .editor__div--flex {
-  --editor-header-margin: 3.5rem;
+  --editor-header-margin-top: 6rem;
+  --editor-header-margin-left: 1.5rem;
   --editor-header-font-size: 2.5rem;
   --editor-common-width: 80%;
+  --editor-content-margin-top: 1rem;
 
   width: calc(100% - var(--sidebar-width));
   max-height: 100%;
@@ -14,44 +16,63 @@ p {
   overflow-y: auto;
 }
 
-.editor__title {
+.editor {
   width: var(--editor-common-width);
-  margin: var(--editor-header-margin) auto 0 auto;
+  margin: var(--editor-header-margin-top) auto 0 auto;
 }
 
-.editor__input-title {
+.editor__input--title {
   font-size: var(--editor-header-font-size);
   font-weight: bold;
   width: 100%;
+  margin-left: var(--editor-header-margin-left);
   border: none;
   outline: none;
 }
 
-.editor__input-title::placeholder {
+.editor__input--title::placeholder {
   color: var(--sidebar-font-color-100);
 }
 
-.editor__input--area {
-  width: 80%;
-  height: 85%;
-  margin-left: auto;
-  margin-right: auto;
-  overflow: auto;
+.editor__content {
+  margin-top: var(--editor-content-margin-top);
 }
 
-.editor__content {
-  height: 85%;
-  margin-left: auto;
-  margin-right: auto;
-  background-color: rgba(0, 0, 0, 0);
+.editor__content--container {
+  display: flex;
+  color: var(--sidebar-font-color-200);
+  margin: var(--editor-content-margin-top) 0;
+}
+
+.material-symbols-rounded.editor__content--drag {
+  visibility: hidden;
+}
+.editor__content--container:hover
+  .material-symbols-rounded.editor__content--drag {
+  visibility: visible;
+}
+.material-symbols-rounded.editor__content--drag:hover {
+  cursor: grab;
+}
+
+.editor__input--content {
   border: none;
-  overflow: auto;
+  outline: none;
   display: block;
   padding-left: 5px;
   padding-right: 5px;
+  color: black;
 }
 
-.editor__main--content {
+.editor__input--content:empty::before {
+  content: attr(data-placeholder);
+  color: var(--sidebar-font-color-200);
+}
+/* .editor__input--content:focus:before {
+  content: "";
+} */
+
+/* .editor__main--content {
   width: 80%;
   margin-left: auto;
   margin-right: auto;
@@ -62,4 +83,4 @@ p {
   text-align: center;
   margin: 0 auto;
   margin-top: 20%;
-}
+} */
