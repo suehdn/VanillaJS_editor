@@ -44,12 +44,12 @@ p {
   margin: var(--editor-content-margin-top) 0;
 }
 
-.material-symbols-rounded.editor__content--drag {
-  visibility: hidden;
-}
 .editor__content--container:hover
   .material-symbols-rounded.editor__content--drag {
   visibility: visible;
+}
+.material-symbols-rounded.editor__content--drag {
+  visibility: hidden;
 }
 .material-symbols-rounded.editor__content--drag:hover {
   cursor: grab;
@@ -62,6 +62,7 @@ p {
   padding-left: 5px;
   padding-right: 5px;
   color: black;
+  width: 100%;
 }
 
 .editor__input--content:empty::before {
