@@ -13,8 +13,7 @@ export default class App extends Component {
       <section class="sidebar__pages"></section>
     </aside>
     <div class="editor__div--flex">
-      <div class="editor__title"></div>
-      <div class="editor__content"></div>
+      <div class="editor"></div>
     </div>`;
   }
   mounted() {

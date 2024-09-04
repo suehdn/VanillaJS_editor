@@ -8,7 +8,7 @@ import { executeWithTryCatch } from "@utils";
 export default class Editor extends Component {
   setup() {
     this.data = new Data();
-    this.$editorTotalContents = this.$target.querySelector(".editor__title");
+    this.$editorTotalContents = this.$target.querySelector(".editor");
     this.editorTotalContents = null;
     this.current_documentId = null;
     this.state = {
