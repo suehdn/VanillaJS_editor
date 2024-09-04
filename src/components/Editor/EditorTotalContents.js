@@ -48,9 +48,8 @@ export default class EditorTotalContents extends Component {
 
   setEvent() {
     this.currentPlaceholderElement = null;
-
     this.addEvent("keyup", "[name=title]", (e) => {
-      if (this.currentTitle !== e.target.textContent) {
+      if (this.state.totalContents.title !== e.target.textContent) {
         this.currentTitle = e.target.textContent;
         this.debounceSetInput({
           title: e.target.textContent,
