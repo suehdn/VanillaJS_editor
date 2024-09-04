@@ -7,6 +7,7 @@ import {
   setID,
   store_pages,
   setPAGES,
+  removeItem,
 } from "@stores";
 import { Component } from "@core";
 import { executeWithTryCatch } from "@utils";
@@ -43,6 +44,8 @@ export default class SideBarHeader extends Component {
           case "main":
             push(`/main`);
             store_documentId.dispatch(setID(getDocumentId()));
+            removeItem("selected");
+            store_pages.dispatch(setPAGES({ selected: getItem("selected") }));
             break;
           case "add":
             await executeWithTryCatch(async () => {
@@ -60,10 +63,14 @@ export default class SideBarHeader extends Component {
           case "quick_start":
             push(`/quick_start`);
             store_documentId.dispatch(setID(getDocumentId()));
+            removeItem("selected");
+            store_pages.dispatch(setPAGES({ selected: getItem("selected") }));
             break;
           case "guestbook":
             push(`/guestbook`);
             store_documentId.dispatch(setID(getDocumentId()));
+            removeItem("selected");
+            store_pages.dispatch(setPAGES({ selected: getItem("selected") }));
             break;
         }
       }
