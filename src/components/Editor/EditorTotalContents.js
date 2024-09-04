@@ -7,11 +7,11 @@ export default class EditorTotalContents extends Component {
   setup() {
     this.data = new Data();
     this.state = { ...this.props };
-    this.currentTitle = this.props.totalContents.title;
-    this.currentContents = this.props.totalContents.content;
+    this.currentTitle = this.state.totalContents.title;
+    this.currentContents = this.state.totalContents.content;
     this.setInput = async (newState) => {
-      const prevTitle = this.props.title;
-      const prevContent = this.props.content;
+      const prevTitle = this.state.totalContents.title;
+      const prevContent = this.state.totalContents.content;
 
       if (newState.title !== prevTitle || newState.content !== prevContent) {
         await executeWithTryCatch(async () => {
@@ -25,8 +25,6 @@ export default class EditorTotalContents extends Component {
             title: newState.title || prevTitle,
             content: newState.content || prevContent,
           });
-          this.currentTitle = newState.title;
-          this.currentContents = newState.content;
         }, "Error get document structure EditorTotalContents");
       }
     };
@@ -34,7 +32,7 @@ export default class EditorTotalContents extends Component {
   }
   //prettier-ignore
   template() {
-    let editor = `<input name="title" type="text" placeholder = "제목 없음" class = "editor__input--title" value = "${this.state.totalContents.title}"/>`+
+    let editor = `<div name="title" contentEditable="true" data-placeholder = "제목 없음" class = "editor__input--title">${this.state.totalContents.title}</div>`+
                 `<div class = "editor__content">`;
     if(this.state.totalContents.content) {
       editor += this.state.totalContents.content + `</div>`;
@@ -52,10 +50,10 @@ export default class EditorTotalContents extends Component {
     this.currentPlaceholderElement = null;
 
     this.addEvent("keyup", "[name=title]", (e) => {
-      if (this.currentTitle !== e.target.value) {
-        this.currentTitle = e.target.value;
+      if (this.currentTitle !== e.target.textContent) {
+        this.currentTitle = e.target.textContent;
         this.debounceSetInput({
-          title: e.target.value,
+          title: e.target.textContent,
           content: this.currentContents,
         });
       }

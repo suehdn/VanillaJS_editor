@@ -29,8 +29,8 @@ p {
   border: none;
   outline: none;
 }
-
-.editor__input--title::placeholder {
+.editor__input--title:empty::before {
+  content: attr(data-placeholder);
   color: var(--sidebar-font-color-100);
 }
 
