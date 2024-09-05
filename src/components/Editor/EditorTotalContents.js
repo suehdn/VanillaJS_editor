@@ -243,7 +243,22 @@ export default class EditorTotalContents extends Component {
             grandparentNode.children[parentIndex]
           );
         }
+        parentNode = grandparentNode;
       }
+      const contentDivs = parentNode.querySelectorAll(
+        ".editor__input--content"
+      );
+      const newContent = Array.from(contentDivs)
+        .map((div) => {
+          return `${div.parentNode.outerHTML}`;
+        })
+        .join("")
+        .replace(/dragging/, "");
+      this.debounceSetInput({
+        title: this.currentTitle,
+        content: newContent,
+      });
+      this.currentContents = newContent;
     });
   }
 }
