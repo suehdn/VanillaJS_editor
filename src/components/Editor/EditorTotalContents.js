@@ -14,14 +14,14 @@ export default class EditorTotalContents extends Component {
     this.data = new Data();
     this.state = { ...this.props };
     this.debounceTime = 300;
-    console.log("initial", this.state.totalContents);
+    // console.log("initial", this.state.totalContents);
     this.setInput = async (newState) => {
-      console.log("currentTitle", this.currentTitle);
-      console.log("currentContents", this.currentContents);
+      // console.log("currentTitle", this.currentTitle);
+      // console.log("currentContents", this.currentContents);
       const prevTitle = this.state.totalContents.title;
       const prevContent = this.state.totalContents.content;
-      console.log("this.state.totalContents ::::", prevTitle, prevContent);
-      console.log("newState", newState);
+      // console.log("this.state.totalContents ::::", prevTitle, prevContent);
+      // console.log("newState", newState);
 
       if (newState.title !== prevTitle || newState.content !== prevContent) {
         await executeWithTryCatch(async () => {
@@ -38,8 +38,8 @@ export default class EditorTotalContents extends Component {
         }, "Error get document structure EditorTotalContents");
         this.currentTitle = newState.title || prevTitle;
         this.currentContents = newState.content || prevContent;
-        console.log("currentTitle", this.currentTitle);
-        console.log("currentContents", this.currentContents);
+        // console.log("currentTitle", this.currentTitle);
+        // console.log("currentContents", this.currentContents);
       }
     };
     this.debounceSetInput = debounce(this.setInput, this.debounceTime);
@@ -85,7 +85,7 @@ export default class EditorTotalContents extends Component {
       }
     });
 
-    this.addEvent("keydown", ".editor__input--content", (e) => {
+    this.addEvent("keyup", ".editor__input--content", (e) => {
       console.log("방향키 인식됨 컨텐츠 :수정요망");
       const contentDivs = this.$target.querySelectorAll(
         ".editor__input--content"
@@ -143,33 +143,27 @@ export default class EditorTotalContents extends Component {
           }
           break;
         case "Backspace":
-          if (
-            currentDiv.textContent.trim() !== "" &&
-            caretOffset === 0 &&
-            index > 0
-          ) {
-            e.preventDefault();
-            const prevDiv = contentDivs[index - 1];
-
-            if (prevDiv) {
-              prevDiv.innerHTML += `${currentDiv.innerHTML}`;
-              const currentContentContainer = currentDiv.parentNode;
-              currentContentContainer.parentNode.removeChild(
-                currentContentContainer
-              );
-              lastCursor(prevDiv);
-            }
-          } else if (currentDiv.textContent.trim() === "" && index > 0) {
+          if (caretOffset === 0 && index > 0) {
             e.preventDefault();
             const currentContentContainer = currentDiv.parentNode;
-            currentContentContainer.parentNode.removeChild(
-              currentContentContainer
+            const prevDiv = contentDivs[index - 1];
+            appendDiv(
+              currentDiv,
+              currentContentContainer,
+              prevDiv,
+              contentDivs.length
             );
-
-            if (index > 0) {
-              const prevDiv = contentDivs[index - 1];
-              lastCursor(prevDiv);
-            }
+          } else if (caretOffset === 0 && index === 0) {
+            e.preventDefault();
+            const currentContentContainer = currentDiv.parentNode;
+            const prevDiv =
+              currentContentContainer.parentNode.previousElementSibling;
+            appendDiv(
+              currentDiv,
+              currentContentContainer,
+              prevDiv,
+              contentDivs.length
+            );
           }
           break;
       }
@@ -194,7 +188,13 @@ export default class EditorTotalContents extends Component {
     });
   }
 }
-
+/**
+ * 엔터를 입력했을 때 Div를 분리하는 함수
+ * @param {*} currentDiv 현재 입력 받고 있는 Div
+ * @param {*} caretOffset 커서의 위치
+ * @param {*} target ".editor__content"를 가져올 목표 노드
+ * @param {*} parentNode currentDiv의 부모 노드
+ */
 const separateDiv = (currentDiv, caretOffset, $target, parentNode) => {
   const currentText = currentDiv.textContent;
   const textBefore = currentText.slice(0, caretOffset);
@@ -204,7 +204,7 @@ const separateDiv = (currentDiv, caretOffset, $target, parentNode) => {
   const newDiv = document.createElement("div");
   newDiv.classList.add("editor__content--container");
   newDiv.innerHTML = `<span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
-      <div name="content" contentEditable="true" class = "editor__input--content">${textAfter}</div>`; // 초기 내용 비우기
+      <div name="content" contentEditable="true" class = "editor__input--content">${textAfter}</div>`;
 
   const selection = $target.querySelector(".editor__content");
   const index = [...selection.childNodes].indexOf(parentNode);
@@ -212,4 +212,31 @@ const separateDiv = (currentDiv, caretOffset, $target, parentNode) => {
 
   const newContent = newDiv.querySelector(".editor__input--content");
   newContent.focus();
+};
+/**
+ * Backspace를 입력했을 때 Div를 합치는 함수
+ * @param {*} currentDiv 현재 입력 받고 있는 Div
+ * @param {*} currentContentContainer 커서의 위치의 부모 노드
+ * @param {*} prevDiv 현재 노드의 이전 노드 (합치기 원하는 노드)
+ * @param {*} length 부모 노드 안의 Div의 총 개수
+ */
+const appendDiv = (currentDiv, currentContentContainer, prevDiv, length) => {
+  const editor_content = currentContentContainer.parentNode;
+  if (currentDiv.textContent.trim() === "") {
+    currentContentContainer.parentNode.removeChild(currentContentContainer);
+    lastCursor(prevDiv);
+  } else if (currentDiv.textContent.trim() !== "") {
+    if (prevDiv) {
+      prevDiv.innerHTML += `${currentDiv.innerHTML}`;
+      currentContentContainer.parentNode.removeChild(currentContentContainer);
+      lastCursor(prevDiv);
+    }
+  }
+  if (!length) {
+    const newDiv = document.createElement("div");
+    newDiv.classList.add("editor__content--container");
+    newDiv.innerHTML = `<span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
+        <div name="content" contentEditable="true" class = "editor__input--content"></div>`;
+    editor_content.appendChild(newDiv);
+  }
 };
