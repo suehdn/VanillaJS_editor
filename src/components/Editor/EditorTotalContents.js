@@ -7,6 +7,7 @@ export default class EditorTotalContents extends Component {
   setup() {
     this.data = new Data();
     this.state = { ...this.props };
+    this.debounceTime = 300;
     console.log("initial", this.state.totalContents);
     this.setInput = async (newState) => {
       console.log("currentTitle", this.currentTitle);
@@ -20,12 +21,12 @@ export default class EditorTotalContents extends Component {
         await executeWithTryCatch(async () => {
           const pages = await this.data.editDocument(
             this.state.current_documentId,
-            newState.title || prevTitle,
+            newState.title,
             newState.content || prevContent
           );
           store_pages.dispatch(setPAGES({ pages }));
           console.log("문서 업데이트됨:", {
-            title: newState.title || prevTitle,
+            title: newState.title,
             content: newState.content || prevContent,
           });
         }, "Error get document structure EditorTotalContents");
@@ -35,7 +36,7 @@ export default class EditorTotalContents extends Component {
         console.log("currentContents", this.currentContents);
       }
     };
-    this.debounceSetInput = debounce(this.setInput, 1000);
+    this.debounceSetInput = debounce(this.setInput, this.debounceTime);
   }
   //prettier-ignore
   template() {
