@@ -59,7 +59,7 @@ export default class EditorTotalContents extends Component {
       return editor;
     }
     return editor +
-          `<div class = "editor__content--container">`+
+          `<div class = "editor__content--container" draggable="true">`+
             `<span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>`+
             `<div name="content" contentEditable="true" class = "editor__input--content">${this.state.totalContents.content || ""}</div>`+
           `</div>`+
@@ -74,18 +74,18 @@ export default class EditorTotalContents extends Component {
   setEvent() {
     this.currentPlaceholderElement = null;
     this.addEvent("keydown", "[name=title]", (e) => {
-      console.log("방향키 인식됨 타이틀:수정요망");
       const caretOffset = setCaretOffset();
 
       if (e.key === "Enter") {
         e.preventDefault();
         const currentDiv = e.target;
-        this.currentTitle = separateDiv(
-          currentDiv,
-          caretOffset,
-          this.$target,
-          e.target.parentNode
-        );
+        this.currentTitle =
+          separateDiv(
+            currentDiv,
+            caretOffset,
+            this.$target,
+            e.target.parentNode
+          ) || this.currentTitle;
       }
     });
     this.addEvent("keyup", "[name=title]", (e) => {
@@ -100,7 +100,6 @@ export default class EditorTotalContents extends Component {
     });
 
     this.addEvent("keyup", ".editor__input--content", (e) => {
-      console.log("방향키 인식됨 컨텐츠 :수정요망");
       const contentDivs = this.$target.querySelectorAll(
         ".editor__input--content"
       );
@@ -132,12 +131,13 @@ export default class EditorTotalContents extends Component {
             return;
           } else {
             e.preventDefault();
-            this.currentTitle = separateDiv(
-              currentDiv,
-              caretOffset,
-              this.$target,
-              e.target.parentNode
-            );
+            this.currentTitle =
+              separateDiv(
+                currentDiv,
+                caretOffset,
+                this.$target,
+                e.target.parentNode
+              ) || this.currentTitle;
           }
           break;
         case "ArrowUp":
@@ -204,6 +204,48 @@ export default class EditorTotalContents extends Component {
       }
       this.currentPlaceholderElement = null;
     });
+
+    this.addEvent("dragstart", ".editor__content--container", (e) => {
+      e.dataTransfer.setData("text/plain", e.target.outerHTML);
+      e.target.classList.add("dragging");
+    });
+
+    this.addEvent("dragend", ".editor__content--container", (e) => {
+      e.target.classList.remove("dragging");
+    });
+
+    this.addEvent("dragover", ".editor__content--container", (e) => {
+      e.preventDefault();
+      const afterElement = this.getDragAfterElement(
+        e.target.parentNode,
+        e.clientY
+      );
+      const dragging = document.querySelector(".dragging");
+      if (afterElement === null) {
+        e.target.parentNode.appendChild(dragging);
+      } else {
+        e.target.parentNode.insertBefore(dragging, afterElement);
+      }
+    });
+  }
+  getDragAfterElement(container, y) {
+    const draggableElements = [
+      ...container.querySelectorAll(
+        ".editor__content--container:not(.dragging)"
+      ),
+    ];
+    return draggableElements.reduce(
+      (closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+          return { offset: offset, element: child };
+        } else {
+          return closest;
+        }
+      },
+      { offset: Number.NEGATIVE_INFINITY }
+    ).element;
   }
 }
 /**
@@ -221,6 +263,7 @@ const separateDiv = (currentDiv, caretOffset, $target, parentNode) => {
 
   const newDiv = document.createElement("div");
   newDiv.classList.add("editor__content--container");
+  newDiv.setAttribute("draggable", "true");
   newDiv.innerHTML = `<span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
       <div name="content" contentEditable="true" class = "editor__input--content">${textAfter}</div>`;
 
@@ -230,7 +273,7 @@ const separateDiv = (currentDiv, caretOffset, $target, parentNode) => {
 
   const newContent = newDiv.querySelector(".editor__input--content");
   newContent.focus();
-  return textBefore;
+  return currentDiv.classList.contains("editor__input--title") && textBefore;
 };
 /**
  * Backspace를 입력했을 때 Div를 합치는 함수
@@ -262,6 +305,7 @@ const appendDiv = (
   if (!length) {
     const newDiv = document.createElement("div");
     newDiv.classList.add("editor__content--container");
+    newDiv.setAttribute("draggable", "true");
     newDiv.innerHTML = `<span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
         <div name="content" contentEditable="true" class = "editor__input--content"></div>`;
     editor_content.appendChild(newDiv);

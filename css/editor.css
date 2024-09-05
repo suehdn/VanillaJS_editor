@@ -44,15 +44,21 @@ p {
   margin: var(--editor-content-margin-top) 0;
 }
 
+.editor__content--container.dragging {
+  border: 1px solid var(--sidebar-font-color-100);
+  border-radius: 0.5rem;
+}
+
 .editor__content--container:hover
   .material-symbols-rounded.editor__content--drag {
   visibility: visible;
 }
 .material-symbols-rounded.editor__content--drag {
   visibility: hidden;
-}
-.material-symbols-rounded.editor__content--drag:hover {
   cursor: grab;
+}
+.material-symbols-rounded.editor__content--drag:active {
+  cursor: grabbing;
 }
 
 .editor__input--content {
