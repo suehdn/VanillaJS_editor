@@ -1,7 +1,13 @@
 import Data from "@/data";
 import { setPAGES, store_pages } from "@stores";
 import { Component } from "@core";
-import { debounce, executeWithTryCatch, saveCursor, lastCursor } from "@utils";
+import {
+  debounce,
+  executeWithTryCatch,
+  setCaretOffset,
+  saveCursor,
+  lastCursor,
+} from "@utils";
 
 export default class EditorTotalContents extends Component {
   setup() {
@@ -61,9 +67,15 @@ export default class EditorTotalContents extends Component {
 
   setEvent() {
     this.currentPlaceholderElement = null;
-    this.addEvent("keyup", "[name=title]", (e) => {
+    this.addEvent("keydown", "[name=title]", (e) => {
       console.log("방향키 인식됨 타이틀:수정요망");
-      if (this.currentTitle !== e.target.textContent) {
+      const caretOffset = setCaretOffset();
+
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const currentDiv = e.target;
+        separateDiv(currentDiv, caretOffset, this.$target, e.target.parentNode);
+      } else if (this.currentTitle !== e.target.textContent) {
         this.currentTitle = e.target.textContent;
         this.currentContents = this.state.totalContents.content;
         this.debounceSetInput({
@@ -73,7 +85,7 @@ export default class EditorTotalContents extends Component {
       }
     });
 
-    this.addEvent("keyup", ".editor__input--content", (e) => {
+    this.addEvent("keydown", ".editor__input--content", (e) => {
       console.log("방향키 인식됨 컨텐츠 :수정요망");
       const contentDivs = this.$target.querySelectorAll(
         ".editor__input--content"
@@ -98,10 +110,7 @@ export default class EditorTotalContents extends Component {
       );
       const currentDiv = e.target;
       const index = Array.from(contentDivs).indexOf(currentDiv);
-
-      const selection = window.getSelection();
-      const range = selection.getRangeAt(0);
-      const caretOffset = range.startOffset;
+      const caretOffset = setCaretOffset();
 
       switch (e.key) {
         case "Enter":
@@ -109,22 +118,12 @@ export default class EditorTotalContents extends Component {
             return;
           } else {
             e.preventDefault();
-            const newDiv = document.createElement("div");
-            newDiv.classList.add("editor__content--container");
-            newDiv.innerHTML = `<span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
-            <div name="content" contentEditable="true" class = "editor__input--content"></div>`; // 초기 내용 비우기
-
-            const selection = this.$target.querySelector(".editor__content");
-            const index = [...selection.childNodes].indexOf(
+            separateDiv(
+              currentDiv,
+              caretOffset,
+              this.$target,
               e.target.parentNode
             );
-            selection.insertBefore(
-              newDiv,
-              selection.children[index + 1] || null
-            );
-
-            const newContent = newDiv.querySelector(".editor__input--content");
-            newContent.focus();
           }
           break;
         case "ArrowUp":
@@ -195,3 +194,22 @@ export default class EditorTotalContents extends Component {
     });
   }
 }
+
+const separateDiv = (currentDiv, caretOffset, $target, parentNode) => {
+  const currentText = currentDiv.textContent;
+  const textBefore = currentText.slice(0, caretOffset);
+  const textAfter = currentText.slice(caretOffset);
+  currentDiv.textContent = textBefore;
+
+  const newDiv = document.createElement("div");
+  newDiv.classList.add("editor__content--container");
+  newDiv.innerHTML = `<span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
+      <div name="content" contentEditable="true" class = "editor__input--content">${textAfter}</div>`; // 초기 내용 비우기
+
+  const selection = $target.querySelector(".editor__content");
+  const index = [...selection.childNodes].indexOf(parentNode);
+  selection.insertBefore(newDiv, selection.children[index + 1] || null);
+
+  const newContent = newDiv.querySelector(".editor__input--content");
+  newContent.focus();
+};
