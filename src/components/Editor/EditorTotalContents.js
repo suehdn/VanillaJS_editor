@@ -80,7 +80,10 @@ export default class EditorTotalContents extends Component {
           this.$target,
           e.target.parentNode
         );
-      } else if (this.currentTitle !== e.target.textContent) {
+      }
+    });
+    this.addEvent("keyup", "[name=title]", (e) => {
+      if (e.key !== "Enter" && this.currentTitle !== e.target.textContent) {
         this.currentTitle = e.target.textContent;
         this.currentContents = this.state.totalContents.content;
         this.debounceSetInput({
@@ -152,7 +155,7 @@ export default class EditorTotalContents extends Component {
             e.preventDefault();
             const currentContentContainer = currentDiv.parentNode;
             const prevDiv = contentDivs[index - 1];
-            appendDiv(
+            [this.currentTitle, this.currentContents] = appendDiv(
               currentDiv,
               currentContentContainer,
               prevDiv,
@@ -165,7 +168,7 @@ export default class EditorTotalContents extends Component {
             const currentContentContainer = currentDiv.parentNode;
             const prevDiv =
               currentContentContainer.parentNode.previousElementSibling;
-            appendDiv(
+            [this.currentTitle, this.currentContents] = appendDiv(
               currentDiv,
               currentContentContainer,
               prevDiv,
@@ -249,6 +252,14 @@ const appendDiv = (
       lastCursor(prevDiv);
     }
   }
+
+  if (!length) {
+    const newDiv = document.createElement("div");
+    newDiv.classList.add("editor__content--container");
+    newDiv.innerHTML = `<span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
+        <div name="content" contentEditable="true" class = "editor__input--content"></div>`;
+    editor_content.appendChild(newDiv);
+  }
   const contentDivs = editor_content.querySelectorAll(
     ".editor__input--content"
   );
@@ -261,12 +272,5 @@ const appendDiv = (
     title: prevDiv.textContent || currentTitle,
     content: newContent,
   });
-
-  if (!length) {
-    const newDiv = document.createElement("div");
-    newDiv.classList.add("editor__content--container");
-    newDiv.innerHTML = `<span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
-        <div name="content" contentEditable="true" class = "editor__input--content"></div>`;
-    editor_content.appendChild(newDiv);
-  }
+  return [prevDiv.textContent || currentTitle, newContent];
 };
