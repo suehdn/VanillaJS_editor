@@ -74,7 +74,12 @@ export default class EditorTotalContents extends Component {
       if (e.key === "Enter") {
         e.preventDefault();
         const currentDiv = e.target;
-        separateDiv(currentDiv, caretOffset, this.$target, e.target.parentNode);
+        this.currentTitle = separateDiv(
+          currentDiv,
+          caretOffset,
+          this.$target,
+          e.target.parentNode
+        );
       } else if (this.currentTitle !== e.target.textContent) {
         this.currentTitle = e.target.textContent;
         this.currentContents = this.state.totalContents.content;
@@ -118,7 +123,7 @@ export default class EditorTotalContents extends Component {
             return;
           } else {
             e.preventDefault();
-            separateDiv(
+            this.currentTitle = separateDiv(
               currentDiv,
               caretOffset,
               this.$target,
@@ -151,7 +156,9 @@ export default class EditorTotalContents extends Component {
               currentDiv,
               currentContentContainer,
               prevDiv,
-              contentDivs.length
+              contentDivs.length,
+              this.debounceSetInput,
+              this.currentTitle
             );
           } else if (caretOffset === 0 && index === 0) {
             e.preventDefault();
@@ -162,7 +169,9 @@ export default class EditorTotalContents extends Component {
               currentDiv,
               currentContentContainer,
               prevDiv,
-              contentDivs.length
+              contentDivs.length,
+              this.debounceSetInput,
+              this.currentTitle
             );
           }
           break;
@@ -212,6 +221,7 @@ const separateDiv = (currentDiv, caretOffset, $target, parentNode) => {
 
   const newContent = newDiv.querySelector(".editor__input--content");
   newContent.focus();
+  return textBefore;
 };
 /**
  * Backspace를 입력했을 때 Div를 합치는 함수
@@ -220,7 +230,14 @@ const separateDiv = (currentDiv, caretOffset, $target, parentNode) => {
  * @param {*} prevDiv 현재 노드의 이전 노드 (합치기 원하는 노드)
  * @param {*} length 부모 노드 안의 Div의 총 개수
  */
-const appendDiv = (currentDiv, currentContentContainer, prevDiv, length) => {
+const appendDiv = (
+  currentDiv,
+  currentContentContainer,
+  prevDiv,
+  length,
+  debounceSetInput,
+  currentTitle
+) => {
   const editor_content = currentContentContainer.parentNode;
   if (currentDiv.textContent.trim() === "") {
     currentContentContainer.parentNode.removeChild(currentContentContainer);
@@ -232,6 +249,19 @@ const appendDiv = (currentDiv, currentContentContainer, prevDiv, length) => {
       lastCursor(prevDiv);
     }
   }
+  const contentDivs = editor_content.querySelectorAll(
+    ".editor__input--content"
+  );
+  const newContent = Array.from(contentDivs)
+    .map((div) => {
+      return `${div.parentNode.outerHTML}`;
+    })
+    .join("");
+  debounceSetInput({
+    title: prevDiv.textContent || currentTitle,
+    content: newContent,
+  });
+
   if (!length) {
     const newDiv = document.createElement("div");
     newDiv.classList.add("editor__content--container");
