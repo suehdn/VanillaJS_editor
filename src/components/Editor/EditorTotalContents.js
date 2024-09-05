@@ -319,8 +319,15 @@ const appendDiv = (
     })
     .join("");
   debounceSetInput({
-    title: prevDiv.textContent || currentTitle,
+    title: prevDiv.classList.contains("editor__input--title")
+      ? prevDiv.textContent
+      : currentTitle,
     content: newContent,
   });
-  return [prevDiv.textContent || currentTitle, newContent];
+  return [
+    prevDiv.classList.contains("editor__input--title")
+      ? prevDiv.textContent
+      : currentTitle,
+    newContent,
+  ];
 };
