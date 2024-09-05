@@ -216,10 +216,7 @@ export default class EditorTotalContents extends Component {
 
     this.addEvent("dragover", ".editor__content--container", (e) => {
       e.preventDefault();
-      const afterElement = this.getDragAfterElement(
-        e.target.parentNode,
-        e.clientY
-      );
+      const afterElement = getDragAfterElement(e.target.parentNode, e.clientY);
       const dragging = document.querySelector(".dragging");
       if (afterElement === null) {
         e.target.parentNode.appendChild(dragging);
@@ -227,25 +224,6 @@ export default class EditorTotalContents extends Component {
         e.target.parentNode.insertBefore(dragging, afterElement);
       }
     });
-  }
-  getDragAfterElement(container, y) {
-    const draggableElements = [
-      ...container.querySelectorAll(
-        ".editor__content--container:not(.dragging)"
-      ),
-    ];
-    return draggableElements.reduce(
-      (closest, child) => {
-        const box = child.getBoundingClientRect();
-        const offset = y - box.top - box.height / 2;
-        if (offset < 0 && offset > closest.offset) {
-          return { offset: offset, element: child };
-        } else {
-          return closest;
-        }
-      },
-      { offset: Number.NEGATIVE_INFINITY }
-    ).element;
   }
 }
 /**
@@ -330,4 +308,22 @@ const appendDiv = (
       : currentTitle,
     newContent,
   ];
+};
+
+const getDragAfterElement = (container, y) => {
+  const draggableElements = [
+    ...container.querySelectorAll(".editor__content--container:not(.dragging)"),
+  ];
+  return draggableElements.reduce(
+    (closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      if (offset < 0 && offset > closest.offset) {
+        return { offset: offset, element: child };
+      } else {
+        return closest;
+      }
+    },
+    { offset: Number.NEGATIVE_INFINITY }
+  ).element;
 };
