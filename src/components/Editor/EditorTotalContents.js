@@ -206,7 +206,6 @@ export default class EditorTotalContents extends Component {
     });
 
     this.addEvent("dragstart", ".editor__content--container", (e) => {
-      e.dataTransfer.setData("text/plain", e.target.outerHTML);
       e.target.classList.add("dragging");
     });
 
@@ -216,12 +215,34 @@ export default class EditorTotalContents extends Component {
 
     this.addEvent("dragover", ".editor__content--container", (e) => {
       e.preventDefault();
-      const afterElement = getDragAfterElement(e.target.parentNode, e.clientY);
+      e.stopPropagation();
+      let parentNode = e.target.parentNode;
+      const afterElement = getDragAfterElement(parentNode, e.clientY);
       const dragging = document.querySelector(".dragging");
-      if (afterElement === null) {
-        e.target.parentNode.appendChild(dragging);
+
+      if (!dragging) return;
+
+      if (afterElement) {
+        parentNode.insertBefore(dragging, afterElement);
       } else {
-        e.target.parentNode.insertBefore(dragging, afterElement);
+        const grandparentNode = parentNode.parentNode;
+        if (parentNode.classList.contains("editor__content--container")) {
+          const parentIndex = [...grandparentNode.childNodes].indexOf(
+            parentNode
+          );
+          const draggingIndex = [...grandparentNode.childNodes].indexOf(
+            dragging
+          );
+          if (parentIndex >= grandparentNode.children.length - 1) {
+            grandparentNode.appendChild(
+              grandparentNode.children[draggingIndex]
+            );
+          }
+          grandparentNode.insertBefore(
+            grandparentNode.children[draggingIndex],
+            grandparentNode.children[parentIndex]
+          );
+        }
       }
     });
   }
