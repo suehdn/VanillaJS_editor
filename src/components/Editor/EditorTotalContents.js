@@ -7,11 +7,14 @@ export default class EditorTotalContents extends Component {
   setup() {
     this.data = new Data();
     this.state = { ...this.props };
-    this.currentTitle = this.state.totalContents.title;
-    this.currentContents = this.state.totalContents.content;
+    console.log("initial", this.state.totalContents);
     this.setInput = async (newState) => {
+      console.log("currentTitle", this.currentTitle);
+      console.log("currentContents", this.currentContents);
       const prevTitle = this.state.totalContents.title;
       const prevContent = this.state.totalContents.content;
+      console.log("this.state.totalContents ::::", prevTitle, prevContent);
+      console.log("newState", newState);
 
       if (newState.title !== prevTitle || newState.content !== prevContent) {
         await executeWithTryCatch(async () => {
@@ -26,6 +29,10 @@ export default class EditorTotalContents extends Component {
             content: newState.content || prevContent,
           });
         }, "Error get document structure EditorTotalContents");
+        this.currentTitle = newState.title || prevTitle;
+        this.currentContents = newState.content || prevContent;
+        console.log("currentTitle", this.currentTitle);
+        console.log("currentContents", this.currentContents);
       }
     };
     this.debounceSetInput = debounce(this.setInput, 1000);
@@ -46,12 +53,18 @@ export default class EditorTotalContents extends Component {
         `</div>`;
   }
 
+  mounted() {
+    this.currentTitle = this.state.totalContents.title;
+    this.currentContents = this.state.totalContents.content;
+  }
+
   setEvent() {
     this.currentPlaceholderElement = null;
     this.addEvent("keyup", "[name=title]", (e) => {
       console.log("방향키 인식됨 타이틀:수정요망");
-      if (this.state.totalContents.title !== e.target.textContent) {
+      if (this.currentTitle !== e.target.textContent) {
         this.currentTitle = e.target.textContent;
+        this.currentContents = this.state.totalContents.content;
         this.debounceSetInput({
           title: e.target.textContent,
           content: this.currentContents,
@@ -179,10 +192,5 @@ export default class EditorTotalContents extends Component {
       }
       this.currentPlaceholderElement = null;
     });
-  }
-
-  mounted() {
-    const inputTitle = this.$target.querySelector("[name=title]");
-    inputTitle.value = this.state.totalContents.title;
   }
 }
