@@ -28,12 +28,18 @@ export default class EditorTotalContents extends Component {
           const pages = await this.data.editDocument(
             this.state.current_documentId,
             newState.title,
-            newState.content || prevContent
+            (newState.content || prevContent).replace(
+              /data-placeholder=".*?"/,
+              ""
+            )
           );
           store_pages.dispatch(setPAGES({ pages }));
           console.log("문서 업데이트됨:", {
             title: newState.title,
-            content: newState.content || prevContent,
+            content: (newState.content || prevContent).replace(
+              /data-placeholder=".*?"/,
+              ""
+            ),
           });
         }, "Error get document structure EditorTotalContents");
         this.currentTitle = newState.title || prevTitle;
