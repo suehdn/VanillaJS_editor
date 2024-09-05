@@ -160,7 +160,7 @@ export default class EditorTotalContents extends Component {
               );
               lastCursor(prevDiv);
             }
-          } else if (currentDiv.textContent.trim() === "") {
+          } else if (currentDiv.textContent.trim() === "" && index > 0) {
             e.preventDefault();
             const currentContentContainer = currentDiv.parentNode;
             currentContentContainer.parentNode.removeChild(
