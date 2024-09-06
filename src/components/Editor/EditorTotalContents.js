@@ -49,6 +49,7 @@ export default class EditorTotalContents extends Component {
       }
     };
     this.debounceSetInput = debounce(this.setInput, this.debounceTime);
+    this.toolbar = setToolbar();
   }
   //prettier-ignore
   template() {
@@ -203,6 +204,9 @@ export default class EditorTotalContents extends Component {
         this.currentPlaceholderElement.removeAttribute("data-placeholder");
       }
       this.currentPlaceholderElement = null;
+      if (!this.toolbar.contains(e.target)) {
+        this.toolbar.style.display = "none";
+      }
     });
 
     this.addEvent("dragstart", ".editor__content--container", (e) => {
@@ -259,6 +263,27 @@ export default class EditorTotalContents extends Component {
         content: newContent,
       });
       this.currentContents = newContent;
+    });
+
+    this.addEvent("mouseup", ".editor__input--content", (e) => {
+      const selection = window.getSelection();
+      if (!selection.isCollapsed) {
+        const range = selection.getRangeAt(0).getBoundingClientRect();
+        const toolbarTop = range.top - this.toolbar.offsetHeight - 45;
+        const toolbarLeft = range.left;
+        this.toolbar.style.top = `${toolbarTop}px`;
+        this.toolbar.style.left = `${toolbarLeft}px`;
+        this.toolbar.style.display = "block";
+      } else {
+        this.toolbar.style.display = "none";
+      }
+    });
+
+    this.addEvent("mousedown", ".editor__input--content", (e) => {
+      if (!this.toolbar.contains(e.target)) {
+        this.toolbar.style.display = "none";
+      }
+      console.log("mousedown");
     });
   }
 }
@@ -362,4 +387,56 @@ const getDragAfterElement = (container, y) => {
     },
     { offset: Number.NEGATIVE_INFINITY }
   ).element;
+};
+
+const setToolbar = () => {
+  const toolbar = document.createElement("div");
+  toolbar.className = "editor-toolbar";
+  toolbar.innerHTML = `
+      <button id="boldBtn">
+        <span class="material-symbols-rounded">format_bold</span>
+      </button>
+      <button id="italicBtn">
+        <span class="material-symbols-rounded">format_italic</span>
+      </button>
+      <button id="underlineBtn">
+        <span class="material-symbols-rounded">format_underlined</span>
+      </button>
+      <button id="strikethroughBtn">
+        <span class="material-symbols-rounded">format_strikethrough</span>
+      </button>
+    `;
+  document.body.appendChild(toolbar);
+
+  document
+    .getElementById("boldBtn")
+    .addEventListener("click", () => formatText("strong"));
+  document
+    .getElementById("italicBtn")
+    .addEventListener("click", () => formatText("em"));
+  document
+    .getElementById("underlineBtn")
+    .addEventListener("click", () => formatText("u"));
+
+  const formatText = (tagName) => {
+    const selection = window.getSelection();
+    if (!selection.isCollapsed) {
+      const range = selection.getRangeAt(0);
+      const selectedText = range.toString();
+
+      console.log(range.startContainer.parentNode);
+      console.log(range.startContainer.parentNode.nodeName);
+      // 새로운 노드 생성
+      const newNode = document.createElement(tagName);
+      newNode.textContent = selectedText;
+
+      // 현재 범위를 새 노드로 교체
+      range.deleteContents(); // 선택된 텍스트 삭제
+      range.insertNode(newNode); // 새 노드 삽입
+
+      // 새 노드에 포커스
+      newNode.focus();
+    }
+  };
+  return toolbar;
 };
