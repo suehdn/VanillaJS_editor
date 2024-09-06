@@ -204,9 +204,6 @@ export default class EditorTotalContents extends Component {
         this.currentPlaceholderElement.removeAttribute("data-placeholder");
       }
       this.currentPlaceholderElement = null;
-      if (!this.toolbar.contains(e.target)) {
-        this.toolbar.style.display = "none";
-      }
     });
 
     this.addEvent("dragstart", ".editor__content--container", (e) => {
@@ -265,25 +262,26 @@ export default class EditorTotalContents extends Component {
       this.currentContents = newContent;
     });
 
-    this.addEvent("mouseup", ".editor__input--content", (e) => {
+    this.addEvent("mouseup", ".editor__content", (e) => {
       const selection = window.getSelection();
       if (!selection.isCollapsed) {
-        const range = selection.getRangeAt(0).getBoundingClientRect();
-        const toolbarTop = range.top - this.toolbar.offsetHeight - 45;
-        const toolbarLeft = range.left;
+        const box = selection.getRangeAt(0).getBoundingClientRect();
+        const toolbarTop = box.top - 45;
+        const toolbarLeft = box.left;
         this.toolbar.style.top = `${toolbarTop}px`;
         this.toolbar.style.left = `${toolbarLeft}px`;
-        this.toolbar.style.display = "block";
+        this.toolbar.style.display = "flex";
       } else {
         this.toolbar.style.display = "none";
       }
     });
+    document.addEventListener("mousedown", (e) => {
+      const isClickInsideEditor = e.target.closest(".editor__content") !== null;
+      const isClickInsideToolbar = this.toolbar.contains(e.target);
 
-    this.addEvent("mousedown", ".editor__input--content", (e) => {
-      if (!this.toolbar.contains(e.target)) {
+      if (!isClickInsideEditor && !isClickInsideToolbar) {
         this.toolbar.style.display = "none";
       }
-      console.log("mousedown");
     });
   }
 }
@@ -391,50 +389,132 @@ const getDragAfterElement = (container, y) => {
 
 const setToolbar = () => {
   const toolbar = document.createElement("div");
-  toolbar.className = "editor-toolbar";
+  toolbar.className = "editor__toolbar";
   toolbar.innerHTML = `
-      <button id="boldBtn">
+      <button class="editor__toolbar--button" id="boldBtn">
         <span class="material-symbols-rounded">format_bold</span>
       </button>
-      <button id="italicBtn">
+      <button class="editor__toolbar--button" id="italicBtn">
         <span class="material-symbols-rounded">format_italic</span>
       </button>
-      <button id="underlineBtn">
+      <button class="editor__toolbar--button" id="underlineBtn">
         <span class="material-symbols-rounded">format_underlined</span>
       </button>
-      <button id="strikethroughBtn">
+      <button class="editor__toolbar--button" id="strikethroughBtn">
         <span class="material-symbols-rounded">format_strikethrough</span>
       </button>
     `;
   document.body.appendChild(toolbar);
 
-  document
-    .getElementById("boldBtn")
-    .addEventListener("click", () => formatText("strong"));
-  document
-    .getElementById("italicBtn")
-    .addEventListener("click", () => formatText("em"));
-  document
-    .getElementById("underlineBtn")
-    .addEventListener("click", () => formatText("u"));
+  document.getElementById("boldBtn").addEventListener("click", (e) => {
+    e.preventDefault();
+    formatText("bold");
+  });
+  document.getElementById("italicBtn").addEventListener("click", (e) => {
+    e.preventDefault();
+    formatText("italic");
+  });
+  document.getElementById("underlineBtn").addEventListener("click", (e) => {
+    e.preventDefault();
+    formatText("underline");
+  });
+  document.getElementById("strikethroughBtn").addEventListener("click", (e) => {
+    e.preventDefault();
+    formatText("strikethrough");
+  });
 
   const formatText = (tagName) => {
     const selection = window.getSelection();
+    console.log("selection", selection);
     if (!selection.isCollapsed) {
       const range = selection.getRangeAt(0);
       const selectedText = range.toString();
 
-      console.log(range.startContainer.parentNode);
-      console.log(range.startContainer.parentNode.nodeName);
-      // 새로운 노드 생성
-      const newNode = document.createElement(tagName);
-      newNode.textContent = selectedText;
+      const startNode = range.startContainer;
+      const endNode = range.endContainer;
 
-      // 현재 범위를 새 노드로 교체
-      range.deleteContents(); // 선택된 텍스트 삭제
-      range.insertNode(newNode); // 새 노드 삽입
+      const alreadySpan = startNode.nodeName.toLowerCase() === "span";
 
-      // 새 노드에 포커스
+      // 각각의 부모 노드를 확인합니다.
+      const startParent = startNode.parentNode;
+      const endParent = endNode.parentNode;
+
+      // console.log(
+      //   startNode.parentNode.querySelector(".editor__input--content")
+      // );
+      console.log("startNode:", startNode.nodeName, startNode); // 선택 시작 노드
+      console.log("endNode:", endNode); // 선택 끝 노드
+      console.log("startParent:", startParent.nodeName, startParent); // 선택 끝 노드
+      console.log("endParent:", endParent);
+      console.log("selectedText:", selectedText);
+      console.log("---------");
+
+      const newNode = alreadySpan ? startNode : document.createElement("span");
+
+      console.log("span?:", startNode.nodeName.toLowerCase() === "span");
+
+      switch (tagName) {
+        case "bold":
+          if (newNode.style.fontWeight === "bold") {
+            newNode.style.fontWeight = "";
+          } else {
+            newNode.style.fontWeight = "bold";
+          }
+
+          break;
+        case "italic":
+          if (newNode.style.fontStyle === "italic") {
+            newNode.style.fontStyle = "";
+          } else {
+            newNode.style.fontStyle = "italic";
+          }
+          break;
+        case "underline":
+          if (newNode.style.textDecorationLine === "underline") {
+            newNode.style.textDecorationLine = "";
+          } else if (
+            newNode.style.textDecorationLine === "underline line-through"
+          ) {
+            newNode.style.textDecorationLine = "line-through";
+          } else {
+            if (newNode.style.textDecorationLine === "line-through") {
+              newNode.style.textDecorationLine = "underline line-through"; // 둘 다
+            } else {
+              newNode.style.textDecorationLine = "underline"; // 밑줄
+            }
+          }
+          break;
+        case "strikethrough":
+          if (newNode.style.textDecorationLine === "line-through") {
+            newNode.style.textDecorationLine = "";
+          } else if (
+            newNode.style.textDecorationLine === "underline line-through"
+          ) {
+            newNode.style.textDecorationLine = "underline";
+          } else {
+            if (newNode.style.textDecorationLine === "underline") {
+              newNode.style.textDecorationLine = "underline line-through"; // 둘 다
+            } else {
+              newNode.style.textDecorationLine = "line-through"; // 취소선
+            }
+          }
+          break;
+        default:
+          break;
+      }
+
+      if (!alreadySpan) {
+        newNode.textContent = selectedText;
+
+        range.deleteContents(); // 선택된 텍스트 삭제
+        range.insertNode(newNode); // 새 노드 삽입
+
+        //기존에 선택되었던 드래그 범위가 재정의 되는 문제 해결
+        const selectionRange = document.createRange();
+        selectionRange.selectNodeContents(newNode); // 새 노드를 선택
+        selection.removeAllRanges(); // 기존 선택 범위 제거
+        selection.addRange(selectionRange); // 새 범위를 추가
+      }
       newNode.focus();
     }
   };
