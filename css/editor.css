@@ -1,58 +1,93 @@
 p {
-    line-height: 10%;
+  line-height: 10%;
 }
 
 .editor__div--flex {
-    width: 75%;
-    height: 95%;
-    display: flex;
-    order: 2;
-    flex-direction: column;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 50px;
-    background-color: white;
+  --editor-header-margin-top: 6rem;
+  --editor-header-margin-left: 1.5rem;
+  --editor-header-font-size: 2.5rem;
+  --editor-common-width: 80%;
+  --editor-content-margin-top: 1rem;
+
+  width: calc(100% - var(--sidebar-width));
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
 }
 
-.editor__input {
-    width: 80%;
-    height: 10%;
-    font-size: 50px;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: rgba(0, 0, 0, 0);
-    border: none;
+.editor {
+  width: var(--editor-common-width);
+  margin: var(--editor-header-margin-top) auto 0 auto;
 }
 
-.editor__input--area {
-    width: 80%;
-    height: 85%;
-    margin-left: auto;
-    margin-right: auto;
-    overflow: auto;
+.editor__input--title {
+  font-size: var(--editor-header-font-size);
+  font-weight: bold;
+  width: 100%;
+  margin-left: var(--editor-header-margin-left);
+  border: none;
+  outline: none;
+}
+.editor__input--title:empty::before {
+  content: attr(data-placeholder);
+  color: var(--sidebar-font-color-100);
 }
 
 .editor__content {
-    height: 85%;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: rgba(0, 0, 0, 0);
-    border: none;
-    overflow: auto;
-    display: block;
-    padding-left: 5px;
-    padding-right: 5px;
+  margin-top: var(--editor-content-margin-top);
 }
 
-.editor__main--content {
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: rgba(0, 0, 0, 0);
-    border: none;
-    font-size: 50px;
-    color: grey;
-    text-align: center;
-    margin: 0 auto;
-    margin-top: 20%;
+.editor__content--container {
+  display: flex;
+  color: var(--sidebar-font-color-200);
+  margin: var(--editor-content-margin-top) 0;
 }
+
+.editor__content--container.dragging {
+  border: 1px solid var(--sidebar-font-color-100);
+  border-radius: 0.5rem;
+}
+
+.editor__content--container:hover
+  .material-symbols-rounded.editor__content--drag {
+  visibility: visible;
+}
+.material-symbols-rounded.editor__content--drag {
+  visibility: hidden;
+  cursor: grab;
+}
+.material-symbols-rounded.editor__content--drag:active {
+  cursor: grabbing;
+}
+
+.editor__input--content {
+  border: none;
+  outline: none;
+  display: block;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: black;
+  width: 100%;
+}
+
+.editor__input--content:empty::before {
+  content: attr(data-placeholder);
+  color: var(--sidebar-font-color-200);
+}
+/* .editor__input--content:focus:before {
+  content: "";
+} */
+
+/* .editor__main--content {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+  font-size: 50px;
+  color: grey;
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 20%;
+} */
