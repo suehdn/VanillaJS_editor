@@ -1,26 +1,23 @@
 import { createStore } from "@core";
-import Data from "@/data";
-
-const data = new Data();
+import { getItem } from "@stores";
 
 const initialState = {
-  x: 100,
-  y: 200,
+  pages: {
+    pages: [],
+    openedDetail: new Set(getItem("openedDetail", [])),
+    selected: getItem("selected") || null,
+  },
 };
 
-export const SET_X = "SET_X";
-export const SET_Y = "SET_Y";
+export const SET_PAGES = "SET_PAGES";
 
-export const store = createStore((state = initialState, action = {}) => {
+export const store_pages = createStore((state = initialState, action = {}) => {
   switch (action.type) {
-    case "SET_X":
-      return { ...state, x: action.payload };
-    case "SET_Y":
-      return { ...state, y: action.payload };
+    case "SET_PAGES":
+      return { ...state, pages: { ...state.pages, ...action.payload } };
     default:
       return state;
   }
 });
 
-export const setX = (payload) => ({ type: SET_X, payload });
-export const setY = (payload) => ({ type: SET_Y, payload });
+export const setPAGES = (payload) => ({ type: SET_PAGES, payload });

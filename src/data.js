@@ -33,7 +33,7 @@ export default class Data {
     const addDocumentStructure = await request("", {
       method: "POST",
       body: JSON.stringify({
-        title: "새로운 페이지",
+        title: "",
         parent: id,
       }),
     });
@@ -42,7 +42,7 @@ export default class Data {
 
   editDocument = async (id, title, content) => {
     if (!title) {
-      title = "제목이 삭제됨";
+      title = "";
     }
     const editDocument = await request(`/${id}`, {
       method: "PUT",

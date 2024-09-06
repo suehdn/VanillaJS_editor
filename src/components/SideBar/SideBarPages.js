@@ -1,28 +1,33 @@
 import Data from "../../data.js";
-import { push } from "../../router.js";
-import { setItem, getItem } from "@stores";
+import { push, getDocumentId } from "../../router.js";
+import { setItem, getItem, store_documentId, setID } from "@stores";
 import { Component } from "@core";
+import { store_pages, setPAGES } from "@stores";
+import { executeWithTryCatch } from "@utils";
 
 export default class SideBarPages extends Component {
   setup() {
-    this.state = {
-      pages: this.props,
-      openedDetail: new Set(getItem("openedDetail", [])),
-      selected: getItem("selected") || null,
-    };
+    store_pages.dispatch(
+      setPAGES({
+        pages: this.props,
+      })
+    );
+    store_pages.subscribe(() => {
+      this.render();
+    });
+
     this.data = new Data();
     this.hoveredElementId = null;
   }
   template() {
     return `${printPage(
-      this.state.pages,
-      this.state.openedDetail,
+      store_pages.getState().pages.pages,
+      store_pages.getState().pages.openedDetail,
       0,
-      this.state.selected,
+      store_pages.getState().pages.selected,
       this.hoveredElementId
     )}`;
   }
-  mounted() {}
   setEvent() {
     this.addEvent("scroll", ".sidebar__pages", (e) => {
       const scrollPositon = this.$target.scrollTop;
@@ -41,7 +46,9 @@ export default class SideBarPages extends Component {
         .action;
       const id = e.target.closest(".sidebar__pages--detail").dataset.id;
       const setOpenedDetail = (action, id) => {
-        const tempOpenedDetail = new Set(this.state.openedDetail);
+        const tempOpenedDetail = new Set(
+          store_pages.getState().pages.openedDetail
+        );
         switch (action) {
           case "add":
             tempOpenedDetail.add(id);
@@ -59,41 +66,63 @@ export default class SideBarPages extends Component {
         setItem("openedDetail", tempOpenedDetail);
         return tempOpenedDetail;
       };
-      const getPages = (action, id, selected) => {
+      const getPages = async (action, id, selected) => {
         const tempOpenedDetail = setOpenedDetail(action, id);
         if (action === "add") {
-          this.data.getDocumentStructure().then((pages) => {
-            this.setState({ pages, openedDetail: tempOpenedDetail, selected });
-          });
+          await executeWithTryCatch(async () => {
+            const pages = await this.data.getDocumentStructure();
+            store_pages.dispatch(
+              setPAGES({ pages, openedDetail: tempOpenedDetail, selected })
+            );
+          }, "Error getPages add document structure SideBarPages");
         } else {
-          this.data.getDocumentStructure().then((pages) => {
-            this.setState({ pages, openedDetail: tempOpenedDetail });
-          });
+          await executeWithTryCatch(async () => {
+            const pages = await this.data.getDocumentStructure();
+            store_pages.dispatch(
+              setPAGES({
+                pages,
+                openedDetail: tempOpenedDetail,
+              })
+            );
+          }, "Error getPages another document structure SideBarPages");
         }
       };
       switch (action) {
         case "toggle":
           const tempOpenedDetail = setOpenedDetail(action, id);
-          this.setState({ openedDetail: tempOpenedDetail });
+          store_pages.dispatch(
+            setPAGES({
+              openedDetail: tempOpenedDetail,
+            })
+          );
           break;
         case "remove":
-          await this.data.deleteDocumentStructure(id).then(() => {
-            push(`/`);
+          await executeWithTryCatch(async () => {
+            await this.data.deleteDocumentStructure(id);
+            push(`/main`);
+            store_documentId.dispatch(setID(getDocumentId()));
             getPages("remove", id);
-          });
+          }, "Error remove document structure SideBarPages");
           break;
         case "add":
-          await this.data.addDocumentStructure(id).then((x) => {
-            push(`/${x.id}`);
-            setItem("selected", x.id);
-            getPages("add", id, x.id);
-          });
+          await executeWithTryCatch(async () => {
+            const document = await this.data.addDocumentStructure(id);
+            push(`/${document.id}`);
+            store_documentId.dispatch(setID(getDocumentId()));
+            setItem("selected", document.id);
+            getPages("add", id, document.id);
+          }, "Error add document structure SideBarPages");
           break;
         case "select":
           const target = e.target.closest(".sidebar__pages--detail-click");
           push(`/${id}`);
+          store_documentId.dispatch(setID(getDocumentId()));
           setItem("selected", id);
-          this.setState({ selected: id });
+          store_pages.dispatch(
+            setPAGES({
+              selected: id,
+            })
+          );
           break;
       }
     });
@@ -124,7 +153,7 @@ export default class SideBarPages extends Component {
           ".sidebar__pages--detail"
         ).dataset.id;
         if (icon)
-          this.state.openedDetail.has(this.hoveredElementId)
+          store_pages.getState().pages.openedDetail.has(this.hoveredElementId)
             ? (icon.textContent = "keyboard_arrow_down")
             : (icon.textContent = "keyboard_arrow_right");
       }

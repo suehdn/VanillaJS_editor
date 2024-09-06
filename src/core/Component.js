@@ -17,15 +17,17 @@ export default class Component {
   }
   render() {
     const { $target } = this;
-    const virtualNode = $target.cloneNode(true);
 
-    virtualNode.innerHTML = this.template();
+    if (this.template()) {
+      const virtualNode = $target.cloneNode(true);
+      virtualNode.innerHTML = this.template();
 
-    const realChildNodes = [...$target.childNodes];
-    const virtualChildNodes = [...virtualNode.childNodes];
-    const max = Math.max(realChildNodes.length, virtualChildNodes.length);
-    for (let i = 0; i < max; i++) {
-      updateNode($target, realChildNodes[i], virtualChildNodes[i]);
+      const realChildNodes = [...$target.childNodes];
+      const virtualChildNodes = [...virtualNode.childNodes];
+      const max = Math.max(realChildNodes.length, virtualChildNodes.length);
+      for (let i = 0; i < max; i++) {
+        updateNode($target, realChildNodes[i], virtualChildNodes[i]);
+      }
     }
     this.mounted();
   }

@@ -1,7 +1,16 @@
-import { push } from "@/router";
+import { getDocumentId, push } from "@/router";
 import Data from "@/data";
-import { setItem, getItem } from "@stores";
+import {
+  setItem,
+  getItem,
+  store_documentId,
+  setID,
+  store_pages,
+  setPAGES,
+  removeItem,
+} from "@stores";
 import { Component } from "@core";
+import { executeWithTryCatch } from "@utils";
 
 export default class SideBarHeader extends Component {
   setup() {
@@ -33,20 +42,35 @@ export default class SideBarHeader extends Component {
           .action;
         switch (action) {
           case "main":
-            push(`/`);
+            push(`/main`);
+            store_documentId.dispatch(setID(getDocumentId()));
+            removeItem("selected");
+            store_pages.dispatch(setPAGES({ selected: getItem("selected") }));
             break;
           case "add":
-            await this.data.addDocumentStructure().then((x) => {
-              push(`/${x.id}`);
-              setItem("selected", x.id);
-              this.props.sideBarPagesRender();
-            });
+            await executeWithTryCatch(async () => {
+              const document = await this.data.addDocumentStructure();
+              push(`/${document.id}`);
+              store_documentId.dispatch(setID(getDocumentId()));
+              setItem("selected", document.id);
+
+              const pages = await this.data.getDocumentStructure();
+              store_pages.dispatch(
+                setPAGES({ pages, selected: getItem("selected") })
+              );
+            }, "Error adding document structure SideBarHeader");
             break;
           case "quick_start":
             push(`/quick_start`);
+            store_documentId.dispatch(setID(getDocumentId()));
+            removeItem("selected");
+            store_pages.dispatch(setPAGES({ selected: getItem("selected") }));
             break;
           case "guestbook":
             push(`/guestbook`);
+            store_documentId.dispatch(setID(getDocumentId()));
+            removeItem("selected");
+            store_pages.dispatch(setPAGES({ selected: getItem("selected") }));
             break;
         }
       }
