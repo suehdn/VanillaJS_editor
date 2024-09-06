@@ -28,7 +28,7 @@ export default class EditorTotalContents extends Component {
           const pages = await this.data.editDocument(
             this.state.current_documentId,
             newState.title,
-            (newState.content || prevContent).replace(
+            (newState.content || prevContent)?.replace(
               /data-placeholder=".*?"/,
               ""
             )
@@ -36,7 +36,7 @@ export default class EditorTotalContents extends Component {
           store_pages.dispatch(setPAGES({ pages }));
           console.log("문서 업데이트됨:", {
             title: newState.title,
-            content: (newState.content || prevContent).replace(
+            content: (newState.content || prevContent)?.replace(
               /data-placeholder=".*?"/,
               ""
             ),
