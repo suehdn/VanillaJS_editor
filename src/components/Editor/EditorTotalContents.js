@@ -1,5 +1,5 @@
 import Data from "@/data";
-import { setPAGES, store_pages } from "@stores";
+import { setPAGES, store_pages, store_currentContents } from "@stores";
 import { Component } from "@core";
 import {
   debounce,
@@ -53,6 +53,13 @@ export default class EditorTotalContents extends Component {
     };
     this.debounceSetInput = debounce(this.setInput, this.debounceTime);
     this.toolbar = document.querySelector("#toolbar");
+
+    store_currentContents.subscribe(() => {
+      this.debounceSetInput({
+        title: this.currentTitle,
+        content: store_currentContents.getState().currentContents,
+      });
+    });
   }
   //prettier-ignore
   template() {

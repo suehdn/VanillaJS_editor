@@ -1,5 +1,5 @@
 import { Component } from "@core";
-
+import { store_currentContents, setCONTENTS } from "@stores";
 export default class Toolbar extends Component {
   template() {
     return `
@@ -73,7 +73,6 @@ const formatText = (tagName) => {
         } else {
           newNode.style.fontWeight = "bold";
         }
-
         break;
       case "italic":
         if (newNode.style.fontStyle === "italic") {
@@ -129,5 +128,13 @@ const formatText = (tagName) => {
       selection.addRange(selectionRange); // 새 범위를 추가
     }
     newNode.focus();
+
+    const contentDivs = document.querySelectorAll(".editor__input--content");
+    const newContent = Array.from(contentDivs)
+      .map((div) => {
+        return `${div.parentNode.outerHTML}`;
+      })
+      .join("");
+    store_currentContents.dispatch(setCONTENTS(newContent));
   }
 };
