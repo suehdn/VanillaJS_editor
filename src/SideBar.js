@@ -21,7 +21,7 @@ export default class SideBar extends Component {
       const pages = await this.data.getDocumentStructure();
       this.sideBarPages = new SideBarPages({
         $target: $sidebarPages,
-        props: pages,
+        props: pages.data,
       });
     }, "Error get document structure SideBar");
   }
