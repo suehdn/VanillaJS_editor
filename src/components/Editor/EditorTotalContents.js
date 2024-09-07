@@ -30,7 +30,7 @@ export default class EditorTotalContents extends Component {
         await executeWithTryCatch(async () => {
           const pages = await this.data.editDocument(
             this.state.current_documentId,
-            newState.title,
+            newState.title === undefined ? prevTitle : newState.title,
             (newState.content || prevContent)?.replace(
               /data-placeholder=".*?"/,
               ""
@@ -38,7 +38,7 @@ export default class EditorTotalContents extends Component {
           );
           store_pages.dispatch(setPAGES({ pages }));
           console.log("문서 업데이트됨:", {
-            title: newState.title,
+            title: newState.title === undefined ? prevTitle : newState.title,
             content: (newState.content || prevContent)?.replace(
               /data-placeholder=".*?"/,
               ""
