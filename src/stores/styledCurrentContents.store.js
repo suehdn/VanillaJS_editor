@@ -1,7 +1,7 @@
 import { createStore } from "@core";
 
 const initialState = {
-  currentContents: "<div></div>",
+  currentContents: "",
 };
 
 export const SET_CONTENTS = "SET_CONTENTS";
