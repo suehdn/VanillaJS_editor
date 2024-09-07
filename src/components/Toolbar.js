@@ -37,34 +37,35 @@ export default class Toolbar extends Component {
   }
 }
 const formatText = (tagName) => {
+  const $toolbar = document.querySelector("#toolbar");
   const selection = window.getSelection();
-  console.log("selection", selection);
   if (!selection.isCollapsed) {
     const range = selection.getRangeAt(0);
     const selectedText = range.toString();
 
-    const startNode = range.startContainer;
-    const endNode = range.endContainer;
+    let startNode = range.startContainer;
+    let startParentNode = startNode.parentNode;
 
-    const alreadySpan = startNode.nodeName.toLowerCase() === "span";
+    let alreadySpan = startNode.nodeName.toLowerCase() === "span";
+    let alreadySpanParent =
+      startParentNode.nodeName.toLocaleLowerCase() === "span";
 
-    // 각각의 부모 노드를 확인합니다.
-    const startParent = startNode.parentNode;
-    const endParent = endNode.parentNode;
+    const selectAll = selectedText === startNode.textContent;
+    if (selectAll && alreadySpanParent) {
+      alreadySpan = true;
+      startNode = startParentNode;
+      startParentNode = startParentNode.parentNode;
+    }
 
-    // console.log(
-    //   startNode.parentNode.querySelector(".editor__input--content")
-    // );
-    console.log("startNode:", startNode.nodeName, startNode); // 선택 시작 노드
-    console.log("endNode:", endNode); // 선택 끝 노드
-    console.log("startParent:", startParent.nodeName, startParent); // 선택 끝 노드
-    console.log("endParent:", endParent);
-    console.log("selectedText:", selectedText);
-    console.log("---------");
-
-    const newNode = alreadySpan ? startNode : document.createElement("span");
-
-    console.log("span?:", startNode.nodeName.toLowerCase() === "span");
+    let newNode = null;
+    if (!alreadySpan && !alreadySpanParent) {
+      newNode = document.createElement("span");
+    } else if (alreadySpan) {
+      newNode = startNode;
+    } else if (!alreadySpan && alreadySpanParent) {
+      newNode = document.createElement(startNode.parentNode.tagName);
+      newNode.style.cssText = startNode.parentNode.style.cssText;
+    }
 
     switch (tagName) {
       case "bold":
@@ -117,15 +118,76 @@ const formatText = (tagName) => {
 
     if (!alreadySpan) {
       newNode.textContent = selectedText;
+      if (alreadySpanParent) {
+        range.deleteContents(); // 선택된 텍스트 삭제
+        range.insertNode(newNode); // 새 노드 삽입
 
-      range.deleteContents(); // 선택된 텍스트 삭제
-      range.insertNode(newNode); // 새 노드 삽입
+        //부모 노드와 같은 스타일의 노드를 만들어 노드 분리
+        for (let i = 0; i < startParentNode.childNodes.length; i++) {
+          if (startParentNode.childNodes[i] instanceof Text) {
+            const newNode = document.createElement(startParentNode.tagName);
+            newNode.style.cssText = startNode.parentNode.style.cssText;
+            newNode.textContent = startParentNode.childNodes[i].textContent;
+            startParentNode.insertAdjacentElement("beforebegin", newNode);
+          } else {
+            startParentNode.insertAdjacentElement(
+              "beforebegin",
+              startParentNode.childNodes[i]
+            );
+            i--;
+          }
+        }
+        //부모 노드 제거
+        startParentNode.parentNode.removeChild(startParentNode);
 
-      //기존에 선택되었던 드래그 범위가 재정의 되는 문제 해결
-      const selectionRange = document.createRange();
-      selectionRange.selectNodeContents(newNode); // 새 노드를 선택
-      selection.removeAllRanges(); // 기존 선택 범위 제거
-      selection.addRange(selectionRange); // 새 범위를 추가
+        //기존에 선택되었던 드래그 범위가 재정의 되는 문제 해결
+        const selectionRange = document.createRange();
+        selectionRange.selectNodeContents(newNode); // 새 노드를 선택
+        selection.removeAllRanges(); // 기존 선택 범위 제거
+        selection.addRange(selectionRange); // 새 범위를 추가
+      } else {
+        range.deleteContents(); // 선택된 텍스트 삭제
+        range.insertNode(newNode); // 새 노드 삽입
+
+        //기존에 선택되었던 드래그 범위가 재정의 되는 문제 해결
+        const selectionRange = document.createRange();
+        selectionRange.selectNodeContents(newNode); // 새 노드를 선택
+        selection.removeAllRanges(); // 기존 선택 범위 제거
+        selection.addRange(selectionRange); // 새 범위를 추가
+      }
+    } else {
+      const hasStyle = Object.keys(newNode.style).some((property) => {
+        return newNode.style[property] !== "";
+      });
+      if (!hasStyle) {
+        const parentNode = newNode.parentNode;
+        let indexChildNodes = [...parentNode.childNodes].indexOf(newNode);
+        let newText = selectedText;
+        if (
+          indexChildNodes - 1 >= 0 &&
+          parentNode.childNodes[indexChildNodes - 1] instanceof Text
+        ) {
+          newText =
+            parentNode.childNodes[indexChildNodes - 1].textContent + newText;
+          parentNode.removeChild(parentNode.childNodes[indexChildNodes - 1]);
+          --indexChildNodes;
+        }
+        if (
+          indexChildNodes + 1 < parentNode.childNodes.length &&
+          parentNode.childNodes[indexChildNodes + 1] instanceof Text
+        ) {
+          newText += parentNode.childNodes[indexChildNodes + 1].textContent;
+          parentNode.removeChild(parentNode.childNodes[indexChildNodes + 1]);
+        }
+        const newTextNode = document.createTextNode(newText);
+
+        parentNode.insertBefore(
+          newTextNode,
+          parentNode.childNodes[indexChildNodes]
+        );
+        parentNode.removeChild(parentNode.children[indexChildNodes]);
+        $toolbar.style.display = "none";
+      }
     }
     newNode.focus();
 
