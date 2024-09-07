@@ -43,8 +43,8 @@ export default class Editor extends Component {
         this.editorTotalContents.setState({
           current_documentId: this.current_documentId,
           totalContents: {
-            title: document.title,
-            content: document.content,
+            title: document.data.title,
+            content: document.data.content,
           },
         });
       }, "Error get document structure Editor");

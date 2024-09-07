@@ -72,7 +72,11 @@ export default class SideBarPages extends Component {
           await executeWithTryCatch(async () => {
             const pages = await this.data.getDocumentStructure();
             store_pages.dispatch(
-              setPAGES({ pages, openedDetail: tempOpenedDetail, selected })
+              setPAGES({
+                pages: pages.data,
+                openedDetail: tempOpenedDetail,
+                selected,
+              })
             );
           }, "Error getPages add document structure SideBarPages");
         } else {
@@ -80,7 +84,7 @@ export default class SideBarPages extends Component {
             const pages = await this.data.getDocumentStructure();
             store_pages.dispatch(
               setPAGES({
-                pages,
+                pages: pages.data,
                 openedDetail: tempOpenedDetail,
               })
             );
@@ -107,10 +111,10 @@ export default class SideBarPages extends Component {
         case "add":
           await executeWithTryCatch(async () => {
             const document = await this.data.addDocumentStructure(id);
-            push(`/${document.id}`);
+            push(`/${document.data.id}`);
             store_documentId.dispatch(setID(getDocumentId()));
-            setItem("selected", document.id);
-            getPages("add", id, document.id);
+            setItem("selected", document.data.id);
+            getPages("add", id, document.data.id);
           }, "Error add document structure SideBarPages");
           break;
         case "select":
