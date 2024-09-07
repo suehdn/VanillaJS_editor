@@ -1,5 +1,8 @@
-import App from './App.js';
+import App from "./App.js";
+import Toolbar from "./components/Toolbar.js";
 
-const $target = document.querySelector('#app');
+const $appTarget = document.querySelector("#app");
+const $toolbarTarget = document.querySelector("#toolbar");
 
-new App({ $target });
+new App({ $target: $appTarget });
+new Toolbar({ $target: $toolbarTarget });

@@ -1,7 +1,8 @@
+import { Component } from "@core";
 import SideBar from "./SideBar.js";
 import Editor from "./Editor.js";
+
 import { initRouter } from "./router.js";
-import Component from "./core/Component.js";
 
 export default class App extends Component {
   setup() {
@@ -23,6 +24,7 @@ export default class App extends Component {
     new Editor({
       $target: this.$target,
     });
+
     // new Editor({
     //   $target: this.$target,
     //   initialState: {},
