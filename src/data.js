@@ -5,32 +5,28 @@ import { request } from "./api.js";
  */
 export default class Data {
   constructor() {}
-  /**
-   * get으로 파일 이름, 구조 전부 가져오는 함수
-   * @returns 전체 파일 이름, 구조
-   */
   getDocumentStructure = async () => {
-    const getDocumentStructure = await request("", {
+    const getDocumentStructure = await request("/index", {
       method: "GET",
     });
     return getDocumentStructure;
   };
 
   getDocumentContent = async (id) => {
-    const getDocumentStructure = await request(`/${id}`, {
+    const getDocumentStructure = await request(`/index/${id}`, {
       method: "GET",
     });
     return getDocumentStructure;
   };
 
   deleteDocumentStructure = async (id) => {
-    const deleteDocumentStructure = await request(`/${id}`, {
+    const deleteDocumentStructure = await request(`/index/${id}`, {
       method: "DELETE",
     });
   };
 
   addDocumentStructure = async (id = null) => {
-    const addDocumentStructure = await request("", {
+    const addDocumentStructure = await request("/index", {
       method: "POST",
       body: JSON.stringify({
         title: "",
@@ -44,7 +40,7 @@ export default class Data {
     if (!title) {
       title = "";
     }
-    const editDocument = await request(`/${id}`, {
+    const editDocument = await request(`/index/${id}`, {
       method: "PUT",
       body: JSON.stringify({
         title: title,
