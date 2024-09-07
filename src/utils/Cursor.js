@@ -1,6 +1,5 @@
 export const setCaretOffset = () => {
   const selection = window.getSelection();
-  console.log(selection.focusNode);
   const range = selection.getRangeAt(0);
   return range.startOffset;
 };

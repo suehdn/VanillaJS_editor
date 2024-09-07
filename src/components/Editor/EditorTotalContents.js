@@ -5,6 +5,7 @@ import {
   debounce,
   executeWithTryCatch,
   setCaretOffset,
+  setCaretAtEnd,
   saveCursor,
   lastCursor,
   appendDiv,
@@ -180,6 +181,10 @@ export default class EditorTotalContents extends Component {
               this.debounceSetInput,
               this.currentTitle
             );
+            setTimeout(() => {
+              prevDiv.focus();
+              setCaretAtEnd(prevDiv);
+            }, 0);
           } else if (caretOffset === 0 && index === 0) {
             e.preventDefault();
             const currentContentContainer = currentDiv.parentNode;
@@ -193,6 +198,10 @@ export default class EditorTotalContents extends Component {
               this.debounceSetInput,
               this.currentTitle
             );
+            setTimeout(() => {
+              prevDiv.focus();
+              setCaretAtEnd(prevDiv);
+            }, 0);
           }
           break;
       }
