@@ -38,7 +38,7 @@ export const quickStartText = {
   <div class="editor__content--container" draggable="true">
     <span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
     <div name="content" contenteditable="true" class="editor__input--content">
-    <h3>글 작성/수정하기</h3>
+    <h3>글 작성/수정</h3>
     </div>
   </div>
   <div class="editor__content--container" draggable="true">
@@ -71,8 +71,12 @@ export const quickStartText = {
   </div>
   <div class="editor__content--container" draggable="true">
     <span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
+    <div name="content" contenteditable="true" class="editor__input--content"></div>
+  </div>
+  <div class="editor__content--container" draggable="true">
+    <span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
     <div name="content" contenteditable="true" class="editor__input--content">
-    <h3>글 드래그 앤 드롭하기</h3>
+    <h3>글 드래그&드롭</h3>
     </div>
   </div>
   <div class="editor__content--container" draggable="true">
