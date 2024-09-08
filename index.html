@@ -16,5 +16,10 @@
     <main id="app"></main>
     <script src="/src/main.js" type="module"></script>
     <div id="toolbar" class="editor__toolbar"></div>
+    <script>
+      if (window.location.pathname === "/") {
+        window.location.href = "/main";
+      }
+    </script>
   </body>
 </html>
