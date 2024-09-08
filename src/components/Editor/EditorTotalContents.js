@@ -27,7 +27,10 @@ export default class EditorTotalContents extends Component {
       // console.log("this.state.totalContents ::::", prevTitle, prevContent);
       // console.log("newState", newState);
 
-      if (newState.title !== prevTitle || newState.content !== prevContent) {
+      if (
+        this.state.current_documentId * 1 &&
+        (newState.title !== prevTitle || newState.content !== prevContent)
+      ) {
         await executeWithTryCatch(async () => {
           const pages = await this.data.editDocument(
             this.state.current_documentId,
@@ -38,13 +41,13 @@ export default class EditorTotalContents extends Component {
             )
           );
           store_pages.dispatch(setPAGES({ pages }));
-          console.log("문서 업데이트됨:", {
-            title: newState.title === undefined ? prevTitle : newState.title,
-            content: (newState.content || prevContent)?.replace(
-              /data-placeholder=".*?"/,
-              ""
-            ),
-          });
+          // console.log("문서 업데이트됨:", {
+          //   title: newState.title === undefined ? prevTitle : newState.title,
+          //   content: (newState.content || prevContent)?.replace(
+          //     /data-placeholder=".*?"/,
+          //     ""
+          //   ),
+          // });
         }, "Error get document structure EditorTotalContents");
         this.currentTitle = newState.title || prevTitle;
         this.currentContents = newState.content || prevContent;

@@ -9,3 +9,4 @@ export {
 } from "./Cursor";
 export { appendDiv, separateDiv } from "./controlEditorDiv";
 export { getDragAfterElement } from "./controlEditorDrag";
+export { showToast } from "./showToast";

@@ -1,0 +1,23 @@
+.toast {
+  visibility: hidden;
+  min-width: 250px; /* 최소 너비 */
+  margin-left: -125px; /* 가운데 정렬을 위한 여백 */
+  background-color: var(--sidebar-font-color-300);
+  color: #fff;
+  text-align: center;
+  border-radius: 1rem;
+  padding: 1rem;
+  position: absolute;
+  z-index: 10000;
+  left: 50%;
+  top: 30px;
+  font-size: 1rem;
+  transition: visibility 0s, opacity 0.5s linear;
+  opacity: 0;
+}
+
+.toast.show {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s, opacity 0.5s linear;
+}
