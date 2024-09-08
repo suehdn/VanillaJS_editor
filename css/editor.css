@@ -18,7 +18,8 @@ p {
 
 .editor {
   width: var(--editor-common-width);
-  margin: var(--editor-header-margin-top) auto 0 auto;
+  margin: var(--editor-header-margin-top) auto var(--editor-header-margin-top)
+    auto;
 }
 
 .editor__input--title {
@@ -96,4 +97,16 @@ p {
 }
 .editor__toolbar--button span {
   font-size: 1.25rem;
+}
+
+.editor__input--content.border {
+  border: 0.1rem solid var(--sidebar-font-color-200);
+  padding: 1.5rem 2rem;
+  border-radius: 1rem;
+}
+
+.editor__input--content.quotes {
+  quotes: none;
+  border-left: 0.2rem solid var(--sidebar-font-color-300);
+  padding-left: 0.5rem;
 }
