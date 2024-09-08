@@ -10,7 +10,7 @@ import {
   removeItem,
 } from "@stores";
 import { Component } from "@core";
-import { executeWithTryCatch } from "@utils";
+import { executeWithTryCatch, showToast } from "@utils";
 
 export default class SideBarHeader extends Component {
   setup() {
@@ -67,10 +67,8 @@ export default class SideBarHeader extends Component {
             store_pages.dispatch(setPAGES({ selected: getItem("selected") }));
             break;
           case "guestbook":
-            push(`/guestbook`);
-            store_documentId.dispatch(setID(getDocumentId()));
-            removeItem("selected");
-            store_pages.dispatch(setPAGES({ selected: getItem("selected") }));
+            const toast = document.getElementById("toast");
+            showToast(toast, 3000);
             break;
         }
       }
