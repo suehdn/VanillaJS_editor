@@ -27,7 +27,10 @@ export default class EditorTotalContents extends Component {
       // console.log("this.state.totalContents ::::", prevTitle, prevContent);
       // console.log("newState", newState);
 
-      if (newState.title !== prevTitle || newState.content !== prevContent) {
+      if (
+        this.state.current_documentId * 1 &&
+        (newState.title !== prevTitle || newState.content !== prevContent)
+      ) {
         await executeWithTryCatch(async () => {
           const pages = await this.data.editDocument(
             this.state.current_documentId,
