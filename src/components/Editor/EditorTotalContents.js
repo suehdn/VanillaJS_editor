@@ -41,13 +41,13 @@ export default class EditorTotalContents extends Component {
             )
           );
           store_pages.dispatch(setPAGES({ pages }));
-          console.log("문서 업데이트됨:", {
-            title: newState.title === undefined ? prevTitle : newState.title,
-            content: (newState.content || prevContent)?.replace(
-              /data-placeholder=".*?"/,
-              ""
-            ),
-          });
+          // console.log("문서 업데이트됨:", {
+          //   title: newState.title === undefined ? prevTitle : newState.title,
+          //   content: (newState.content || prevContent)?.replace(
+          //     /data-placeholder=".*?"/,
+          //     ""
+          //   ),
+          // });
         }, "Error get document structure EditorTotalContents");
         this.currentTitle = newState.title || prevTitle;
         this.currentContents = newState.content || prevContent;
