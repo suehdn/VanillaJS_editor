@@ -55,22 +55,6 @@ export const quickStartText = {
   </div>
   <div class="editor__content--container" draggable="true">
     <span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
-    <div name="content" contenteditable="true" class="editor__input--content border">
-        글자에 스타일을 지정해줄 수 있습니다.</br></br>
-        1. <span style="font-weight: bold;">Bold</span></br>
-        2. <span style="font-style: italic;">Italic</span></br>
-        3. <span style="text-decoration-line: underline;">underline</span></br>
-        4. <span style="text-decoration-line: line-through;">line-through</span>
-    </div>
-  </div>
-  <div class="editor__content--container" draggable="true">
-    <span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
-    <div name="content" contenteditable="true" class="editor__input--content">
-        글자를 드래그하면 툴바가 나타나 스타일 적용을 도와줍니다.
-    </div>
-  </div>
-  <div class="editor__content--container" draggable="true">
-    <span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
     <div name="content" contenteditable="true" class="editor__input--content"></div>
   </div>
   <div class="editor__content--container" draggable="true">
@@ -89,6 +73,37 @@ export const quickStartText = {
     <span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
     <div name="content" contenteditable="true" class="editor__input--content">
         마우스를 올리면 왼쪽에 잡고 드래그할 수 있는 아이콘이 나타납니다.
+    </div>
+  </div>
+  <div class="editor__content--container" draggable="true">
+    <span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
+    <div name="content" contenteditable="true" class="editor__input--content"></div>
+  </div>
+  <div class="editor__content--container" draggable="true">
+    <span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
+    <div name="content" contenteditable="true" class="editor__input--content">
+    <h3>글 스타일 지정/삭제</h3>
+    </div>
+  </div>
+  <div class="editor__content--container" draggable="true">
+    <span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
+    <div name="content" contenteditable="true" class="editor__input--content">
+        글자에 스타일을 지정해줄 수 있습니다.
+    </div>
+  </div>
+  <div class="editor__content--container" draggable="true">
+    <span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
+    <div name="content" contenteditable="true" class="editor__input--content">
+        글자를 드래그하면 툴바가 나타나 스타일 적용을 도와줍니다.
+    </div>
+  </div>
+  <div class="editor__content--container" draggable="true">
+    <span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
+    <div name="content" contenteditable="true" class="editor__input--content">
+        1. <span style="font-weight: bold;">Bold</span></br>
+        2. <span style="font-style: italic;">Italic</span></br>
+        3. <span style="text-decoration-line: underline;">underline</span></br>
+        4. <span style="text-decoration-line: line-through;">line-through</span>
     </div>
   </div>
   <div class="editor__content--container" draggable="true">

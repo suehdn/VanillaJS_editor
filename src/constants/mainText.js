@@ -1,10 +1,10 @@
 export const mainText = {
-  title: "H의 Notion입니다.",
+  title: "VanillaJS로 구현된 문서 편집기",
   contents: `
   <div class="editor__content--container" draggable="true">
     <span class="material-symbols-rounded editor__content--drag"> drag_indicator </span>
     <div name="content" contenteditable="true" class="editor__input--content">
-      이 프로젝트는 프레임워크나 라이브러리에 의존하지 않고 순수 VanillaJS로 구현된 문서 편집기입니다.</br>
+      이 프로젝트는 프레임워크나 라이브러리에 의존하지 않은 VanillaJS로 구현된 문서 편집기입니다.</br>
       JavaScript와 DOM에 대한 깊은 이해를 목표로 합니다.
     </div>
   </div>

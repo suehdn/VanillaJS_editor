@@ -215,10 +215,7 @@ export default class EditorTotalContents extends Component {
       if (this.currentPlaceholderElement) {
         this.currentPlaceholderElement.removeAttribute("data-placeholder");
       }
-      e.target.setAttribute(
-        "data-placeholder",
-        "글을 자유롭게 작성하세요. 명령어를 사용하려면 '/' 키를 누르세요."
-      );
+      e.target.setAttribute("data-placeholder", "글을 자유롭게 작성하세요!");
       this.currentPlaceholderElement = e.target;
     });
     this.addEvent("focusout", ".editor__input--content", (e) => {
