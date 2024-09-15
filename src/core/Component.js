@@ -45,7 +45,7 @@ export default class Component {
   }
 }
 
-const updateNode = (parent, realNode, virtualNode) => {
+export const updateNode = (parent, realNode, virtualNode) => {
   if (realNode && !virtualNode) {
     return realNode.remove();
   }
@@ -79,7 +79,7 @@ const updateAttributes = (realNode, virtualNode) => {
     realNode.setAttribute(name, value);
   }
   for (const { name } of [...realNode.attributes]) {
-    if (virtualNode.getAttribute(name) !== undefined) continue;
+    if (virtualNode.getAttribute(name) !== null) continue;
     realNode.removeAttribute(name);
   }
 };
